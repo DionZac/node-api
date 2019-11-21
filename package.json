@@ -1,0 +1,26 @@
+{
+    "scripts": {
+        "test": "run-func module.js test",
+        "start": "nw",
+        "reset": "run-func module.js reset",
+        "addmodel": "run-func module.js addmodel",
+        "add_db_field": "run-func module.js add_db_field",
+        "remove_db_field": "run-func module.js remove_db_field",
+        "createmigrations": "run-func migrations.js createmigrations",
+        "runmigrations": "run-func migrations.js runmigrations",
+        "update_images": "run-func module.js update_images",
+        "load_movies": "run-func module.js load",
+        "get_genres": "run-func module.js getAllGenres"
+    },
+    "dependencies": {
+        "colors": "^1.4.0",
+        "express": "^4.17.1",
+        "moment": "^2.24.0",
+        "monitor": "^0.6.10",
+        "mysql": "^2.17.1",
+        "request": "^2.88.0",
+        "run-func": "^1.0.3",
+        "sqlite3": "^4.1.0",
+        "stack-trace": "0.0.10"
+    }
+}

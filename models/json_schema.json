@@ -1,0 +1,10 @@
+{
+    "json_schema":{
+        "name": "json_schema",
+        "vname":"json_schema",
+        "fields": [
+          { "fname": "tablename", "type": "str", "def":"" },
+          { "fname": "schema", "type": "str" , "def":""}
+        ] 
+    }
+}

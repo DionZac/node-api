@@ -1,0 +1,23 @@
+{
+    "migrations": {
+        "name": "migrations",
+        "vname": "migrations",
+        "endpoint": "migrations",
+        "resourceName": "migrationsResource",
+        "inputGroups": [],
+        "fields": [
+            {
+                "fname": "name",
+                "type": "str",
+                "len": 160,
+                "def": "Test field"
+            },
+            {
+                "fname": "number",
+                "type": "str",
+                "len": 160,
+                "def": "'0001'"
+            }
+        ]
+    }
+}

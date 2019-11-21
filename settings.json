@@ -1,0 +1,7 @@
+{
+    "database": "SQLITE3",
+    "PORT":9001,
+    "DB_FILE":"menu.db",
+    "LOGSQL":1,
+    "api_endpoint": "/api/v1/"
+}
