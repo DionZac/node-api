@@ -36,7 +36,7 @@
     "runmigrations": "run-func migrations.js runmigrations",
     "update_images": "run-func module.js update_images",
     "load_movies": "run-func module.js load",
-    "get_genres":"run-func module.js getAllGenres"
+    "get_genres": "run-func module.js getAllGenres"
   },
   "devDependencies": {
     "moment": "^2.22.2",

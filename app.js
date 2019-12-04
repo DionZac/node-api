@@ -13,12 +13,10 @@ var fs = require('fs');
 var express     = require('express');
 var server      = express();
 var http        = require('http').Server(server);
-var io          = require('socket.io')(http);
 var bodyParser  = require('body-parser');
 var util        = require('util');
 var Monitor     = require('monitor');
 var port        = /*process.argv[2] || */80;
-var ssl_port    = 443
 var cluster = require('cluster');
 
 
@@ -28,7 +26,6 @@ var cluster = require('cluster');
 // App
 var dbs         = require('./dbs.js');
 var glib        = require('./glib.js');
-var appRequests = require('./appRequests.js');
 var api         = require('./api.js');
 var urls        = require('./urls.js');
 
