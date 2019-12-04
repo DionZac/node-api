@@ -6,9 +6,19 @@
             "resource": "migrationsResource"
         },
         {
+            "dbname": "movies",
+            "endpoint": "movies",
+            "resource": "moviesResource"
+        },
+        {
             "dbname": "users",
             "endpoint": "users",
             "resource": "usersResource"
+        },
+        {
+            "dbname": "likes",
+            "endpoint": "likes",
+            "resource": "likesResource"
         }
     ]
 }

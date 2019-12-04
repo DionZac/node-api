@@ -4,6 +4,7 @@ var glib = require('./glib.js');
 var dbs  = require('./dbs.js');
 var fs   = require('fs');
 
+const colors = require('colors');
 
 
 var migration_error = function(err){
@@ -231,7 +232,6 @@ var generate_migration_name = async function(list){
     })
 }
 module.exports.create_migration_files = async function(list){
-    console.log('Creating migrations files...');
     if(list.length == 0){ console.log('No changes in the models. \n 0 Migrations created'.red); process.exit(0);}
 
     let script = '';

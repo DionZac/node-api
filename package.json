@@ -1,26 +1,46 @@
 {
-    "scripts": {
-        "test": "run-func module.js test",
-        "start": "nw",
-        "reset": "run-func module.js reset",
-        "addmodel": "run-func module.js addmodel",
-        "add_db_field": "run-func module.js add_db_field",
-        "remove_db_field": "run-func module.js remove_db_field",
-        "createmigrations": "run-func migrations.js createmigrations",
-        "runmigrations": "run-func migrations.js runmigrations",
-        "update_images": "run-func module.js update_images",
-        "load_movies": "run-func module.js load",
-        "get_genres": "run-func module.js getAllGenres"
-    },
-    "dependencies": {
-        "colors": "^1.4.0",
-        "express": "^4.17.1",
-        "moment": "^2.24.0",
-        "monitor": "^0.6.10",
-        "mysql": "^2.17.1",
-        "request": "^2.88.0",
-        "run-func": "^1.0.3",
-        "sqlite3": "^4.1.0",
-        "stack-trace": "0.0.10"
-    }
+  "name": "nwpos",
+  "main": "index.html",
+  "window": {
+    "toolbar": false,
+    "resizable": true,
+    "fullscreen": false,
+    "width": 800,
+    "height": 600
+  },
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "colors": "^1.4.0",
+    "event-stream": "^4.0.1",
+    "express": "^4.13.3",
+    "jquery": "^3.4.1",
+    "jsdom": "^15.2.1",
+    "mysql": "^2.10.1",
+    "node-monitor": "^0.3.11",
+    "readline-promise": "^1.0.4",
+    "readline-sync": "^1.4.9",
+    "require-all": "^3.0.0",
+    "run-func": "^1.0.2",
+    "socket.io": "^1.4.4",
+    "sqlite3": "^4.0.9",
+    "stack-trace": "0.0.9"
+  },
+  "scripts": {
+    "test": "run-func module.js test",
+    "start": "nw",
+    "reset": "run-func module.js reset",
+    "addmodel": "run-func module.js addmodel",
+    "add_db_field": "run-func module.js add_db_field",
+    "remove_db_field": "run-func module.js remove_db_field",
+    "createmigrations": "run-func migrations.js createmigrations",
+    "runmigrations": "run-func migrations.js runmigrations",
+    "update_images": "run-func module.js update_images",
+    "load_movies": "run-func module.js load",
+    "get_genres":"run-func module.js getAllGenres"
+  },
+  "devDependencies": {
+    "moment": "^2.22.2",
+    "monitor": "^0.6.10",
+    "request": "^2.88.0"
+  }
 }

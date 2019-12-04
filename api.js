@@ -3,11 +3,7 @@ var objects = require('./db.js');
 var app     = require('./app.js');
 var urls    = require('./urls.js');
 
-var resources;
-try{
-    resources = require('require-all')(__dirname + '/resources');
-}
-catch(err){}
+var resources = require('require-all')(__dirname + '/resources');
 
 exports.references = {}; /// resource references
 var api = this;
@@ -18,10 +14,6 @@ var _url     = require('url');
 const settings = app.settings;
 
 exports.intialize_resources = async() => {
-    if(!resources){
-        console.log('"Resources" folder is missing')
-        return;
-    }
     var registered = await glib.readJSONfile('./registered.json');
     console.log(registered);
     registered = JSON.parse(registered);

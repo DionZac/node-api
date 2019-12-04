@@ -1,6 +1,7 @@
 // MODULE SCRIPT
 var glib = require('./glib.js');
 var fs = require('fs');
+var es = require('event-stream');
 var app = require('./app.js');
 var objects = require('./db.js');
 var dbs     = require('./dbs');
@@ -38,7 +39,7 @@ exports.getAllGenres = function(){
 //// updates the movies images with image links
 exports.update_images =  function(){
     /// Start from the first not-updated movie image ///
-    let last_movie_image_updated = 1086;
+    let last_movie_image_updated = 2532;
 
     app.initialize_only_database = true;
     app.startup('', async () => {
@@ -51,7 +52,10 @@ exports.update_images =  function(){
             if(idx < last_movie_image_updated || link.indexOf('http') !== 0) continue;
             let image = await getImage(movie.movie_imdb_link);
             movie.movie_imdb_link = image;
-            await db.update(movie);
+            try{
+                await db.update(movie);
+            }
+            catch(err){};
         }
     })
 }
@@ -79,6 +83,105 @@ var getImage = function(url){
     })
 }
 
+exports.load = function(){
+    var totalLines = 0;
+    
+    var columns = [];
+    app.initialize_only_database = true;
+    app.startup('', () => {
+        var s = fs.createReadStream('./movie_metadata.csv')
+        .pipe(es.split())
+        .pipe(es.mapSync(async (line) => {
+            if(totalLines == 0) {
+                // console.log(line);
+                extractColumns(line);
+            }
+            
+            // if(totalLines == 4){
+                // console.log(line);
+            let m = extractMovie(line);
+            // console.log(m);
+            await insert(m);
+                
+                // process.exit(0)
+            // }
+            // let m = extractMovie(line);
+            totalLines ++;
+        }))
+    })
+
+
+    var insert = (obj) => {
+        return new Promise((resolve, reject) => {
+            setTimeout( async () => {
+                try{
+                    let db = objects.databases.movies;
+                    await db.insert(obj);
+                    resolve();
+                }
+                catch(err){
+                    reject(err);
+                }    
+            }, 500)
+        })
+    }
+    
+    var extractColumns = (line) => {
+        var cols = line.split(',');
+        for(var col of cols) columns.push(col);
+
+        console.log(columns);
+    }
+
+    var extractMovie = (line) => {
+        // let fields = ['director_name', 'duration', 'director_facebook_likes' , 'actor_3_facebook_likes', 'actor_2_name', 'actor_1_facebook_likes', 'genres', 'actor_1_name', 'movie_title', 'num_voted_users', 'cast_total_facebook_likes', 'actor_3_name', 'plot_key_words', 'movie_imdb_link', 'num_user_for_reviews', 'language', 'country', 'budget', 'title_year', 'actor_2_facebook_likes', 'imdb_score', 'movie_facebook_likes'     ];
+        
+        let cols = line.split(',');
+        let idx = 0, obj = {};
+        for(let col of cols){
+            switch(columns[idx]){
+                case 'num_critic_for_reviews':
+                case 'duration':
+                case 'director_facebook_likes':
+                case 'actor_3_facebook_likes':
+                case 'actor_1_facebook_likes':
+                case 'gross':
+                case 'num_voted_users':
+                case 'cast_total_facebook_likes':
+                case 'facenumber_in_poster':
+                case 'num_user_for_reviews':
+                case 'budget':
+                case 'actor_2_facebook_likes':
+                case 'movie_facebook_likes':
+                    try{
+                        col = parseInt(col);
+                    }
+                    catch(err){
+                        col = 0;
+                    }
+                    break;
+                case 'imdb_score':
+                case 'aspect_ratio':
+                    try{
+                        col = parseFloat(col);
+                    }
+                    catch(err){
+                        col = 0.00;
+                    }
+                    break;
+                default:
+                    col = col;
+                    break;
+                
+            
+            }
+            obj[columns[idx]] = col;
+            idx ++;
+        }
+        return obj;
+    }
+}
+
 
 const readline = require('readline').createInterface({
     input: process.stdin,
@@ -86,6 +189,11 @@ const readline = require('readline').createInterface({
     terminal:false
 })
 
+
+exports.test = function(args){
+    console.log(args);
+    process.exit(0);
+}
 
 ////////////////////////////////////////////////////////////
 // MODULE API: Resets all databases

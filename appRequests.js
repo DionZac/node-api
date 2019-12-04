@@ -17,7 +17,15 @@ var appReq      = {};
 
 
 
-exports.login = async (req,res) => {
+exports.registerRequestServices = function(server)
+{
+  server.all('/login', appReq.login);
+
+  server.all('/api/v1/*', api.call);
+}
+
+
+appReq.login = async (req,res) => {
 	let users = await objects.databases.users.get();
 
 	// delete users[0]['rowid'];

@@ -68,7 +68,7 @@ exports.readJSONfile = function(file){
 			}
       let json = data;
       try{
-        let json = JSON.parse(data);
+        json = JSON.parse(data);
       }
       catch(err){}
 			resolve(json);
