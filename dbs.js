@@ -500,18 +500,39 @@ exports.query = function(dbf , cols , data , callback , admin){
 // API: ** CUSTOM **  Query record from database
 ////////////////////////////////////////////////////////////
 //== Output handler
-exports.customQuery = function(dbf , out , data , callback){
-	 //== Checks
-  if(!callback) callback = function(){};
-	//== Issue query
-  console.log(out);
-	if(dbs.DB_ENGINE == ENGINE_MYSQL) {
-		db.query(out , data , function(sqlerr, rows) { handleReadOutput(dbf, sqlerr, rows, callback); });
-	} else 
-    if(dbs.DB_ENGINE == ENGINE_SQLITE) {
-		db.all(out , data , function(sqlerr, rows) { handleReadOutput(dbf, sqlerr, rows, callback); });
+
+exports.customQuery = function(dbf,out,data){
+  return new Promise( (resolve, reject) => {
+    if(dbs.DB_ENGINE == ENGINE_MYSQL){
+      db.query(out, data, (sqlerr, rows) => {
+        if(sqlerr) reject(err)
+        else resolve(rows);
+      })
     }
+    else if(dbs.DB_ENGINE == ENGINE_SQLITE){
+      db.all(out,data, (sqlerr, rows) => {
+        if(sqlerr) reject(err);
+        else resolve(rows);
+      })
+    }
+    else{
+      reject("Error: Invalid DB_ENGINE variable -> " , dbs.DB_ENGINE);
+    }
+  })
 }
+
+// exports.customQuery = function(dbf , out , data , callback){
+// 	 //== Checks
+//   if(!callback) callback = function(){};
+// 	//== Issue query
+//   console.log(out);
+// 	if(dbs.DB_ENGINE == ENGINE_MYSQL) {
+// 		db.query(out , data , function(sqlerr, rows) { handleReadOutput(dbf, sqlerr, rows, callback); });
+// 	} else 
+//     if(dbs.DB_ENGINE == ENGINE_SQLITE) {
+// 		db.all(out , data , function(sqlerr, rows) { handleReadOutput(dbf, sqlerr, rows, callback); });
+//     }
+// }
 
 exports.remove = function(dbf,rowid,callback){
 	if(!callback) callback = function(){};
@@ -547,7 +568,7 @@ exports.remove = function(dbf,rowid,callback){
 //  Operation - Remove column
 //    -- column : object (only fname:'field' attribute)
 ////////////////////////////////////////////////////////////
-exports.alter = function(dbf,operation,column,callb){
+exports.alter = async function(dbf,operation,column,callb){
   console.log('Column -> ' , column);
   if(!(typeof(column) == 'object') || !('fname' in column)){ callb('Invalid column object'); return;} /// validate column object
   if(!dbf || !(typeof(dbf) == 'object') || !('fields' in dbf) || !Array.isArray(dbf.fields)) { callb('Invalid column object'); return; } /// validate database table
@@ -557,13 +578,13 @@ exports.alter = function(dbf,operation,column,callb){
   var handle_transaction_error = function(){
     let out = 'ROLLBACK';
     handle_error_retries ++;
-    dbs.customQuery(dbf, out , [], function(err){
-      if(err){
-        console.log('Error -> ' , err);
-        if(handle_error_retries < 10) handle_transaction_error();
-      }
-      else console.log('TRANSACTION rolled-back.');
-    })
+
+    dbs.customQuery(dbf,out, [])
+        .then(() => console.log('TRANSACTION rolled-back.'))
+        .catch(err => {
+          console.log('Error -> ' , err);
+          if(handle_error_retries < 10) handle_transaction_error();
+        });
   }
 
   let fname = column.fname;
@@ -585,6 +606,67 @@ exports.alter = function(dbf,operation,column,callb){
       }
       break;
     case 1:
+
+      try{
+        // ## START TRANSACTION
+        let begin = 'BEGIN TRANSACTION;';
+        await dbs.customQuery(dbf,begin,[]);
+
+        // remove the updated column //
+        let temp = JSON.parse(JSON.stringify(dbf));
+        temp['name'] = '__' + dbf.name + '_backup__';
+        for(let i=0; i<temp.fields.length; i++) if(temp.fields[i].fname == fname) temp.fields.splice(i,1);
+
+        // ## CREATE THE BACKUP TABLE //
+        dbs.create(temp, async (err) => {
+          if(err) throw err;
+
+          // ## INSERT RECORDS //
+          let q = 'INSERT INTO ' + temp['name'] + ' SELECT';
+          for(let f of temp.fields) q += ' ' + f.fname + ',';
+          q = q.substr(0, q.length -1); /// remove the ','
+          q += ' FROM ' + dbf.name + ';';
+          await dbs.customQuery(dbf,q,[]);
+
+          // ## DROP THE OLD TABLE //
+          let drop = 'DROP TABLE ' + dbf.name + ';';
+          await dbs.customQuery(dbf,drop,[]);
+
+          // ## RENAME THE BACKUP TABLE //
+          let rename = 'ALTER TABLE ' + temp['name'] + ' RENAME TO ' + dbf.name + ';';
+          await dbs.customQuery(dbf,rename, []);
+          
+          // ## COMMIT THE CHANGES //
+          let commit = 'COMMIT;';
+          await dbs.customQuery(dbf, commit , []);
+
+          callb();
+        })
+      }
+      catch(err){
+        console.log('Error : Rolling back Database transaction.');
+        handle_transaction_error();
+        callb(err);
+      }
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       /// update column ////
       if(dbs.DB_ENGINE == ENGINE_SQLITE){
         //// SQLITE3 ///

@@ -4,6 +4,11 @@
             "dbname": "migrations",
             "endpoint": "migrations",
             "resource": "migrationsResource"
+        },
+        {
+            "dbname": "users",
+            "endpoint": "users",
+            "resource": "usersResource"
         }
     ]
 }

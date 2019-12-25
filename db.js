@@ -79,10 +79,9 @@ exports.newdb = class {
         out = generateQuery(out, config);
       }
 
-      dbs.customQuery(this.db, out, [], (err, rows) => {
-        if (err) { reject(err); return; }
-        else { resolve(rows); return; }
-      })
+      dbs.customQuery(this.db, out, [])
+        .then(rows => resolve(rows))
+        .catch(err => reject(err));
 
     })
   }
@@ -187,10 +186,9 @@ exports.newdb = class {
 
           console.log(out);
 
-          dbs.customQuery(this.db,out,[],(err,rows) => {
-              if(err) { reject(err); return;}
-              else{ resolve(rows); return;}
-          })
+          dbs.customQuery(this.db, out, [])
+            .then(rows => resolve(rows))
+            .catch(err => reject(err));
       })
   }
 
@@ -281,10 +279,9 @@ exports.newdb = class {
         out += ' LIMIT ' + parseInt(fields['limit'])
       }
 
-      dbs.customQuery(this.db, out , [], (err, rows) => {
-        if(err) { reject(err); return; }
-        resolve(rows);
-      })
+      dbs.customQuery(this.db, out, [])
+        .then(rows => resolve(rows))
+        .catch(err => reject(err));
 
       
     })
@@ -307,10 +304,9 @@ exports.newdb = class {
     if(!sql_data) sql_data = [];
 
     return new Promise( (resolve, reject) => {
-      dbs.customQuery(this.db,sql, sql_data, (err, rows) => {
-        if(err) { reject(err); return}
-        else{ resolve(rows); return; }
-      })
+      dbs.customQuery(this.db, sql, sql_data)
+        .then(rows => resolve(rows))
+        .catch(err => reject(err));
     })
   }
   
@@ -392,40 +388,48 @@ exports.newdb = class {
   begin(){
     return new Promise((resolve,reject) => {
       let query = 'BEGIN TRANSACTION;';
-      dbs.customQuery(this.db,query, [], (err) => {
-        if(err) { console.log('Error on begin transaction : ' , this.db); reject(err); return; }
-        else { resolve(); return; }
-      })
+      dbs.customQuery(this.db, query, [])
+        .then(rows => resolve(rows))
+        .catch(err => {
+          console.log('Error on begin transaction : ' , this.db);
+          reject(err);
+        });
     })
   }
 
   end(){
     return new Promise((resolve, reject) => {
       let query = 'END;';
-      dbs.customQuery(this.db, query, [], (err) => {
-        if(err) { console.log('Error on END transaction :  ' , this.db); reject(err); return;}
-        else { resolve(); return; }
-      })
+      dbs.customQuery(this.db, query, [])
+        .then(rows => resolve(rows))
+        .catch(err => {
+          console.log('Error on END transaction :  ' , this.db);
+          reject(err);
+        });
     })
   }
 
   rollback(){
     return new Promise((resolve, reject) => {
       let query = 'ROLLBACK;'
-      dbs.customQuery(this.db, query , [], (err) => {
-        if(err) { console.log('Error on ROLLBACK -> SQL transaction : ' , this.db); reject(err); return; }
-        else { resolve(); return;}
-      })
+      dbs.customQuery(this.db, query, [])
+        .then(rows => resolve(rows))
+        .catch(err => {
+          console.log('Error on ROLLBACK -> SQL transaction : ' , this.db);
+          reject(err);
+        });
     })
   }
 
   commit(){
     return new Promise((resolve, reject) => {
       let query = 'COMMIT;'
-      dbs.customQuery(this.db, query , [], (err) => {
-        if(err) { console.log('Error on COMMIT -> SQL transaction : ' , this.db); reject(err); return; }
-        else { resolve(); return;}
-      })
+      dbs.customQuery(this.db, query, [])
+        .then(rows => resolve(rows))
+        .catch(err => {
+          console.log('Error on COMMIT -> SQL transaction : ' , this.db);
+          reject(err);
+        });
     })
   }
 
