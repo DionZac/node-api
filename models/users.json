@@ -1,0 +1,24 @@
+{
+    "users": {
+        "name": "users",
+        "vname": "users",
+        "endpoint": "users",
+        "resourceName": "usersResource",
+        "inputGroups": [],
+        "fields": [
+            {
+                "fname": "test",
+                "type": "str",
+                "len": 160,
+                "def": "",
+                "hlp": "Just a test field so table is not empty"
+            },
+            {
+                "fname": "fullname",
+                "type": "str",
+                "len": 160,
+                "def": "Test field"
+            }
+        ]
+    }
+}
