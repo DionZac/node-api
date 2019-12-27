@@ -274,24 +274,25 @@ exports.resetDatabases = function(callback)
 ///// MIGRATION API : Update a field inside the table
 ///// -- No changes in the schema -- this function will be called only from apply/unapply migration
 ///////////////////////////////////////////////////
-module.exports.update_db_field = async function(dbname, fname, callback){
+module.exports.update_db_field = async function(dbname, field, callback){
     var self = this;
     app.initialize_only_database = true; /// do NOT initialize the HTTP server ///
     app.startup('', function(err){
         if(err) { console.log('Failed to initialize database'); process.exit(1); return; }
         
-        glib.readJSONfile(fname).then(model => {
-            try{ model = JSON.parse(model)}
-            catch(err){}
+        // let modelFile = 'models/' + dbname + '.json';
+        // glib.readJSONfile(modelFile).then(model => {
+            // try{ model = JSON.parse(model)}
+            // catch(err){}
             
             /// dbname check 
             if(!(dbname in objects.databases)){ console.log('Database table ' + dbname + ' not found'); process.exit(1); return; }
 
             var db = objects.databases[dbname];
-            db.updatecolumn(model).then(() => {
-                console.log('Successfully updated ' + dbname + ' table : ' + fname);
+            db.updatecolumn(field).then(() => {
+                console.log('Successfully updated ' + dbname + ' table : ' + field.fname);
                 if(callback) callback();
-                process.exit(0);
+                else process.exit(0);
             }).catch(err => {
                 console.log('Failed to update ' + dbname);
                 console.log(err);
@@ -300,11 +301,11 @@ module.exports.update_db_field = async function(dbname, fname, callback){
             })
 
 
-        }).catch(err => {
-            console.log('Failed to load model file');
-            console.log(err);
-            process.exit(1)
-        })
+        // }).catch(err => {
+            // console.log('Failed to load model file');
+            // console.log(err);
+            // process.exit(1)
+        // })
     })
 }
 

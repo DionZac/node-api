@@ -7,11 +7,18 @@
         "inputGroups": [],
         "fields": [
             {
-                "fname": "test",
+                "fname": "firstname",
+                "type": "i32",
+                "len": 120,
+                "def": "",
+                "hlp": "Help Text"
+            },
+            {
+                "fname": "lastname",
                 "type": "str",
                 "len": 160,
                 "def": "",
-                "hlp": "Just a test field so table is not empty"
+                "hlp": "Help Text"
             }
         ]
     }

@@ -604,7 +604,7 @@ exports.alter = async function(dbf,operation,column,callb){
         // remove the updated column //
         let temp = JSON.parse(JSON.stringify(dbf));
         temp['name'] = '__' + dbf.name + '_backup__';
-        for(let i=0; i<temp.fields.length; i++) if(temp.fields[i].fname == fname) temp.fields.splice(i,1);
+        // for(let i=0; i<temp.fields.length; i++) if(temp.fields[i].fname == fname) temp.fields.splice(i,1);
 
         // ## CREATE THE BACKUP TABLE //
         dbs.create(temp, async (err) => {

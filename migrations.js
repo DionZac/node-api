@@ -48,7 +48,7 @@ function run_migration(migration){
     var updatefield = function(operation){
         return new Promise( (resolve, reject) => {
             try{
-                main.update_db_field(operation.dbname, operation.field.fname, function(err){
+                main.update_db_field(operation.dbname, operation.field, function(err){
                     if(err) { reject(err); }
                     else resolve();
                 })
@@ -83,64 +83,69 @@ function run_migration(migration){
             return;
         }
 
-        for(let op of operations){
-            console.log('Running operation : ' + op.type + ' ' +  op.dbname);
-            switch(op.type){
-                case 'add_database':
-                    if(!('dbname' in op)){
-                        console.log('No dbname in add database migration at file : ' + migration);
+        try{
+            for(let op of operations){
+                console.log('Running operation : ' + op.type + ' ' +  op.dbname);
+                switch(op.type){
+                    case 'add_database':
+                        if(!('dbname' in op)){
+                            console.log('No dbname in add database migration at file : ' + migration);
+                            continue;
+                        }
+                        main.called_from_migration_file = true;
+                        await addmodel(op.dbname);
+                        break;
+                    case 'remove_field':
+                        if(!('dbname' in op)){
+                            console.log('No dbname in remove field at file : ' + migration);
+                            continue;
+                        }
+                        if(!('field' in op)){
+                            console.log('No fname in remove field at file : ' + migration);
+                            continue;
+                        }
+    
+                        main.called_from_migration_file = true;
+                        await removefield(op);
+                        await main.insert_database_schema(op.dbname);
+                        break;
+                    case 'add_field':
+                        if(!('dbname' in op)){
+                            console.log('No dbname in add field at file : ' + migration);
+                            continue;
+                        }
+                        if(!('field' in op)){
+                            console.log('No field in add field at file : ' + migration);
+                            continue;
+                        }
+                        main.called_from_migration_file = true;
+                        await addfield(op);
+                        await main.insert_database_schema(op.dbname);
+                        break;
+                    case 'update_field':
+                        if(!('dbname' in op)){
+                            console.log('No dbname in remove field at file : ' + migration);
+                            continue;
+                        }
+                        if(!('field' in op)){
+                            console.log('No fname in remove field at file : ' + migration);
+                            continue;
+                        }
+                        //// just update the database cause the changes will come ONLY from schema ////
+                        main.called_from_migration_file = true;
+                        await updatefield(op);
+                        await main.insert_database_schema(op.dbname);
+                        break;
+                    default:
+                        console.log('Unknown type of migration in : ' + migration);
                         continue;
-                    }
-                    main.called_from_migration_file = true;
-                    await addmodel(op.dbname);
-                    break;
-                case 'remove_field':
-                    if(!('dbname' in op)){
-                        console.log('No dbname in remove field at file : ' + migration);
-                        continue;
-                    }
-                    if(!('field' in op)){
-                        console.log('No fname in remove field at file : ' + migration);
-                        continue;
-                    }
-
-                    main.called_from_migration_file = true;
-                    await removefield(op);
-                    await main.insert_database_schema(op.dbname);
-                    break;
-                case 'add_field':
-                    if(!('dbname' in op)){
-                        console.log('No dbname in add field at file : ' + migration);
-                        continue;
-                    }
-                    if(!('field' in op)){
-                        console.log('No field in add field at file : ' + migration);
-                        continue;
-                    }
-                    main.called_from_migration_file = true;
-                    await addfield(op);
-                    await main.insert_database_schema(op.dbname);
-                    break;
-                case 'update_field':
-                    if(!('dbname' in op)){
-                        console.log('No dbname in remove field at file : ' + migration);
-                        continue;
-                    }
-                    if(!('field' in op)){
-                        console.log('No fname in remove field at file : ' + migration);
-                        continue;
-                    }
-                    //// just update the database cause the changes will come ONLY from schema ////
-                    main.called_from_migration_file = true;
-                    await updatefield(op);
-                    await main.insert_database_schema(op.dbname);
-                    break;
-                default:
-                    console.log('Unknown type of migration in : ' + migration);
-                    continue;
+                }
             }
+            resolve();
         }
-        resolve();
+        catch(err){
+            reject(err);
+        }
     })
 }
 
