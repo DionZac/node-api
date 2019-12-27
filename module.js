@@ -500,32 +500,34 @@ module.exports.insert_database_schema = function(dbname){
     return new Promise( (resolve, reject) => {
         const filename = './models/' + dbname + '.json';
         console.log('File name : ' , filename);
-        glib.readJSONfile(filename).then(table => {
+        glib.readJSONfile(filename).then(async (table) => {
             var data = table;
             try{ data = JSON.stringify(table, null , 4); }
             catch(err) { console.log(err); reject(err); return; }
             data = data.replaceAt(0, "'");
             data = data.replaceAt(data.length-1, "'");
             
-            let begin = "BEGIN TRANSACTION;";
-            dbs.customQuery(null,begin,[],function(err){
-                if(err) { console.log('Failed to begin SQL TRANSACTION'); reject(err); return; }
-                let r = 'DELETE FROM json_schema WHERE tablename=?';
-                dbs.customQuery(dbs.dbdefs.json_schema, r, [dbname], function(err){
-                    if(err){ console.log('Failed to remove from json_schema'); reject(err); return;}
-                    let query = "INSERT INTO json_schema (tablename, schema) VALUES('" + dbname + "'," + data + ");";
-                    dbs.customQuery(null, query, [], (err) => {
-                        if(err) { console.log('Error -> ' ,err); reject(err); return; }
-                        let commit = "COMMIT;";
-                        dbs.customQuery(dbs.dbdefs.json_schema, commit ,[],function(err){
-                            if(err) { console.log('Failed to COMMIT '); reject(err); return;}
-                            resolve();
-                        })
-                
-                    
-                    })
-                })
-            })
+            try{
+                // ## BEGIN TRANSACTION //
+                let begin = "BEGIN TRANSACTION;";
+                await dbs.customQuery(null,begin,[]);
+
+                // ## DELETE OLD json_schema RECORD //
+                let remove = 'DELETE FROM json_schema WHERE tablename=?';
+                await dbs.customQuery(dbs.dbdefs.json_schema,remove,[dbname]);
+
+                // ## INERT NEW json_schema RECORD -- the .json model file that we got //
+                let insert = "INSERT INTO json_schema (tablename,schema) VALUES('" + dbname + "'," + data + ");";
+                await dbs.customQuery(dbs.dbdefs.json_schema,insert,[]);
+
+                // ## COMMIT SQL QUERIES //
+                let commit = 'COMMIT;';
+                await dbs.customQuery(dbs.dbdefs.json_schema,commit,[]);
+            }
+            catch(err){
+                console.log('Error :::: ' , err);
+                reject(err);
+            }
         }).catch(err => {
             console.log('File ' + filename + ' not found');
             reject(err);

@@ -149,10 +149,12 @@ function add_migration_record(migration){
         let number = migration.split('_')[0];
 
         let out = 'INSERT INTO migrations(name,number) VALUES("' + migration + '","' + number + '")';
-        dbs.customQuery(dbs.dbdefs.migrations, out , [] , (err) => {
-            if(err) { console.log('Insert migration error ::: ' , err); reject(err); return; }
-            resolve();
-        }) 
+        dbs.customQuery(dbs.dbdefs.migrations, out , [])
+            .then(resolve)
+            .catch(err => {
+                console.log('Insert migration error ::: ', err);
+                reject(err);
+            })
     })
 }
 
@@ -167,10 +169,9 @@ module.exports.runmigrations = function(MIGRATION_NUMBER){
     try{
         app.initialize_only_database = true; /// do NOT initialize the HTTP web server
         app.startup('', () => {
+            /// Get the migration already applied ////
             let out = 'SELECT rowid,* FROM migrations;';
-            dbs.customQuery(dbs.dbdefs.migrations, out, [], async (err,rows) => {
-                if(err) migration_error(err);
-
+            dbs.customQuery(dbs.dbdefs.migrations, out, []).then(async (rows) => {
                 var migrations = [];
                 migrations = await glib.loadMigrationFiles();
 
@@ -195,6 +196,9 @@ module.exports.runmigrations = function(MIGRATION_NUMBER){
                 if(!at_least_one_migration) console.log('No migrations to apply.');
 
                 process.exit(0);
+            })
+            .catch(err => {
+                migration_error(err);
             })
         })
     }
@@ -285,8 +289,7 @@ module.exports.createmigrations = function(){
 
     glib.loadModelFiles().then( dbfiles =>{
         let query = "SELECT * FROM json_schema;";
-        dbs.customQuery(dbs.dbdefs.json_schema, query, [], (err,rows) => {
-            if(err) { console.log('Error -> ' ,err); process.exit(1);}
+        dbs.customQuery(dbs.dbdefs.json_schema, query, []).then(rows => {
             for(let dbfile in dbfiles){
                 let database = dbfiles[dbfile];
                 try{ database = JSON.parse(database)}
@@ -366,6 +369,11 @@ module.exports.createmigrations = function(){
             console.log('migrations -> ' , migrations);
             self.create_migration_files(migrations)
 
+        })
+        .catch(err => {
+            console.log('Failed to load the JSON schema database.');
+            console.log('Error -> ' ,err); 
+            process.exit(1);
         })
     }).catch(err => {
         console.log('Failed to load tables json files ' , err);

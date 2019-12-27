@@ -606,6 +606,8 @@ exports.alter = async function(dbf,operation,column,callb){
       }
       break;
     case 1:
+      /// update column ////
+      /// handle non-sqlite database ///
 
       try{
         // ## START TRANSACTION
@@ -648,101 +650,45 @@ exports.alter = async function(dbf,operation,column,callb){
         handle_transaction_error();
         callb(err);
       }
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      /// update column ////
-      if(dbs.DB_ENGINE == ENGINE_SQLITE){
-        //// SQLITE3 ///
-        let begin = 'BEGIN TRANSACTION;';
-        dbs.customQuery(dbf,begin,[], function(err){
-          if(err) { callb('Failed to begin transaction'); handle_transaction_error(); return; }
-          var temp = JSON.parse(JSON.stringify(dbf));
-          temp['name'] = '__' + dbf.name + '_backup__';
-          for(let i=0; i<temp.fields.length; i++) if(temp.fields[i].fname == fname) temp.fields.splice(i,1);
-          dbs.create(temp, function(err){
-            if(err) { callb('Failed to create temp table ----- ' , err); handle_transaction_error(); return; }
-            let q = 'INSERT INTO ' + temp['name'] + ' SELECT';
-            for(let f of temp.fields) q += ' ' + f.fname + ','
-            q = q.substr(0, q.length -1); /// remove ','
-
-            q += ' FROM ' + dbf.name + ';';
-            dbs.customQuery(dbf,q,[], function(err){
-              if(err) { callb('Failed to insert all records from original table ------ ' , err); handle_transaction_error();return; }
-              let drop = 'DROP TABLE ' + dbf.name + ';';
-              dbs.customQuery(dbf, drop , [], function(err){
-                if(err) { callb('Failed to drop ' + dbf.name); handle_transaction_error(); return; }
-                let rename = 'ALTER TABLE ' + temp['name'] + ' RENAME TO ' + dbf.name + ';';
-                dbs.customQuery(dbf,rename , [], function(err) {
-                  if(err) { callb('Failed to rename ' + temp.name + ' to ' + dbf.name); handle_transaction_error(); return; }
-                  let commit = 'COMMIT;';
-                  dbs.customQuery(dbf, commit, [], function(err){
-                    if(err) { callb('Failed to COMMIT ------ ', err); handle_transaction_error(); return; }
-                    callb();
-                  })
-                })
-              })
-              
-            }) 
-          })
-
-        })
-      }
       break;
     case 2:
         /// remove column ////
-      if(dbs.DB_ENGINE == ENGINE_SQLITE){
-        //// SQLITE3 ///
-        let begin = 'BEGIN TRANSACTION;';
-        dbs.customQuery(dbf,begin,[], function(err){
-          if(err) { callb('Failed to begin transaction'); handle_transaction_error(); return; }
-          var temp = JSON.parse(JSON.stringify(dbf));
-          temp['name'] = '__' + dbf.name + '_backup__';
-          for(let i=0; i<temp.fields.length; i++) if(temp.fields[i].fname == fname) temp.fields.splice(i,1);
-          dbs.create(temp, function(err){
-            if(err) { callb('Failed to create temp table ----- ' , err); handle_transaction_error(); return; }
-            let q = 'INSERT INTO ' + temp['name'] + ' SELECT';
-            for(let f of temp.fields) q += ' ' + f.fname + ','
-            q = q.substr(0, q.length -1); /// remove ','
+        /// handle non-sqlite database ///
+      
+      /// ## START DATABASE TRANSACTION ///
+      let begin = 'BEGIN TRANSACTION';
+      await dbs.customQuery(dbf,begin,[]);
 
-            q += ' FROM ' + dbf.name + ';';
-            dbs.customQuery(dbf,q,[], function(err){
-              if(err) { callb('Failed to insert all records from original table ------ ' , err); handle_transaction_error();return; }
-              let drop = 'DROP TABLE ' + dbf.name + ';';
-              dbs.customQuery(dbf, drop , [], function(err){
-                if(err) { callb('Failed to drop ' + dbf.name); handle_transaction_error(); return; }
-                let rename = 'ALTER TABLE ' + temp['name'] + ' RENAME TO ' + dbf.name + ';';
-                dbs.customQuery(dbf,rename , [], function(err) {
-                  if(err) { callb('Failed to rename ' + temp.name + ' to ' + dbf.name); handle_transaction_error(); return; }
-                  let commit = 'COMMIT;';
-                  dbs.customQuery(dbf, commit, [], function(err){
-                    if(err) { callb('Failed to COMMIT ------ ', err); handle_transaction_error(); return; }
-                    callb();
-                  })
-                })
-              })
-              
-            }) 
-          })
+      /// ## REMOVE THE COLUMN FROM database SCHEMA ////
+      let temp = JSON.parse(JSON.stringify(dbf));
+      temp['name'] = '__' + dbf.name + '__';
+      for(let i=0; i<temp.fields.length; i++) if(temp.fields[i].fname == fname) temp.fields.splice(i,1);
 
-        })
-      }
+      //// ## CREATE THE BACKUP TABLE ////
+      dbs.create(temp, async (err) => {
+        if(err) throw err;
+
+        // ## INSERT RECORDS //
+        let q = 'INSERT INTO ' + temp['name'] + ' SELECT';
+        for(let f of temp.fields) q += ' ' + f.fname + ',';
+        q = q.substr(0, q.length -1); /// remove the ',' 
+        q += ' FROM ' + dbf.name + ';';
+        await dbs.customQuery(dbf,q,[]);
+
+        // ## DROP OLD DATABASE TABLE ///
+        let drop = 'DROP TABLE ' + dbf.name + ';';
+        await dbs.customQuery(dbf,drop,[]);
+        
+        // ## RENAME THE BACKUP TABLE ///
+        let rename = 'ALTER TABLE ' + temp['name'] + ' RENAME TO '+ dbf.name + ';';
+        await dbs.customQuery(dbf,rename,[]);
+
+        // ## COMMIT THE SQL QUERIES ///
+        let commit = 'COMMIT';
+        await dbs.customQuery(dbf,commit,[]);
+
+        callb();
+      })
       break;
     default:
       callb('Invalid operation');
