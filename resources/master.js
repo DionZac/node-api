@@ -39,6 +39,19 @@ exports.masterResource = class {
         return true;
     }
 
+    __token_authorization__(self){
+        let params = glib.getRequestParams(self.req);
+        if(!('token' in params)){
+            console.log('No token in request');
+            return false;
+        }
+        
+        let token = params.token;
+        /// find a way to compare the token given with the user session token ///
+
+        return true;
+    }
+
     __authorization_failed__(self){
         let msg = 'Unathourized';
         this.__handle_error__(self.res, msg);

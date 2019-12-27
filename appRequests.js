@@ -6,7 +6,7 @@ var app         = require('./app.js');
 var glib        = require('./glib.js');
 var dbs         = require('./dbs.js');
 var objects		= require('./db.js');
-var api         = require('./api.js');
+var handler     = require('./handler.js');
 
 var appReq      = {};
 ////////////////////////////////////////////////////////////

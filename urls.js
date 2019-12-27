@@ -1,5 +1,5 @@
 var glib        = require('./glib.js');
-var api         = require('./api.js');
+var handler     = require('./handler.js');
 
 var appRequests = require('./appRequests');
 // var registered  = require('./registered.js');
@@ -7,7 +7,7 @@ var appRequests = require('./appRequests');
 exports.registerRequestServices = function(server){
     server.all('/login', appRequests.login);
 
-    server.all('/api/v1/*', api.call);
+    server.all('/api/v1/*', handler.call);
 }
 
 var get_function_name_from_method = function(method){

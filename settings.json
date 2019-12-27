@@ -3,5 +3,6 @@
     "PORT":9000,
     "DB_FILE":"menu.db",
     "LOGSQL":1,
-    "api_endpoint": "/api/v1/"
+    "api_endpoint": "/api/v1/",
+    "AUTHORIZATION_CLASS":"TokenAuthorization"
 }

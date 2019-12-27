@@ -26,7 +26,7 @@ var cluster = require('cluster');
 // App
 var dbs         = require('./dbs.js');
 var glib        = require('./glib.js');
-var api         = require('./api.js');
+var handler     = require('./handler.js');
 var urls        = require('./urls.js');
 
 var logFile = fs.createWriteStream('log.txt',{flags:'a'});
@@ -129,7 +129,7 @@ exports.startup = async function(args,callb)
     if(err) { console.log('Error') ; callb(err); return;}
     if(!app.initialize_only_database){
       app.serverInit(args);
-      api.intialize_resources();
+      handler.intialize_resources();
     }
     if(callb) callb();
   });
