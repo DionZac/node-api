@@ -10,6 +10,8 @@ var glib              = require("./glib.js");
 var objects           = require('./db.js');
 // var app               = require('./app.js');
 
+const colors =  require('colors');
+
 //** Module vars
 var dbs               = this;
 var init              = 0;
@@ -87,12 +89,7 @@ exports.init = async function(callb)
   dbdefs.dblist   = [];
 
   glib.loadModelFiles().then(dbfiles => {
-    // let databases = await glib.readJSONfile('./databases.json');
-    // try{databases = JSON.parse(databases);}
-    // catch(err){}
-
-    // console.log('files-> ' ,dbfiles);
-  
+    // from all db model files - push the json object to dbdefs.dblist ///
     for(let dbfile in dbfiles){
       let database = dbfiles[dbfile];
       try{ database = JSON.parse(database);}
@@ -116,7 +113,8 @@ exports.init = async function(callb)
     
     if(callb) callb();
   }).catch(err => {
-    console.log(err);
+    console.log('Failed to initialize databases.'.red);
+    console.log('Error -> ' , err);
   })
 
  
@@ -502,6 +500,7 @@ exports.query = function(dbf , cols , data , callback , admin){
 //== Output handler
 
 exports.customQuery = function(dbf,out,data){
+  console.log('Running : ', out);
   return new Promise( (resolve, reject) => {
     if(dbs.DB_ENGINE == ENGINE_MYSQL){
       db.query(out, data, (sqlerr, rows) => {
@@ -520,19 +519,6 @@ exports.customQuery = function(dbf,out,data){
     }
   })
 }
-
-// exports.customQuery = function(dbf , out , data , callback){
-// 	 //== Checks
-//   if(!callback) callback = function(){};
-// 	//== Issue query
-//   console.log(out);
-// 	if(dbs.DB_ENGINE == ENGINE_MYSQL) {
-// 		db.query(out , data , function(sqlerr, rows) { handleReadOutput(dbf, sqlerr, rows, callback); });
-// 	} else 
-//     if(dbs.DB_ENGINE == ENGINE_SQLITE) {
-// 		db.all(out , data , function(sqlerr, rows) { handleReadOutput(dbf, sqlerr, rows, callback); });
-//     }
-// }
 
 exports.remove = function(dbf,rowid,callback){
 	if(!callback) callback = function(){};
@@ -569,7 +555,8 @@ exports.remove = function(dbf,rowid,callback){
 //    -- column : object (only fname:'field' attribute)
 ////////////////////////////////////////////////////////////
 exports.alter = async function(dbf,operation,column,callb){
-  console.log('Column -> ' , column);
+
+  /// function call checks ///
   if(!(typeof(column) == 'object') || !('fname' in column)){ callb('Invalid column object'); return;} /// validate column object
   if(!dbf || !(typeof(dbf) == 'object') || !('fields' in dbf) || !Array.isArray(dbf.fields)) { callb('Invalid column object'); return; } /// validate database table
 

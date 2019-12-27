@@ -236,7 +236,7 @@ var generate_migration_name = async function(list){
     })
 }
 module.exports.create_migration_files = async function(list){
-    if(list.length == 0){ console.log('No changes in the models. \n 0 Migrations created'.red); process.exit(0);}
+    if(list.length == 0){ console.log('No changes in the models. \n0 Migrations created'.red); process.exit(0);}
 
     let script = '';
     //// GENERATE SCRIPT FOR MIGRATION FILE /////

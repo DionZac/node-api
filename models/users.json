@@ -12,12 +12,6 @@
                 "len": 160,
                 "def": "",
                 "hlp": "Just a test field so table is not empty"
-            },
-            {
-                "fname": "fullname",
-                "type": "str",
-                "len": 160,
-                "def": "Test field"
             }
         ]
     }

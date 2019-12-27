@@ -523,6 +523,8 @@ module.exports.insert_database_schema = function(dbname){
                 // ## COMMIT SQL QUERIES //
                 let commit = 'COMMIT;';
                 await dbs.customQuery(dbs.dbdefs.json_schema,commit,[]);
+
+                resolve();
             }
             catch(err){
                 console.log('Error :::: ' , err);
