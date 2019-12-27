@@ -12,278 +12,20 @@ var migration_error = function(err){
     process.exit(1);
 }
 
-///////////////////////////////////////////////////
-//// MIGRATION API : Applying a migration file.
-///////////////////////////////////////////////////
-function run_migration(migration){
-    var addmodel = function(dbname){
-        return new Promise((resolve ,reject) => {
-            try{
-                main.addmodel(dbname, function(err){
-                    if(err) { reject(err); }
-                    else resolve();
-                });
-            }
-            catch(err){
-                reject(err);
-            }
-        })
-    }
-
-    var addfield = function(operation){
-        console.log(operation);
-        return new Promise( async ( resolve , reject) => {
-            try{
-                main.add_db_field(operation.dbname, operation.field.fname, operation.field.type, operation.field.len, operation.field.def, function(err){
-                    if(err) { reject(err);}
-                    else resolve();
-                });
-            }
-            catch(err){
-                reject(err);
-            }
-        })
-    }
-
-    var updatefield = function(operation){
-        return new Promise( (resolve, reject) => {
-            try{
-                main.update_db_field(operation.dbname, operation.field, function(err){
-                    if(err) { reject(err); }
-                    else resolve();
-                })
-            }
-            catch(err){
-                reject(err);
-            }
-        })
-    }
-
-    var removefield = function(operation){
-        return new Promise( (resolve, reject) => {
-            try{
-                main.remove_db_field(operation.dbname, operation.field.fname, function(err){
-                    if(err) reject(err);
-                    else resolve()
-                })
-            }
-            catch(err){ reject(err);}
-        })
-    }
-
-    return new Promise( async (resolve, reject) => {
-        console.log('Running migration ' + migration);
-        /// update the schema on the database ///
-        /// update the database ////
-        var file = require('./migrations/' + migration);
-        var operations = file.migration.operations;
-        if(operations.length == 0) {
-            console.log('Empty migration file');
-            resolve();
-            return;
-        }
-
-        try{
-            for(let op of operations){
-                console.log('Running operation : ' + op.type + ' ' +  op.dbname);
-                switch(op.type){
-                    case 'add_database':
-                        if(!('dbname' in op)){
-                            console.log('No dbname in add database migration at file : ' + migration);
-                            continue;
-                        }
-                        main.called_from_migration_file = true;
-                        await addmodel(op.dbname);
-                        break;
-                    case 'remove_field':
-                        if(!('dbname' in op)){
-                            console.log('No dbname in remove field at file : ' + migration);
-                            continue;
-                        }
-                        if(!('field' in op)){
-                            console.log('No fname in remove field at file : ' + migration);
-                            continue;
-                        }
-    
-                        main.called_from_migration_file = true;
-                        await removefield(op);
-                        await main.insert_database_schema(op.dbname);
-                        break;
-                    case 'add_field':
-                        if(!('dbname' in op)){
-                            console.log('No dbname in add field at file : ' + migration);
-                            continue;
-                        }
-                        if(!('field' in op)){
-                            console.log('No field in add field at file : ' + migration);
-                            continue;
-                        }
-                        main.called_from_migration_file = true;
-                        await addfield(op);
-                        await main.insert_database_schema(op.dbname);
-                        break;
-                    case 'update_field':
-                        if(!('dbname' in op)){
-                            console.log('No dbname in remove field at file : ' + migration);
-                            continue;
-                        }
-                        if(!('field' in op)){
-                            console.log('No fname in remove field at file : ' + migration);
-                            continue;
-                        }
-                        //// just update the database cause the changes will come ONLY from schema ////
-                        main.called_from_migration_file = true;
-                        await updatefield(op);
-                        await main.insert_database_schema(op.dbname);
-                        break;
-                    default:
-                        console.log('Unknown type of migration in : ' + migration);
-                        continue;
-                }
-            }
-            resolve();
-        }
-        catch(err){
-            reject(err);
-        }
-    })
+///////////////////////////////////////////////////////
+// HELPER FUNCTION : 'unapply_migration'
+// ---- called by runmigrations npm script 
+// ---- when migrate back to specific migration number
+// ---- Gets a migration object and unapply it's function
+///////////////////////////////////////////////////////
+function undo_migration(migration){
+     
 }
 
-function add_migration_record(migration){
-    return new Promise( (resolve , reject) => {
-        let number = migration.split('_')[0];
-
-        let out = 'INSERT INTO migrations(name,number) VALUES("' + migration + '","' + number + '")';
-        dbs.customQuery(dbs.dbdefs.migrations, out , [])
-            .then(resolve)
-            .catch(err => {
-                console.log('Insert migration error ::: ', err);
-                reject(err);
-            })
-    })
-}
 
 ///////////////////////////////////////////////////////
-// CMD API : Migrations --- > Running available migrations
-///////////////////////////////////////////////////////
-var once = false;
-module.exports.runmigrations = function(MIGRATION_NUMBER){
-    if(once) return;
-    once = true;
-    /// MIGRATION NUMBER VARIABLE WILL BE USED TO MIGRATE IN SPECIFIC MIGRATION ///
-    try{
-        app.initialize_only_database = true; /// do NOT initialize the HTTP web server
-        app.startup('', () => {
-            /// Get the migration already applied ////
-            let out = 'SELECT rowid,* FROM migrations;';
-            dbs.customQuery(dbs.dbdefs.migrations, out, []).then(async (rows) => {
-                var migrations = [];
-                migrations = await glib.loadMigrationFiles();
-
-                var migrations_applied = rows;
-                var at_least_one_migration = false;
-
-                for(let migration of migrations){
-                    let num = migration.split('_')[0];
-                    let exists = false;
-                    for(let applied of migrations_applied){
-                        if(applied.number == num) exists = true;
-                    }
-
-                    if(!exists){
-                        at_least_one_migration = true;
-                        /// run this migration ////
-                        await run_migration(migration);
-                        await add_migration_record(migration);
-                    }
-                }
-
-                if(!at_least_one_migration) console.log('No migrations to apply.');
-
-                process.exit(0);
-            })
-            .catch(err => {
-                migration_error(err);
-            })
-        })
-    }
-    catch(err){
-        console.log('Migration run failed -> ');
-        console.log('Reason ::: ', err);
-    }
-
-}
-
-///////////////////////////////////////////////////////
-// CMD API : Migrations ---- > Creating migration file 
-///////////////////////////////////////////////////////
-var generate_migration_name = async function(list){
-    return new Promise( async (resolve, reject) => {
-        var migrations = await glib.loadMigrationFiles();
-        let name;
-        if(migrations.length < 9){
-            name = '000' + (migrations.length + 1);
-        }
-        else if (migrations.length < 99){
-            name = '00' + (migrations.length + 1);
-        }
-        else if (migrations.length < 999){
-            name = '0' + (migrations.length + 1);
-        }
-        else name = (migrations.length + 1);
-        
-        name += '_' + list[0].type + '_';
-        if('field' in list[0]) name += list[0].field.fname;
-        else name += list[0].dbname;
-
-        console.log('Name : ' , name);
-        resolve(name);
-    })
-}
-module.exports.create_migration_files = async function(list){
-    if(list.length == 0){ console.log('No changes in the models. \n0 Migrations created'.red); process.exit(0);}
-
-    let script = '';
-    //// GENERATE SCRIPT FOR MIGRATION FILE /////
-    let migration_name = await generate_migration_name(list);
-    
-    script = '\
-    exports.migration = {\n\
-        operations:[\n\ ';
-
-    list.forEach(migration => {
-        if(!('type' in migration)){
-            console.log('No migration type found');
-            return;
-        }
-
-        if(!('dbname' in migration)){
-            console.log('No migration dbname found');
-            return;
-        }
-
-        
-        script += JSON.stringify(migration,null , 4);
-        script += ',';
-    });
-
-
-    script += ']';
-    script += '}';
-    
-    try{
-        let path = './migrations/' + migration_name + '.js';
-        fs.writeFile(path, script, function(err){
-            if(err) console.log(err)
-            process.exit(0);
-        })
-    }
-    catch(err){ console.log('Error -> ' , err);}
-}
-
-//////////////////////////////////////////////////////////////
 // CMD API : Checking database(model.json) and databases schema(from schema_json table) and creates migration files if needed
-// ========================
+///////////////////////////////////////////////////////
 module.exports.createmigrations = function(){
     var settings = app.settings;
     var self = this;
@@ -387,3 +129,330 @@ module.exports.createmigrations = function(){
     })
 
 }
+
+///////////////////////////////////////////////////////
+// CREATE MIGRATIONS HELPER FUNCTION 
+// 
+// input  =====> List of migration operations objects
+// result =====> Creates a migration Script file in the migrations folder.
+//               Operations array of the Script will be the list of the objects given.
+////////////////////////////////////////////////////////
+
+module.exports.create_migration_files = async function(list){
+    if(list.length == 0){ console.log('No changes in the models. \n0 Migrations created'.red); process.exit(0);}
+
+    let script = '';
+    //// GENERATE SCRIPT FOR MIGRATION FILE /////
+    let migration_name = await generate_migration_name(list);
+    
+    script = '\
+    exports.migration = {\n\
+        operations:[\n\ ';
+
+    list.forEach(migration => {
+        if(!('type' in migration)){
+            console.log('No migration type found');
+            return;
+        }
+
+        if(!('dbname' in migration)){
+            console.log('No migration dbname found');
+            return;
+        }
+
+        
+        script += JSON.stringify(migration,null , 4);
+        script += ',';
+    });
+
+
+    script += ']';
+    script += '}';
+    
+    try{
+        let path = './migrations/' + migration_name + '.js';
+        fs.writeFile(path, script, function(err){
+            if(err) console.log(err)
+            process.exit(0);
+        })
+    }
+    catch(err){ console.log('Error -> ' , err);}
+}
+
+
+///////////////////////////////////////////////////////
+// CMD API : Migrations --- > Running available migrations
+///////////////////////////////////////////////////////
+
+var once = false;
+module.exports.runmigrations = function(MIGRATION_NUMBER){
+    if(once) return;
+    once = true;
+    /// MIGRATION NUMBER VARIABLE WILL BE USED TO MIGRATE IN SPECIFIC MIGRATION ///
+    try{
+        app.initialize_only_database = true; /// do NOT initialize the HTTP web server
+        app.startup('', () => {
+            /// Get the migration already applied ////
+            let out = 'SELECT rowid,* FROM migrations;';
+            dbs.customQuery(dbs.dbdefs.migrations, out, []).then(async (rows) => {
+                var migrations = [];
+                migrations = await glib.loadMigrationFiles();
+
+                var migrations_applied = rows;
+                var at_least_one_migration = false;
+
+                for(let migration of migrations){
+                    let num = migration.split('_')[0];
+                    let exists = false;
+                    for(let applied of migrations_applied){
+                        if(applied.number == num) exists = true;
+                    }
+
+                    if(!exists){
+                        at_least_one_migration = true;
+                        /// run this migration ////
+                        await run_migration(migration);
+                        await add_migration_record(migration);
+                    }
+                }
+
+                if(!at_least_one_migration) console.log('No migrations to apply.');
+
+                process.exit(0);
+            })
+            .catch(err => {
+                migration_error(err);
+            })
+        })
+    }
+    catch(err){
+        console.log('Migration run failed -> ');
+        console.log('Reason ::: ', err);
+    }
+
+}
+
+///////////////////////////////////////////////////////
+// HELPER FUNCTION : 'run_migration'
+// ---- called by runmigrations npm script
+// 
+// Input  ====> Migration object
+// Output ====> Runs the migration object operation
+//              Helper Functions:  'addmodel' / 'addfield' / 'updatefield' / 'removefield' 
+//                    
+///////////////////////////////////////////////////////
+
+function run_migration(migration){
+    return new Promise( async (resolve, reject) => {
+        console.log('Running migration ' + migration);
+        /// update the schema on the database ///
+        /// update the database ////
+        var file = require('./migrations/' + migration);
+        var operations = file.migration.operations;
+        if(operations.length == 0) {
+            console.log('Empty migration file');
+            resolve();
+            return;
+        }
+
+        try{
+            for(let op of operations){
+                console.log('Running operation : ' + op.type + ' ' +  op.dbname);
+                switch(op.type){
+                    case 'add_database':
+                        if(!('dbname' in op)){
+                            console.log('No dbname in add database migration at file : ' + migration);
+                            continue;
+                        }
+                        main.called_from_migration_file = true;
+                        await addmodel(op.dbname);
+                        break;
+                    case 'remove_field':
+                        if(!('dbname' in op)){
+                            console.log('No dbname in remove field at file : ' + migration);
+                            continue;
+                        }
+                        if(!('field' in op)){
+                            console.log('No fname in remove field at file : ' + migration);
+                            continue;
+                        }
+    
+                        main.called_from_migration_file = true;
+                        await removefield(op);
+                        await main.insert_database_schema(op.dbname);
+                        break;
+                    case 'add_field':
+                        if(!('dbname' in op)){
+                            console.log('No dbname in add field at file : ' + migration);
+                            continue;
+                        }
+                        if(!('field' in op)){
+                            console.log('No field in add field at file : ' + migration);
+                            continue;
+                        }
+                        main.called_from_migration_file = true;
+                        await addfield(op);
+                        await main.insert_database_schema(op.dbname);
+                        break;
+                    case 'update_field':
+                        if(!('dbname' in op)){
+                            console.log('No dbname in remove field at file : ' + migration);
+                            continue;
+                        }
+                        if(!('field' in op)){
+                            console.log('No fname in remove field at file : ' + migration);
+                            continue;
+                        }
+                        //// just update the database cause the changes will come ONLY from schema ////
+                        main.called_from_migration_file = true;
+                        await updatefield(op);
+                        await main.insert_database_schema(op.dbname);
+                        break;
+                    default:
+                        console.log('Unknown type of migration in : ' + migration);
+                        continue;
+                }
+            }
+            resolve();
+        }
+        catch(err){
+            reject(err);
+        }
+    })
+}
+
+
+///////////////////////////////////////////////////////
+// HELPER FUNCTION : 'addmodel'
+// ---- called by run_migration/unapply_migration
+// ---- creates a new model.
+///////////////////////////////////////////////////////
+
+function addmodel(dbname){
+    return new Promise((resolve ,reject) => {
+        try{
+            main.addmodel(dbname, function(err){
+                if(err) { reject(err); }
+                else resolve();
+            });
+        }
+        catch(err){
+            reject(err);
+        }
+    })
+}
+
+///////////////////////////////////////////////////////
+// HELPER FUNCTION : 'addfield'
+// ---- called by run_migration/unapply_migration
+// ---- creates a new field in a model.
+///////////////////////////////////////////////////////
+
+function addfield(operation){
+    console.log(operation);
+    return new Promise( async ( resolve , reject) => {
+        try{
+            main.add_db_field(operation.dbname, operation.field.fname, operation.field.type, operation.field.len, operation.field.def, function(err){
+                if(err) { reject(err);}
+                else resolve();
+            });
+        }
+        catch(err){
+            reject(err);
+        }
+    })
+}
+
+
+///////////////////////////////////////////////////////
+// HELPER FUNCTION : 'updatefield'
+// ---- called by run_migration/unapply_migration
+// ---- updates a field in a model.
+///////////////////////////////////////////////////////
+
+function updatefield(operation){
+    return new Promise( (resolve, reject) => {
+        try{
+            main.update_db_field(operation.dbname, operation.field, function(err){
+                if(err) { reject(err); }
+                else resolve();
+            })
+        }
+        catch(err){
+            reject(err);
+        }
+    })
+}
+
+///////////////////////////////////////////////////////
+// HELPER FUNCTION : 'removefield'
+// ---- called by run_migration/unapply_migration
+// ---- removes a field from a model.
+///////////////////////////////////////////////////////
+
+function removefield(operation){
+    return new Promise( (resolve, reject) => {
+        try{
+            main.remove_db_field(operation.dbname, operation.field.fname, function(err){
+                if(err) reject(err);
+                else resolve()
+            })
+        }
+        catch(err){ reject(err);}
+    })
+}
+
+
+///////////////////////////////////////////////////////
+// HELPER FUNCTION : 'add_migration_record'
+// ---- called by runmigrations npm script
+//
+// ---- creates a new record in the MIGRATIONS database table
+// ---- when a migration is applied successfully
+///////////////////////////////////////////////////////
+
+function add_migration_record(migration){
+    return new Promise( (resolve , reject) => {
+        let number = migration.split('_')[0];
+
+        let out = 'INSERT INTO migrations(name,number) VALUES("' + migration + '","' + number + '")';
+        dbs.customQuery(dbs.dbdefs.migrations, out , [])
+            .then(resolve)
+            .catch(err => {
+                console.log('Insert migration error ::: ', err);
+                reject(err);
+            })
+    })
+}
+
+
+///////////////////////////////////////////////////////
+// HELPER FUNCTION 'generate_migration_name'
+// 
+// ----- Generates the migration file name
+///////////////////////////////////////////////////////
+var generate_migration_name = async function(list){
+    return new Promise( async (resolve, reject) => {
+        var migrations = await glib.loadMigrationFiles();
+        let name;
+        if(migrations.length < 9){
+            name = '000' + (migrations.length + 1);
+        }
+        else if (migrations.length < 99){
+            name = '00' + (migrations.length + 1);
+        }
+        else if (migrations.length < 999){
+            name = '0' + (migrations.length + 1);
+        }
+        else name = (migrations.length + 1);
+        
+        name += '_' + list[0].type + '_';
+        if('field' in list[0]) name += list[0].field.fname;
+        else name += list[0].dbname;
+
+        console.log('Name : ' , name);
+        resolve(name);
+    })
+}
+
+
