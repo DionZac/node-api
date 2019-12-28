@@ -205,6 +205,11 @@ module.exports.runmigrations = function(MIGRATION_NUMBER){
                 var migrations_applied = rows;
                 var at_least_one_migration = false;
 
+                var last_migration_applied = -1;
+                if(rows && rows.length > 0){
+                    last_migration_applied = parseInt(rows[rows.length-1].number);
+                }
+
                 for(let migration of migrations){
                     let num = migration.split('_')[0];
                     let exists = false;
@@ -212,12 +217,15 @@ module.exports.runmigrations = function(MIGRATION_NUMBER){
                         if(applied.number == num) exists = true;
                     }
 
-                    if(!exists){
+                    //// if unapply check the migration number given ////
+                    if((!unapply && !exists) || (unapply && (MIGRATION_NUMBER < num))){
+                        //// if unapply migration -- update the migrations table to the given number 
+                        //// so the runmigrations will be triggered properly
+                        console.log('Running migration ', num);
                         at_least_one_migration = true;
                         /// run this migration ////
 
-                        migration.unapply = unapply; /// apply or unapply this migration
-                        await run_migration(migration);
+                        await run_migration(migration,unapply);
                         await add_migration_record(migration);
                     }
                 }
@@ -248,7 +256,7 @@ module.exports.runmigrations = function(MIGRATION_NUMBER){
 //                    
 ///////////////////////////////////////////////////////
 
-function run_migration(migration){
+function run_migration(migration,unapply){
     return new Promise( async (resolve, reject) => {
         console.log('Running migration ' + migration);
         /// update the schema on the database ///
@@ -263,12 +271,12 @@ function run_migration(migration){
 
         try{
             for(let op of operations){
-                if(migration.unapply){
+                if(unapply){
                     if(op.type == 'add_database') op.type = 'remove_database';
-                    if(op.type == 'remove_database') op.type = 'add_database';
-                    if(op.type == 'add_field') op.type = 'remove_field';
-                    if(op.type == 'remove_field') op.type = 'add_field';
-                    if(op.type == 'update_field'){
+                    else if(op.type == 'remove_database') op.type = 'add_database';
+                    else if(op.type == 'add_field') op.type = 'remove_field';
+                    else if(op.type == 'remove_field') op.type = 'add_field';
+                    else if(op.type == 'update_field'){
                         /// undo the update_field operation ///
                     }
                 }
