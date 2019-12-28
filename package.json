@@ -30,6 +30,7 @@
     "start": "nw",
     "reset": "run-func module.js reset",
     "addmodel": "run-func module.js addmodel",
+    "removemodel": "run-func module.js removemodel",
     "add_db_field": "run-func module.js add_db_field",
     "remove_db_field": "run-func module.js remove_db_field",
     "createmigrations": "run-func migrations.js createmigrations",

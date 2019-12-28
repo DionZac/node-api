@@ -187,6 +187,10 @@ module.exports.create_migration_files = async function(list){
 var once = false;
 module.exports.runmigrations = function(MIGRATION_NUMBER){
     if(once) return;
+
+    let unapply = false;
+    if(MIGRATION_NUMBER) unapply = true;
+
     once = true;
     /// MIGRATION NUMBER VARIABLE WILL BE USED TO MIGRATE IN SPECIFIC MIGRATION ///
     try{
@@ -211,6 +215,8 @@ module.exports.runmigrations = function(MIGRATION_NUMBER){
                     if(!exists){
                         at_least_one_migration = true;
                         /// run this migration ////
+
+                        migration.unapply = unapply; /// apply or unapply this migration
                         await run_migration(migration);
                         await add_migration_record(migration);
                     }
@@ -257,6 +263,15 @@ function run_migration(migration){
 
         try{
             for(let op of operations){
+                if(migration.unapply){
+                    if(op.type == 'add_database') op.type = 'remove_database';
+                    if(op.type == 'remove_database') op.type = 'add_database';
+                    if(op.type == 'add_field') op.type = 'remove_field';
+                    if(op.type == 'remove_field') op.type = 'add_field';
+                    if(op.type == 'update_field'){
+                        /// undo the update_field operation ///
+                    }
+                }
                 console.log('Running operation : ' + op.type + ' ' +  op.dbname);
                 switch(op.type){
                     case 'add_database':
@@ -266,6 +281,14 @@ function run_migration(migration){
                         }
                         main.called_from_migration_file = true;
                         await addmodel(op.dbname);
+                        break;
+                    case 'remove_database':
+                        if(!('dbname' in op)){
+                            console.log('No dbname in remove database migration at file : ' + migration);
+                            continue;
+                        }
+                        main.called_from_migration_file = true;
+                        await removemodel(op.dbname);
                         break;
                     case 'remove_field':
                         if(!('dbname' in op)){
@@ -321,6 +344,25 @@ function run_migration(migration){
     })
 }
 
+///////////////////////////////////////////////////////
+// HELPER FUNCTION : 'removemodel'
+// ---- called by run_migration/unapply_migration
+// ---- removes a model.
+///////////////////////////////////////////////////////
+
+function removemodel(dbname){
+    return new Promise((resolve,reject) => {
+        try{
+            main.removemodel(dbname, (err) => {
+                if(err) reject(err);
+                else resolve();
+            })
+        }
+        catch(err){
+            reject(err);
+        }
+    })
+}
 
 ///////////////////////////////////////////////////////
 // HELPER FUNCTION : 'addmodel'

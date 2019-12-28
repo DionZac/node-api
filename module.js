@@ -368,6 +368,56 @@ module.exports.remove_db_field = async function(dbname, fname, callback){
 }
 
 ///////////////////////////////////////////////////////
+//// CMD API       : 'npm run removemodel'
+//// MIGRATION API : 'removemodel' opearation
+//// RESULT        : 'Remove a table from the database'
+///////////////////////////////////////////////////////
+var remove_once = false;
+module.exports.removemodel = async function(dbname, callback){
+    const self = this;
+    if(remove_once && !callback) return; // if called from command-line
+    console.log('Removing a database : ', dbname);
+    remove_once = true;
+    app.initialize_only_database = true;
+
+    app.startup('', (err) => {
+        if(err) { console.log('Failed to initialize database'); process.exit(1);}
+
+        init().then( () => {
+            console.log('Success!');
+            if(callback){
+                callback();
+                return;
+            }
+            process.exit(0);
+        }).catch(err => {
+            console.log('Error ');
+            if(err) console.log(err);
+            if(callback){
+                callback(err);
+                return;
+            }
+
+            process.exit(1);
+        })
+    })
+
+    const init = async function(){
+
+        await remove_model_json(dbname);
+
+        await remove_resource_file(dbname);
+
+        await remove_registered_endpoint(dbname);
+        
+        await remove_database_table(dbname);
+        
+        await remove_from_json_schema(dbname);
+        /// remove row from json_schema table ///
+    }
+}
+
+///////////////////////////////////////////////////////
 //// CMD API & MIGRATION API : Adding a table in the database
 ///////////////////////////////////////////////////////
 var once = false;
@@ -408,11 +458,6 @@ module.exports.addmodel = async function(dbname, callback){
 
         await create_database_table(dbname);
     }
-    
-
-    
-
-
 }
 
 ///////////////////////////////////////////////////////
@@ -539,6 +584,166 @@ module.exports.insert_database_schema = function(dbname){
 }
 
 ////////////////////////////////////////////////////////////
+// HELPER FUNCTION : Remove database table
+//                   When removing a model
+// =========================================================
+
+var remove_database_table = function(dbname){
+    return new Promise((resolve, reject) => {
+        try{
+            let query = 'DROP TABLE ' + dbname;
+            
+            dbs.customQuery(dbs.dbdefs[dbname], query, [])
+                .then( () => {
+                    console.log('Removed table ' + dbname + ' from database');
+                    resolve();
+                })
+                .catch(err => {
+                    console.log('Failed to remove table ' + dbname + ' from database');
+                    reject(err);
+                })
+        }
+        catch(err){
+            console.log('Uncaught error : ' , err);
+            console.log('Failed to remove table ' + dbname + ' from database');
+            reject(err);
+        }
+    })
+}
+
+////////////////////////////////////////////////////////////
+// HELPER FUNCTION : Remove record from json_schema table
+//                   When removing a model
+// =========================================================
+
+var remove_from_json_schema = function(dbname){
+    return new Promise((resolve, reject) => {
+        try{
+            let query = 'DELETE FROM json_schema WHERE tablename="' + dbname + '"';
+            dbs.customQuery(null,query,[])
+                .then(() => {
+                    console.log('Removed successfully from json_schema');
+                    resolve();
+                })
+                .catch(err => {
+                    console.log('Failed to remove from json_schema');
+                    reject(err);
+                })
+        }
+        catch(err){
+            console.log("Uncaught Error ::: ", err);
+            reject(err);
+        }
+    })
+}
+
+
+////////////////////////////////////////////////////////////
+// HELPER FUNCTION : Remove resource.js file 
+//                   When removing a model
+// =========================================================
+
+var remove_resource_file = function(dbname){
+    return new Promise( (resolve, reject) => {
+        try{
+            let filename = 'resources/' + dbname + 'Resource.js';
+            fs.unlink(filename, (err) => {
+                if(err){
+                    console.log('Failed to remove Resource file ::: ' ,filename );
+                    reject(err);
+                    return;
+                }
+                console.log('Removed resource file ::: ', filename);
+                resolve();
+            })
+        }
+        catch(err){
+            console.log(err);
+            reject(err);
+        }
+    })
+}
+
+////////////////////////////////////////////////////////////
+// HELPER FUNCTION : Remove a model.json file 
+//                   When removing a model
+// ==========================================================
+
+var remove_model_json = function(dbname){
+    return new Promise( (resolve, reject) => {
+        try{
+            fs.unlink('./models/' + dbname + '.json', (err) => {
+                if(err){
+                    console.log('Failed to remove model JSON file ::: ' , dbname);
+                    console.log(err);
+                    reject(err);
+                }
+
+                console.log('Removed file :::: ' , dbname);
+                resolve();
+            })
+        }
+        catch(err){
+            console.log(err);
+            reject(err);
+        }
+    })
+}
+
+////////////////////////////////////////////////////////////
+// HELPER FUNCTION : Remove a registered endpoint from JSON file
+//                   When removing a model
+// ========================
+
+var remove_registered_endpoint = function(dbname){
+    return new Promise( (resolve, reject) => {
+        try{
+            glib.readJSONfile('./registered.json').then(registered => {
+                if(!registered || registered == ''){
+                    resolve();
+                    return; /// if empty file return
+                }
+
+                try{ registered = JSON.parse(registered)}
+                catch(err){};
+
+                if(!('registered_endpoints' in registered)){
+                    resolve();
+                    return; /// if no endpoints in registered.json -- return
+                }
+
+                let i=0;
+                for(let reg of registered.registered_endpoints){
+                    if(reg.dbname == dbname){
+                        console.log('Removing registered endpoint :::: ' , dbname);
+                        registered.registered_endpoints.splice(i,1);
+                    }
+                    i++;
+                }
+
+                registered = JSON.stringify(registered, null, 4);
+                glib.writeJSONfile('./registered.json', registered).then( () => {
+                    console.log('Completed removing registered endpoint :::: ', dbname);
+                    resolve();
+                }).catch(err => {
+                    console.log('Failed to remove register endpoint :::: ', dbname);
+                    console.log(err);
+                    reject(err);
+                })
+            }).catch(err => {
+                console.log('Failed to open JSON file');
+                console.log(err);
+                reject(err);
+            })
+        }
+        catch(err){
+            console.log(err);
+            reject(err);
+        }
+    })
+}
+
+////////////////////////////////////////////////////////////
 // HELPER FUNCTION : Add a registered endpoint in JSON file when adding a new model
 // ========================
 var update_registered_json = function(dbname) {
@@ -580,6 +785,10 @@ var update_registered_json = function(dbname) {
                     console.log(err);
                     reject(err);
                 })
+            }).catch(err => {
+                console.log('Failed to open JSON file');
+                console.log(err);
+                reject(err);
             })
         }
         catch(err){
