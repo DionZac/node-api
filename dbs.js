@@ -510,7 +510,7 @@ exports.customQuery = function(dbf,out,data){
     }
     else if(dbs.DB_ENGINE == ENGINE_SQLITE){
       db.all(out,data, (sqlerr, rows) => {
-        if(sqlerr) reject(err);
+        if(sqlerr) reject(sqlerr);
         else resolve(rows);
       })
     }
@@ -641,10 +641,19 @@ exports.alter = async function(dbf,operation,column,callb){
     case 2:
         /// remove column ////
         /// handle non-sqlite database ///
-      
+
+      /// ## get the database schema /////
+      try{
+        let json_schema = await objects.databases.json_schema.query(['tablename'],[dbf.name])
+        console.log(json_schema);
+        dbf = glib.parseModelSchema(json_schema[0].schema)[dbf.name];
+        console.log(dbf);
+      }
+      catch(err){ console.log('Failed to load JSON schema ::: ' , err); callb('JSON schema load failed'); return; }
+
       /// ## START DATABASE TRANSACTION ///
       let begin = 'BEGIN TRANSACTION';
-      await dbs.customQuery(dbf,begin,[]);
+      await dbs.customQuery(dbf,begin,[]);  
 
       /// ## REMOVE THE COLUMN FROM database SCHEMA ////
       let temp = JSON.parse(JSON.stringify(dbf));

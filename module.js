@@ -536,6 +536,53 @@ var create_resource = function(dbname){
 }
 
 ////////////////////////////////////////////////////////////
+// HELPER FUNCTION : Updates the json_schema database record
+//                   By getting the operation given to :
+//              a)  remove field -> Get the json schema record / remove the field / push the updated schema on the database
+//              b)  add field -> Get the json schema record / add the field / push the updated schema on the database
+//              c)  update field -> Get the json schema record / update the field / push the updated schema on the database
+// =========================================================
+
+module.exports.update_database_schema = function(operation){
+    return new Promise( async (resolve, reject) => {
+        let json_schema = await objects.databases.json_schema.query(['tablename'],[operation.dbname]);
+        let schema = glib.parseModelSchema(json_schema[0].schema)[operation.dbname];
+
+        switch(operation.type){
+            case 'add_field':
+                schema.fields.push(operation.field);
+                break;
+            case 'remove_field':
+                for(let i=0; i<schema.fields.length; i++){
+                    if(schema.fields[i].fname == operation.field.fname) schema.fields.splice(i,1);
+                }
+                break;
+            case 'update_field':
+                for(let i=0; i<schema.fields.length; i++){
+                    if(schema.fields[i].fname == operation.field.fname){
+                        schema.fields[i] = operation.field;
+                        i = schema.fields.length; // end loop
+                        break;
+                    }
+                }
+                break;
+        }
+
+        try{
+            let query = 'UPDATE json_schema SET schema=? WHERE tablename="' + operation.dbname + '"';
+            out = {};
+            out[operation.dbname] = schema;
+            await dbs.customQuery(dbs.dbdefs.json_schema,query,[JSON.stringify(out)]); 
+            resolve();
+        }
+        catch(err){
+            console.log('Failed to update JSON_SCHEMA database ::: ', err);
+            reject(err);
+        }
+    })
+}
+
+////////////////////////////////////////////////////////////
 // HELPER FUNCTION : Insert a record in json_schema database 
 // ========================
 module.exports.insert_database_schema = function(dbname){

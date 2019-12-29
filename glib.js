@@ -74,6 +74,20 @@ exports.readJSONfile = function(file){
 	})
 }
 
+// Parse the schema to replace the special characters ///
+exports.parseModelSchema = function(schema){
+  schema = schema.replace(/\\n/g, '');
+  schema = schema.replace(/\\r/g, '');
+  schema = schema.replace(/\\/g, '');
+
+  try{
+    schema = JSON.parse(schema);
+  }
+  catch(err){}
+
+  return schema;
+}
+
 /**
  * Get the @settings object 
  * Update the corresponding variables of 'dbs.js' class

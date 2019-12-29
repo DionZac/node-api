@@ -212,21 +212,47 @@ module.exports.runmigrations = function(MIGRATION_NUMBER){
 
                 for(let migration of migrations){
                     let num = migration.split('_')[0];
+                    
+                    if(MIGRATION_NUMBER && MIGRATION_NUMBER<last_migration_applied && MIGRATION_NUMBER < num) unapply = true;
+                    else unapply = false;
+
                     let exists = false;
                     for(let applied of migrations_applied){
                         if(applied.number == num) exists = true;
                     }
 
+
                     //// if unapply check the migration number given ////
-                    if((!unapply && !exists) || (unapply && (MIGRATION_NUMBER < num))){
-                        //// if unapply migration -- update the migrations table to the given number 
-                        //// so the runmigrations will be triggered properly
+                    if(!unapply && !exists){
+                        
+                        /// extra check if given number to apply a migration instead of running all available migrations ///
+                        if(MIGRATION_NUMBER && MIGRATION_NUMBER < num) continue;
+
                         console.log('Running migration ', num);
                         at_least_one_migration = true;
                         /// run this migration ////
 
-                        await run_migration(migration,unapply);
-                        await add_migration_record(migration);
+                        try{
+                            await run_migration(migration,false);
+                            await add_migration_record(migration);
+                        }
+                        catch(err){
+                            console.log('Failed to apply migration ::: ', num);
+                        }
+                    }
+                    else if(unapply){
+                        at_least_one_migration = true;
+                        console.log('Unaply migration ', num);
+                        try{
+                            await run_migration(migration, unapply);
+                            await remove_migration_record(migration);
+
+                            /// change the last applied to properly manage the 'unapply' variable ///
+                            last_migration_applied = parseInt(migration);
+                        }
+                        catch(err){
+                            console.log('Failed to unapply migration ::: ', num);
+                        }
                     }
                 }
 
@@ -251,6 +277,7 @@ module.exports.runmigrations = function(MIGRATION_NUMBER){
 // ---- called by runmigrations npm script
 // 
 // Input  ====> Migration object
+//        ====> "unapply" : Boolean variable if this migrations has to be unapplied instead
 // Output ====> Runs the migration object operation
 //              Helper Functions:  'addmodel' / 'addfield' / 'updatefield' / 'removefield' 
 //                    
@@ -310,7 +337,8 @@ function run_migration(migration,unapply){
     
                         main.called_from_migration_file = true;
                         await removefield(op);
-                        await main.insert_database_schema(op.dbname);
+                        // await main.insert_database_schema(op.dbname);
+                        await main.update_database_schema(op);
                         break;
                     case 'add_field':
                         if(!('dbname' in op)){
@@ -323,7 +351,8 @@ function run_migration(migration,unapply){
                         }
                         main.called_from_migration_file = true;
                         await addfield(op);
-                        await main.insert_database_schema(op.dbname);
+                        // await main.insert_database_schema(op.dbname);
+                        await main.update_database_schema(op);
                         break;
                     case 'update_field':
                         if(!('dbname' in op)){
@@ -337,7 +366,8 @@ function run_migration(migration,unapply){
                         //// just update the database cause the changes will come ONLY from schema ////
                         main.called_from_migration_file = true;
                         await updatefield(op);
-                        await main.insert_database_schema(op.dbname);
+                        // await main.insert_database_schema(op.dbname);
+                        await main.update_database_schema(op);
                         break;
                     default:
                         console.log('Unknown type of migration in : ' + migration);
@@ -451,6 +481,29 @@ function removefield(operation){
         catch(err){ reject(err);}
     })
 }
+
+///////////////////////////////////////////////////////
+// HELPER FUNCTION : 'remove_migration_record'
+// ---- called by runmigrations npm script
+//
+// ---- removes a new record from the MIGRATIONS database table
+// ---- when a migration is unapplied successfully
+///////////////////////////////////////////////////////
+
+function remove_migration_record(migration){
+    return new Promise( (resolve, reject) => {
+        let number = migration.split('_')[0];
+
+        let query = 'DELETE FROM migrations WHERE number="' + number + '"';
+        dbs.customQuery(null,query,[])
+            .then(resolve)
+            .catch( (err) => {
+                console.log('Remove migration record error ::: ', err);
+                reject(err);
+            })
+    })
+}
+
 
 
 ///////////////////////////////////////////////////////
