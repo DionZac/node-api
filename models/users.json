@@ -1,0 +1,26 @@
+{
+    "users": {
+        "name": "users",
+        "vname": "users",
+        "endpoint": "users",
+        "resourceName": "usersResource",
+        "allowed_without_authorization":["POST"],
+        "inputGroups": [],
+        "fields": [
+            {
+                "fname": "token",
+                "type": "str",
+                "len" : 2048,
+                "def" : "0123456789",
+                "hlp" : "Help Text"
+            },
+            {
+                "fname": "username",
+                "type": "str",
+                "len" : 160,
+                "def" : "",
+                "hlp" : "Username of the profile"
+            }
+        ]
+    }
+}

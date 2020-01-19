@@ -1,0 +1,9 @@
+{
+    "authorization_classes":[
+        {
+            "filename":"auth.js",
+            "name":"TokenAuthorization",
+            "classname":"TokenAuthorization"
+        }
+    ]
+}

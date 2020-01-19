@@ -4,5 +4,6 @@
     "DB_FILE":"menu.db",
     "LOGSQL":1,
     "api_endpoint": "/api/v1/",
+    "profiles_name":"users",
     "AUTHORIZATION_CLASS":"TokenAuthorization"
 }

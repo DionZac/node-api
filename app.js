@@ -122,7 +122,6 @@ exports.startup = async function(args,callb)
   
   glib.updateSettingsVariables(settings);
 
-
  /// Init major modules
  /// this should work with promises instead of callbacks ///
   app.databaseInit(args,function(err){
@@ -130,6 +129,7 @@ exports.startup = async function(args,callb)
     if(!app.initialize_only_database){
       app.serverInit(args);
       handler.intialize_resources();
+      handler.initializeAuthorizationClasses();
     }
     if(callb) callb();
   });

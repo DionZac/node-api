@@ -52,9 +52,10 @@ exports.masterResource = class {
         return true;
     }
 
-    __authorization_failed__(self){
-        let msg = 'Unathourized';
-        this.__handle_error__(self.res, msg);
+    __authorization_failed__(self, reason){
+        self.res.status(401);
+        if(reason) self.res.send(reason);
+        else self.res.send();
         return;
     }
     

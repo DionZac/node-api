@@ -2,10 +2,12 @@ var glib    = require('./glib.js');
 var objects = require('./db.js');
 var app     = require('./app.js');
 var urls    = require('./urls.js');
+var __auth__    = require('./auth.js');
 
 var resources = require('require-all')(__dirname + '/resources');
 
 exports.references = {}; /// resource references
+exports.auth = {}; /// authorization classes reference
 var handler = this;
 
 
@@ -21,7 +23,7 @@ exports.intialize_resources = async() => {
         var endpoints = registered.registered_endpoints;
         for(let end of endpoints){
             if('resource' in end){
-                if(!api[end.resource]){
+                if(!handler[end.resource]){
                     console.log('Creating resource class instance for ' + end.resource);
 
                     if(!(end.resource in resources)){
@@ -35,11 +37,30 @@ exports.intialize_resources = async() => {
                     }
 
                     var db = new resources[end.resource][end.resource]();
-                    api[end.dbname] = db;
+                    handler[end.dbname] = db;
                 }
             }
         }
     }
+}
+
+// ===========================
+// == INITIALIZE THE AUTHORIZATION CLASSES 
+// == AND STORE THEM GLOBALLY 
+// ===========================
+exports.initializeAuthorizationClasses = async (req,res) => {
+    var auth_classes = await glib.readJSONfile('./authorization.json');
+    console.log(auth_classes);
+    auth_classes = JSON.parse(auth_classes);
+
+    let AUTH_CLASSES = auth_classes['authorization_classes'];
+    for(let obj of AUTH_CLASSES){
+        console.log(obj);
+        /// initialize the auth class and store in the 'handler' object ///
+        handler.auth[obj.name] = new __auth__[obj.classname]();
+    }
+
+    console.log('Authorization classes are initialized');
 }
 
 
@@ -91,9 +112,11 @@ exports.call = async (req,res) => {
 var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
     if(!objects.databases[dbname]) { throw new Error("Resource " + dbname + "  model missing"); }
 
-    var resourceName = objects.databases[dbname].db.resourceName;
+    var dbmodel = objects.databases[dbname];
+
+    var resourceName = dbmodel.db.resourceName;
     
-    if(!api[dbname]) {
+    if(!handler[dbname]) {
         console.log('Creating resource class instance');
         console.log(resources);
         
@@ -109,24 +132,13 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
             return;
         }
         var db = new resources[resourceName][resourceName]();
-        api[dbname] = db;
+        handler[dbname] = db;
     }
     else{
-        var db = api[dbname];
+        var db = handler[dbname];
     }
 
-    /// check the settings.json for "AUTHORIZATION_CLASS" field
-    /// if exists use this class authorization function
-    /// to pass the authorization request 
-    /// this function can also be a default like 'tokenAuthorization'
-    //// that I will develop in the future.
-    if('__authorize__' in db){
-        if(!db.__authorize__(self)){
-            db.__authorization_failed__(self);
-            return;
-        }
-    }
-
+    /// Check if request Method is allowed on this endpoint ////
     try{
         method = method.toUpperCase();
         let allowed_methods = db['Meta'].allowed_methods;
@@ -139,6 +151,42 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
         db.__handle_not_allowed_method__(self.res,msg);
         return;
     }
+
+    /// check the settings.json for "AUTHORIZATION_CLASS" field
+    /// if exists use this class authorization function
+    /// to pass the authorization request 
+    /// this function can also be a default like 'tokenAuthorization'
+    //// that I will develop in the future.
+    var auth_class = app.settings.AUTHORIZATION_CLASS;
+    if(auth_class && auth_class in handler.auth){
+        /// check if model method is allowed without authorization ///
+        let allowed = false;
+        if('allowed_without_authorization' in dbmodel.db){
+            for(let m of dbmodel.db.allowed_without_authorization){
+                if(m == method.toUpperCase()) allowed = true;
+            }
+        }
+
+        if(!allowed){
+            var authorized_user;
+            try{
+                authorized_user = await handler.auth[auth_class].authorize(parameters);
+            }
+            catch(err){
+                db.__authorization_failed__(self,err);
+                return;
+            }
+            console.log('AUTHORIZED USER : ', authorized_user);
+        }
+    }
+    // if('__authorize__' in db){
+    //     if(!db.__authorize__(self)){
+    //         db.__authorization_failed__(self);
+    //         return;
+    //     }
+    // }
+
+    
 
     try{
         //// if failed to find the database reference given /////
@@ -186,7 +234,7 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
 }
 
 exports.serializeData = function(data,dbname){
-    let db = api[dbname];
+    let db = handler[dbname];
     let fields = objects.databases[dbname].db.fields;
 
     for(let f of fields){
@@ -205,7 +253,7 @@ exports.serializeData = function(data,dbname){
 
 exports.deserializeData =  function(data, dbname){
     return new Promise( async (resolve,  reject) => {
-        let db = api[dbname];
+        let db = handler[dbname];
         let fields = objects.databases[dbname].db.fields;
         
         let i = 0;
