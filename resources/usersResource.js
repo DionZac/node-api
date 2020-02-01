@@ -2,14 +2,20 @@
     var objects = require("../db.js");
     var dbs     = require("../dbs.js");
     var master  = require("./master.js");
-    
+
     exports.usersResource = class extends master.masterResource {
         constructor(){
             super();
             this.users = objects.databases.users;
+
+            this.Meta = {
+                'AUTHORIZATION_CLASS': 'none',
+                allowed_methods : ['GET', 'POST', 'PUT', 'DELETE']
+            }
+
             super.initialize(this.users);
         }
-        
+
         __authorize__(self){
             // authorization for all requests of users
             // "self" parameter is an object with two attributes
@@ -32,7 +38,7 @@
             }
         }
 
-        
+
 
         generateUserToken(){
             let tokenStringLength = 128;
@@ -54,4 +60,3 @@
             return 'Deserialized username : ' + username;
         }
     }
-    

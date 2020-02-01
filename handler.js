@@ -45,8 +45,8 @@ exports.intialize_resources = async() => {
 }
 
 // ===========================
-// == INITIALIZE THE AUTHORIZATION CLASSES 
-// == AND STORE THEM GLOBALLY 
+// == INITIALIZE THE AUTHORIZATION CLASSES
+// == AND STORE THEM GLOBALLY
 // ===========================
 exports.initializeAuthorizationClasses = async (req,res) => {
     var auth_classes = await glib.readJSONfile('./authorization.json');
@@ -104,7 +104,7 @@ exports.call = async (req,res) => {
         }
     }
 
-    
+
     else resource_call(map.fnname, map.dbname, params, self, req.method,map.kwargs);
 }
 
@@ -115,11 +115,11 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
     var dbmodel = objects.databases[dbname];
 
     var resourceName = dbmodel.db.resourceName;
-    
+
     if(!handler[dbname]) {
         console.log('Creating resource class instance');
         console.log(resources);
-        
+
         if(!(resourceName in resources)){
             console.log('Missing ' + resourceName + ' file on resources folder.');
             self.res.send('Failed');
@@ -154,11 +154,19 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
 
     /// check the settings.json for "AUTHORIZATION_CLASS" field
     /// if exists use this class authorization function
-    /// to pass the authorization request 
+    /// to pass the authorization request
     /// this function can also be a default like 'tokenAuthorization'
     //// that I will develop in the future.
+    /// NOTE : do a check if the endpoint model has an auth method first
+    /// before checking the settings JSON
+
     var auth_class = app.settings.AUTHORIZATION_CLASS;
-    if(auth_class && auth_class in handler.auth){
+
+    if('AUTHORIZATION_CLASS' in db['Meta']){
+        auth_class = db['Meta'].AUTHORIZATION_CLASS;
+    }
+
+    if(auth_class && auth_class in handler.auth && auth_class !== 'none'){
         /// check if model method is allowed without authorization ///
         let allowed = false;
         if('allowed_without_authorization' in dbmodel.db){
@@ -179,14 +187,7 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
             console.log('AUTHORIZED USER : ', authorized_user);
         }
     }
-    // if('__authorize__' in db){
-    //     if(!db.__authorize__(self)){
-    //         db.__authorization_failed__(self);
-    //         return;
-    //     }
-    // }
 
-    
 
     try{
         //// if failed to find the database reference given /////
@@ -204,7 +205,7 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
                 data = await db.filter_by(self, parameters, kwargs);
             }
             else data = await db[fn](self,parameters,kwargs);
-            
+
             if(data){
                 // Modify the data //
                 data = await handler.deserializeData(data,dbname);
@@ -255,7 +256,7 @@ exports.deserializeData =  function(data, dbname){
     return new Promise( async (resolve,  reject) => {
         let db = handler[dbname];
         let fields = objects.databases[dbname].db.fields;
-        
+
         let i = 0;
         for(let entry of data){
             for(let f of fields){

@@ -9,6 +9,11 @@
             "dbname": "users",
             "endpoint": "users",
             "resource": "usersResource"
+        },
+        {
+            "dbname": "testmodel1",
+            "endpoint": "testmodel1",
+            "resource": "testmodel1Resource"
         }
     ]
 }
