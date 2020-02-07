@@ -1,0 +1,23 @@
+{
+    "feed": {
+        "name": "feed",
+        "vname": "feed",
+        "endpoint": "feed",
+        "resourceName": "feedResource",
+        "inputGroups": [],
+        "fields": [
+            {
+                "fname":"token",
+                "type":"str",
+                "len":2048,
+                "def":""
+            },
+            {
+                "fname": "status_text",
+                "type": "str",
+                "len" : 4096,
+                "def" : ""
+            }
+        ]
+    }
+}

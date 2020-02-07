@@ -32,6 +32,14 @@ exports.masterResource = class {
     }
 
 
+    //// Error:404 (no results found) /////
+    __results_not_found__(self){
+        console.log('No results found');
+        self.res.status(404);
+        self.res.send('No results found')
+    }
+
+
     // ************************************* AUTHORIZE REQUEST ************************ //
     __authorize__(self){
         let params = glib.getRequestParams(self.req);
@@ -110,8 +118,23 @@ exports.masterResource = class {
 
         try{
             var t = await this.db.get(id);
-            // if(id == -1) var t = await this.db.get();
-            // else var t = await this.db.filter({rowid:id});
+
+            if(!t || t.length == 0){
+                this.__results_not_found__(self);
+                return;
+            }
+
+
+            //// if there are private fields in the resource -- do not return them in the GET response ///
+            if(this.private_fields && Array.isArray(this.private_fields)){
+                for(let pr of this.private_fields){
+                    for(let row of t){
+                        for(let fname in row){
+                            if(fname == pr) delete row[fname];
+                        }
+                    }
+                }
+            }
 
             console.log('Success');
             return t;
@@ -146,6 +169,12 @@ exports.masterResource = class {
 
         try{
             var t = await this.db.get(rowid);
+
+            if(!t || t.length == 0){
+                this.__results_not_found__(self);
+                return;
+            }
+
             console.log('Success');
             res.send(t);
         }
@@ -186,6 +215,5 @@ exports.masterResource = class {
             res.send(err);
         }
     }
-
     
 }

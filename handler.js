@@ -15,6 +15,12 @@ var _url     = require('url');
 
 const settings = app.settings;
 
+const modify_object_methods = [
+    'PUT',
+    'PATCH',
+    'DELETE'
+]
+
 exports.intialize_resources = async() => {
     var registered = await glib.readJSONfile('./registered.json');
     console.log(registered);
@@ -152,41 +158,62 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
         return;
     }
 
-    /// check the settings.json for "AUTHORIZATION_CLASS" field
-    /// if exists use this class authorization function
-    /// to pass the authorization request
-    /// this function can also be a default like 'tokenAuthorization'
-    //// that I will develop in the future.
-    /// NOTE : do a check if the endpoint model has an auth method first
-    /// before checking the settings JSON
+    
+    // =======================================
+    // == ENDPOINT AUTHORIZATION CHECK 
+    // ========================================
 
-    var auth_class = app.settings.AUTHORIZATION_CLASS;
+    var auth_classes = app.settings.AUTHORIZATION_CLASS;
+    var META_ATTRIBUTES = db.Meta;
 
-    if('AUTHORIZATION_CLASS' in db['Meta']){
-        auth_class = db['Meta'].AUTHORIZATION_CLASS;
+    if('Meta' in db && 'AUTHORIZATION_CLASS' in db['Meta']){
+        auth_classes = db['Meta'].AUTHORIZATION_CLASS;
     }
-
-    if(auth_class && auth_class in handler.auth && auth_class !== 'none'){
-        /// check if model method is allowed without authorization ///
-        let allowed = false;
-        if('allowed_without_authorization' in dbmodel.db){
-            for(let m of dbmodel.db.allowed_without_authorization){
-                if(m == method.toUpperCase()) allowed = true;
+    
+    if(Array.isArray(auth_classes)){
+        try{
+            for(let auth_class_name of auth_classes){
+                if(auth_class_name && auth_class_name in handler.auth && auth_class_name !== 'none'){
+                    var authorized_user;
+                    
+                    var __authorization__ = handler.auth[auth_class_name];
+                    if(modify_object_methods.includes(method)){
+                        /// if the request method is to manipulate an existing object
+                        /// check if modify_object function exists in authorization class
+                        /// to check for access to modify specific object 
+                        if('modify_object' in __authorization__){
+                            if(kwargs && 'rowid' in kwargs && kwargs.rowid > -1){
+                                let __obj__ = await objects.databases[dbname].get(kwargs.rowid);
+                                
+                                let has_access_to_this_object = __authorization__.modify_object(parameters, __obj__[0]);
+                                if(!has_access_to_this_object){
+                                    db.__authorization_failed__(self,'No access to modify this object')
+                                    return;
+                                }
+                            }
+                        }
+                    }
+        
+                    if('authorize' in __authorization__ && typeof(__authorization__.authorize) == 'function'){
+                        /// if safe methods exists in the meta attribute -- include them in authorization check ///
+                        if(META_ATTRIBUTES && 'SAFE_AUTH_METHODS' in META_ATTRIBUTES){
+                            authorized_user = await handler.auth[auth_class_name].authorize(parameters,method,META_ATTRIBUTES.SAFE_AUTH_METHODS);
+                        }
+                        else {
+                            authorized_user = await handler.auth[auth_class_name].authorize(parameters,method);
+                        }
+                    }
+                }
             }
         }
-
-        if(!allowed){
-            var authorized_user;
-            try{
-                authorized_user = await handler.auth[auth_class].authorize(parameters);
-            }
-            catch(err){
-                db.__authorization_failed__(self,err);
-                return;
-            }
-            console.log('AUTHORIZED USER : ', authorized_user);
+        catch(err){
+            console.log('Authorization failed');
+            db.__authorization_failed__(self,err);
+            return;
         }
     }
+
+    
 
 
     try{
@@ -215,7 +242,6 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
             }
             else{
                 console.log(`You need to RETURN data in __get__ function of resource ${dbname}`);
-                db.__function_not_found__(self.res);
                 return;
             }
         }

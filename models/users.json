@@ -4,7 +4,6 @@
         "vname": "users",
         "endpoint": "users",
         "resourceName": "usersResource",
-        "allowed_without_authorization":["POST"],
         "inputGroups": [],
         "fields": [
             {
