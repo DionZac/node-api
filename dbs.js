@@ -748,6 +748,7 @@ exports.newRecord = function(dbf, template)
   for(var i=0; i<dbf.fields.length; i++) {
     f = dbf.fields[i];
     if(template && (f.fname in template)) v = template[f.fname]; else v = f.def;
+    console.log(f.fname + ' : ' + v);
     rec[f.fname] = glib.cloneObj(v);
   }
   rec.rowid = 0;
@@ -765,6 +766,8 @@ exports.updateRecord = async function(dbf,template,rowid,callb)
     var database = objects.databases[dbf.name];
     var EXISTING_RECORD = await database.filter({rowid:rowid});
     EXISTING_RECORD = EXISTING_RECORD[0];
+    console.log('Previus -> ', EXISTING_RECORD);
+    EXISTING_RECORD = dbs._validate(dbf, EXISTING_RECORD);
     console.log(EXISTING_RECORD);
   }
   catch(err){
@@ -776,6 +779,7 @@ exports.updateRecord = async function(dbf,template,rowid,callb)
   for(var i=0; i<dbf.fields.length; i++) {
     f = dbf.fields[i];
     if(template && (f.fname in template)) v = template[f.fname]; else v = EXISTING_RECORD[f.fname];
+    console.log(v);
     rec[f.fname] = glib.cloneObj(v);
   }
   rec.rowid = EXISTING_RECORD.rowid;

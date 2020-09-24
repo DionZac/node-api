@@ -421,7 +421,7 @@ module.exports.removemodel = async function(dbname, callback){
 //// CMD API & MIGRATION API : Adding a table in the database
 ///////////////////////////////////////////////////////
 var once = false;
-module.exports.addmodel = async function(dbname, callback){
+module.exports.addmodel = async function(dbname, callback, fromMigration){
     const self = this;
     if(once && !callback) return; /// if called from Command-Line ///
     console.log('Adding a database ' + dbname);
@@ -450,7 +450,7 @@ module.exports.addmodel = async function(dbname, callback){
     const init = async function(){
         await create_resource(dbname);
     
-        await update_databases_json(dbname);
+        if(!fromMigration) await update_databases_json(dbname);
 
         await update_registered_json(dbname);
 

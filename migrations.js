@@ -92,6 +92,10 @@ module.exports.createmigrations = function(){
                                                 //// found the field
                                                 field_exist = true;
                                                 let diff = Object.keys(schema_field).filter(k => schema_field[k] !== json_field[k]);
+                                                for(let i=0; i<diff.length; i++){
+                                                    if(diff[i] == 'def') diff.splice(i,1);
+                                                }
+                                                
                                                 if(diff.length > 0){
                                                     console.log('DIFFERENCE -> ' , diff);
                                                     migrations.push({type:'update_field', dbname:dbname, field:json_field});
@@ -414,7 +418,7 @@ function addmodel(dbname){
             main.addmodel(dbname, function(err){
                 if(err) { reject(err); }
                 else resolve();
-            });
+            },true);
         }
         catch(err){
             reject(err);
