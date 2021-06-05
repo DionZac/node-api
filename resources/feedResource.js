@@ -17,7 +17,7 @@
             }
 
             this.private_fields = [
-                // 'token'
+                'token'
             ]
 
             super.initialize(this.feed);

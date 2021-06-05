@@ -15,8 +15,8 @@
             }
 
             this.private_fields = [
-                'rowid'
-                // 'token'
+                'rowid',
+                'token'
             ]
 
             super.initialize(this.users);
@@ -54,13 +54,5 @@
             }
 
             return rndString;
-        }
-
-        serialize_username(username){
-            return 'Serialized username : ' + username;
-        }
-
-        deserialize_username(username){
-            return 'Deserialized username : ' + username;
         }
     }

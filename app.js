@@ -98,16 +98,12 @@ exports.startup = async function(args,callb)
   
   else{
 	  if(!args) args = [];  // can plug in default
-  // glib.log("MEMORY START: "+util.inspect(process.memoryUsage()));
 
-  /// Init global context
-  GLOBAL.app = {
-    sockio:   null
-  };
 
  /// initialize settings from 'settings.json' file ///
   try{
     var settings = await glib.readJSONfile('settings.json')
+    console.log(settings);
     try{ settings = JSON.parse(settings);}
     catch(err){}
   }
@@ -117,7 +113,7 @@ exports.startup = async function(args,callb)
   }
   
   port = settings.PORT;
-  app.settings = settings;
+  this.settings = settings;
   Settings = settings; /// global inform 
   
   glib.updateSettingsVariables(settings);
