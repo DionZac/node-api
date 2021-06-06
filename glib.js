@@ -178,6 +178,7 @@ exports.dateTimeStr = function(d, format)
 exports.getRequestParams = function(req)
 {
   if(!('method' in req)) return({});
+  console.log(req.method)
   console.log("BODY -------------------------> " , req.query);
   if(!glib.objectIsEmpty(req.query)) return req.query;
   

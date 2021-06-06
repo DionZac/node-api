@@ -2,3 +2,5 @@ node_modules
 sqlite3.exe
 menu.db
 migrations/*
+
+ui/collection-ui/node_modules

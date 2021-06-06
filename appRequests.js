@@ -8,6 +8,8 @@ var dbs         = require('./dbs.js');
 var objects		= require('./db.js');
 var handler     = require('./handler.js');
 
+var login       = require('./resources/loginResource.js');
+
 var appReq      = {};
 ////////////////////////////////////////////////////////////
 // API: Register handlers for requests
@@ -15,8 +17,7 @@ var appReq      = {};
 
 
 exports.login = async (req,res) => {
-	let users = await objects.databases.users.get();
-
-	// delete users[0]['rowid'];
-	res.send(users[0]);
+	var params = glib.getRequestParams(req);
+	let _login = new login.loginResource();
+	_login.__insert__({req:req, res:res})
 }

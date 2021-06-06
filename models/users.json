@@ -14,11 +14,16 @@
                 "hlp" : "Help Text"
             },
             {
-                "fname": "username",
+                "fname":"email",
                 "type": "str",
-                "len" : 160,
-                "def" : "",
-                "hlp" : "Username of the profile"
+                "len": 2048,
+                "def":""
+            },
+            {
+                "fname":"password",
+                "type":"str",
+                "len": 164,
+                "def":""
             }
         ]
     }

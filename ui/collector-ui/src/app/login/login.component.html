@@ -1,0 +1,29 @@
+<div class="main-container">
+    <div class="login-container">
+        <div class="login-title-container">
+            <h3 class="login-title">Welcome to TabbyCol </h3>
+        </div>
+        <div class="login-box-container">
+            <div class="logo">
+                <img src="../../assets/hi.png" width="75" height="75" />
+            </div>
+
+            <div class="email-container login-form-field">
+                <mat-form-field appearance="fill">
+                  <mat-label>Enter your email</mat-label>
+                  <input matInput placeholder="pat@example.com" [formControl]="email" required>
+                </mat-form-field>
+            </div>
+            <div class="password-container login-form-field">
+                <mat-form-field appearance="fill">
+                    <mat-label>Enter your password</mat-label>
+                    <input type="password" matInput placeholder="your password" [formControl]="password" required>
+                </mat-form-field>
+            </div>
+
+            <div class="submit-container">
+                <a mat-stroked-button (click)="submit()" >Login</a>
+            </div>
+        </div>
+    </div>
+</div>

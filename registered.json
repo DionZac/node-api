@@ -6,14 +6,14 @@
             "resource": "migrationsResource"
         },
         {
-            "dbname": "users",
-            "endpoint": "users",
-            "resource": "usersResource"
-        },
-        {
             "dbname": "feed",
             "endpoint": "feed",
             "resource": "feedResource"
+        },
+        {
+            "dbname": "users",
+            "endpoint": "users",
+            "resource": "usersResource"
         }
     ]
 }

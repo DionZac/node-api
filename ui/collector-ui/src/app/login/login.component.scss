@@ -1,0 +1,66 @@
+@import "../../themes/theme.scss";
+@import "../../themes/login.scss";
+
+.main-container{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: $mainColor;
+}
+
+.login-container{
+    margin: auto;
+    margin-top: 9%;
+}
+
+.login-title-container{
+    margin: auto;
+    text-align: center;
+}
+
+.login-title{
+    font-size: $loginTitleSize;
+    font-weight: bold;
+    font-family: $font;
+}
+
+.login-box-container{
+    border-radius: 5px;
+    margin: auto;
+    max-width: 600px;
+    max-height: 900px;
+    height: 65%;
+    width: 20%;
+    min-height: 450px;
+    min-width: 300px;
+    box-shadow: 0px 3px 10px 1px #e6e6e6;
+    background: #fff;
+}
+
+.logo{
+    text-align: center;
+    padding-top: 32px;
+}
+
+.login-form-field{
+    padding-top: 32px;
+    margin-left: 24px;
+    margin-right: 24px;
+}
+
+.login-form-field mat-form-field{
+    width: 100%;
+}
+
+.password-container{
+    padding-top: 12px;
+}
+
+.submit-container{
+    width: 100%;
+    text-align: center;
+    margin-top: 24px;
+}
+
