@@ -22,13 +22,14 @@ const modify_object_methods = [
 ]
 
 exports.intialize_resources = async() => {
-    glib.serverlog("Initializing Resources...");
     var registered = await glib.readJSONfile('./registered.json');
 
     registered = JSON.parse(registered);
     if('registered_endpoints' in registered){
         var endpoints = registered.registered_endpoints;
         for(let end of endpoints){
+            if(end.endpoint == "migrations") continue;
+
             if('resource' in end){
                 if(!handler[end.resource]){
 
@@ -48,6 +49,8 @@ exports.intialize_resources = async() => {
             }
         }
     }
+
+    glib.serverlog("Resource classes are initialized",1)
 }
 
 // ===========================
@@ -55,7 +58,6 @@ exports.intialize_resources = async() => {
 // == AND STORE THEM GLOBALLY
 // ===========================
 exports.initializeAuthorizationClasses = async (req,res) => {
-    glib.serverlog("Initializing Authorization classes....")
     var auth_classes = await glib.readJSONfile('./authorization.json');
     auth_classes = JSON.parse(auth_classes);
 

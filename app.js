@@ -125,7 +125,7 @@ exports.startup = async function(args,callb)
       await handler.initializeAuthorizationClasses();
 
       app.serverInit(args);
-      glib.serverlog("Server started" , 1)
+      glib.serverlog(`Server started @port : ${port}` , 1)
     }
     if(callb) callb();
   });

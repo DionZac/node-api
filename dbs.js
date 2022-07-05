@@ -88,6 +88,7 @@ exports.init = async function(callb)
   dbdefs.dblist   = [];
 
   glib.loadModelFiles().then(dbfiles => {
+    glib.serverlog("Model files are loaded", 1);
     // from all db model files - push the json object to dbdefs.dblist ///
     for(let dbfile in dbfiles){
       let database = dbfiles[dbfile];
@@ -149,7 +150,6 @@ exports.connect = function(to, callback)
   if(dbs.DB_ENGINE == ENGINE_SQLITE) {
     db = new sqlite3.Database(to, function(err) {
       if(err) { glib.err("dbs: connect: error->"+err); callback(glib.lasterr()); return; }
-	    glib.serverlog("Successfully connected to SQLITE3 Database", 1);
       callback();
       return;
     });

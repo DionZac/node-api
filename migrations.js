@@ -116,7 +116,6 @@ module.exports.createmigrations = function(){
                     }
                 }
             }
-            glib.serverlog(migrations,2);
             self.create_migration_files(migrations)
 
         })
@@ -231,7 +230,6 @@ module.exports.runmigrations = function(MIGRATION_NUMBER){
                         /// extra check if given number to apply a migration instead of running all available migrations ///
                         if(MIGRATION_NUMBER && MIGRATION_NUMBER < num) continue;
 
-                        glib.serverlog('Running migration ' + num,2);
                         at_least_one_migration = true;
                         /// run this migration ////
 
@@ -288,7 +286,7 @@ module.exports.runmigrations = function(MIGRATION_NUMBER){
 
 function run_migration(migration,unapply){
     return new Promise( async (resolve, reject) => {
-        glib.serverlog('Running migration ' + migration,3);
+        glib.serverlog('Running migration ' + migration,2);
         /// update the schema on the database ///
         /// update the database ////
         var file = require('./migrations/' + migration);
