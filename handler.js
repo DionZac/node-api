@@ -93,7 +93,7 @@ exports.call = async (req,res) => {
     let temp = [];
     for(let _s of s) if(_s !== '') temp.push(_s);
     var map = urls.url_mapping(endpoint_database, req.method, temp);
-    glib.serverlog("URL map -> " + map, 2);
+    glib.serverlog("URL map -> " + JSON.stringify(map), 2);
 
     if('methods' in map){
         if(map.methods.length > 1){

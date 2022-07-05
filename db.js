@@ -261,7 +261,7 @@ exports.newdb = class {
   query(fields,values){
     return new Promise((resolve, reject) => {
       dbs.query(this.db, fields, values, (err,rows) => {
-        if(err) {glib.serverlog('Error on query database record from table : ' + this.db['name'] + '<br> Error : ' + err, 0); reject(err); return; }
+        if(err) {glib.serverlog('Error on query database record from table : ' + this.db['name'] + '<br> Error : ' + JSON.stringify(err), 0); reject(err); return; }
         else{ resolve(rows); return; }
       })
     })
@@ -319,7 +319,7 @@ exports.newdb = class {
   remove(rowid){
     return new Promise((resolve, reject) => {
       dbs.remove(this.db, rowid, (err) => {
-        if(err) {glib.serverlog('Error on remove database record from table : ' + this.db[name] + '<br> Error : ' + err, 0); reject(err); return; }
+        if(err) {glib.serverlog('Error on remove database record from table : ' + this.db[name] + '<br> Error : ' + JSON.stringify(err), 0); reject(err); return; }
         else{ resolve(); return; }
       })
     })
@@ -329,7 +329,7 @@ exports.newdb = class {
   addcolumn(column){
     return new Promise( (resolve, reject) => {
       dbs.alter(this.db, 0, column, (err) => {
-        if(err) { glib.serverlog('dbs : Add Column Failed -> ' + err, 0); reject(err); return ;}
+        if(err) { glib.serverlog('dbs : Add Column Failed -> ' + JSON.stringify(err), 0); reject(err); return ;}
         resolve();
       })
     })
@@ -338,7 +338,7 @@ exports.newdb = class {
   updatecolumn(column){
     return new Promise( (resolve , reject) => {
       dbs.alter(this.db, 1, column, (err) => {
-        if(err) { glib.serverlog('dbs: Update column failed -> ' + err , 0); reject(err); return;}
+        if(err) { glib.serverlog('dbs: Update column failed -> ' + JSON.stringify(err) , 0); reject(err); return;}
         resolve();
       })
     })
@@ -347,7 +347,7 @@ exports.newdb = class {
   removecolumn(column){
     return new Promise( (resolve, reject) => {
       dbs.alter(this.db, 2 , column , (err) => {
-        if(err) { glib.serverlog('dbs: Remove column Failed -> ' + err, 0); reject(err); return; }
+        if(err) { glib.serverlog('dbs: Remove column Failed -> ' + JSON.stringify(err), 0); reject(err); return; }
         resolve();
       })
     })

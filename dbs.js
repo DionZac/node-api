@@ -642,7 +642,7 @@ exports.alter = async function(dbf,operation,column,callb){
         let json_schema = await objects.databases.json_schema.query(['tablename'],[dbf.name])
         dbf = glib.parseModelSchema(json_schema[0].schema)[dbf.name];
       }
-      catch(err){ glib.serverlog('Failed to load JSON schema ::: ' + err, 1); callb('JSON schema load failed'); return; }
+      catch(err){ glib.serverlog('Failed to load JSON schema ::: ' + JSON.stringify(err), 1); callb('JSON schema load failed'); return; }
 
       /// ## START DATABASE TRANSACTION ///
       let begin = 'BEGIN TRANSACTION';

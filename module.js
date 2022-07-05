@@ -29,7 +29,7 @@ exports.reset = function()
   once=true;
 
   var callback = function(err){
-      if(err){ glib.serverlog('Error -> ' + err, 1); process.exit(1);}
+      if(err){ glib.serverlog('Error -> ' + JSON.stringify(err), 1); process.exit(1);}
       process.exit(0);
   }
 
@@ -181,7 +181,7 @@ var remove_once = false;
 module.exports.removemodel = async function(dbname, callback){
     const self = this;
     if(remove_once && !callback) return; // if called from command-line
-    glib.serverlog('Removing a database : ', dbname, 3);
+    glib.serverlog('Removing a database : '+ dbname, 3);
     remove_once = true;
     app.initialize_only_database = true;
 
@@ -393,7 +393,7 @@ module.exports.update_database_schema = function(operation){
             resolve();
         }
         catch(err){
-            glib.serverlog('Failed to update JSON_SCHEMA database ::: ' + err, 0);
+            glib.serverlog('Failed to update JSON_SCHEMA database ::: ' + JSON.stringify(err), 0);
             reject(err);
         }
     })
@@ -436,7 +436,7 @@ module.exports.insert_database_schema = function(dbname){
                 resolve();
             }
             catch(err){
-                glib.serverlog('Error :::: ' + err, 0);
+                glib.serverlog(err, 0);
                 reject(err);
             }
         }).catch(err => {
@@ -467,7 +467,7 @@ var remove_database_table = function(dbname){
                 })
         }
         catch(err){
-            glib.serverlog('Uncaught error : ' + err, 0);
+            glib.serverlog(err, 0);
             glib.serverlog('Failed to remove table ' + dbname + ' from database', 0);
             reject(err);
         }
@@ -494,7 +494,7 @@ var remove_from_json_schema = function(dbname){
                 })
         }
         catch(err){
-            glib.serverlog("Uncaught Error ::: " + err, 0);
+            glib.serverlog(err, 0);
             reject(err);
         }
     })

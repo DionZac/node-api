@@ -8,7 +8,7 @@ const colors = require('colors');
 
 
 var migration_error = function(err){
-    glib.serverlog("Migration error : -> " + err,0);
+    glib.serverlog("Migration error : -> " + JSON.stringify(err),0);
     process.exit(1);
 }
 
@@ -121,11 +121,11 @@ module.exports.createmigrations = function(){
         })
         .catch(err => {
             glib.serverlog('Failed to load the JSON schema database.',0);
-            glib.serverlog('Error -> ' + err,0); 
+            glib.serverlog('Error -> ' + JSON.stringify(err),0); 
             process.exit(1);
         })
     }).catch(err => {
-        glib.serverlog('Failed to load tables json files ' + err,0);
+        glib.serverlog('Failed to load tables json files ' + JSON.stringify(err),0);
         process.exit(1);
     })
     })
@@ -178,7 +178,7 @@ module.exports.create_migration_files = async function(list){
             process.exit(0);
         })
     }
-    catch(err){ glib.serverlog('Error -> ' + err,0);}
+    catch(err){ glib.serverlog('Error -> ' + JSON.stringify(err),0);}
 }
 
 
@@ -498,7 +498,7 @@ function remove_migration_record(migration){
         dbs.customQuery(null,query,[])
             .then(resolve)
             .catch( (err) => {
-                glib.serverlog('Remove migration record error ::: ' + err, 0);
+                glib.serverlog('Remove migration record error ::: ' + JSON.stringify(err), 0);
                 reject(err);
             })
     })
@@ -522,7 +522,7 @@ function add_migration_record(migration){
         dbs.customQuery(dbs.dbdefs.migrations, out , [])
             .then(resolve)
             .catch(err => {
-                glib.serverlog('Insert migration error ::: ' + err,0);
+                glib.serverlog('Insert migration error ::: ' + JSON.stringify(err),0);
                 reject(err);
             })
     })

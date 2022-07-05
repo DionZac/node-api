@@ -119,7 +119,7 @@ exports.startup = async function(args,callb)
  /// Init major modules
  /// this should work with promises instead of callbacks ///
   app.databaseInit(args,async function(err){
-    if(err) { glib.serverlog("Error", 0) ; callb(err); return;}
+    if(err) { glib.serverlog(err, 0) ; callb(err); return;}
     if(!app.initialize_only_database){
       await handler.intialize_resources();
       await handler.initializeAuthorizationClasses();
