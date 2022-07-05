@@ -313,8 +313,8 @@ exports.deserializeData =  function(data, dbname){
 exports.exclude_private_fields = (db, data) => {
     if(db.private_fields && Array.isArray(db.private_fields)){
         for(let pf of db.private_fields){
-            if(data[pf]){
-                delete data[pf];
+            for(let rec of data){
+                if(rec[pf]) delete rec[pf];
             }
         }
     }
