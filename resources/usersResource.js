@@ -9,7 +9,7 @@
             this.users = objects.databases.users;
 
             this.Meta = {
-                AUTHORIZATION_CLASS: 'TokenAuthorization',
+                AUTHORIZATION_CLASS: ['TokenAuthorization'],
                 SAFE_AUTH_METHODS:['GET'],
                 allowed_methods : ['GET', 'POST', 'PUT', 'DELETE']
             }
