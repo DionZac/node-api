@@ -48,8 +48,6 @@ exports.feedAuthorization = class {
     }
 
     modify_object(params,obj){
-        console.log(params);
-        console.log(obj);
         if(!('token' in params)) return false;
 
         if(params.token == obj.token) return true;

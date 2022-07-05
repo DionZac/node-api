@@ -22,23 +22,23 @@ const modify_object_methods = [
 ]
 
 exports.intialize_resources = async() => {
+    glib.serverlog("Initializing Resources...");
     var registered = await glib.readJSONfile('./registered.json');
-    console.log(registered);
+
     registered = JSON.parse(registered);
     if('registered_endpoints' in registered){
         var endpoints = registered.registered_endpoints;
         for(let end of endpoints){
             if('resource' in end){
                 if(!handler[end.resource]){
-                    console.log('Creating resource class instance for ' + end.resource);
 
                     if(!(end.resource in resources)){
-                        console.log('Missing ' + end.resource + ' file on resources folder');
+                        glib.serverlog('Missing ' + end.resource + ' file on resources folder', 0);
                         continue;
                     }
 
                     if(!(end.resource in resources[end.resource])){
-                        console.log('Missing ' + end.resource + ' class in resource class file');
+                        glib.serverlog('Missing ' + end.resource + ' class in resource class file', 0);
                         continue;
                     }
 
@@ -55,18 +55,17 @@ exports.intialize_resources = async() => {
 // == AND STORE THEM GLOBALLY
 // ===========================
 exports.initializeAuthorizationClasses = async (req,res) => {
+    glib.serverlog("Initializing Authorization classes....")
     var auth_classes = await glib.readJSONfile('./authorization.json');
-    console.log(auth_classes);
     auth_classes = JSON.parse(auth_classes);
 
     let AUTH_CLASSES = auth_classes['authorization_classes'];
     for(let obj of AUTH_CLASSES){
-        console.log(obj);
         /// initialize the auth class and store in the 'handler' object ///
         handler.auth[obj.name] = new __auth__[obj.classname]();
     }
 
-    console.log('Authorization classes are initialized');
+    glib.serverlog('Authorization classes are initialized', 1);
 }
 
 
@@ -92,7 +91,7 @@ exports.call = async (req,res) => {
     let temp = [];
     for(let _s of s) if(_s !== '') temp.push(_s);
     var map = urls.url_mapping(endpoint_database, req.method, temp);
-    console.log("URL map -> " , map);
+    glib.serverlog("URL map -> " + map, 2);
 
     if('methods' in map){
         if(map.methods.length > 1){
@@ -123,17 +122,15 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
     var resourceName = dbmodel.db.resourceName;
 
     if(!handler[dbname]) {
-        console.log('Creating resource class instance');
-        console.log(resources);
 
         if(!(resourceName in resources)){
-            console.log('Missing ' + resourceName + ' file on resources folder.');
+            glib.serverlog('Missing ' + resourceName + ' file on resources folder.', 0);
             self.res.send('Failed');
             return;
         }
 
         if(!(resourceName in resources[resourceName])){
-            console.log('Missing ' + resourceName + ' class in resource class file.');
+            glib.serverlog('Missing ' + resourceName + ' class in resource class file.', 0);
             self.res.send('Failed');
             return;
         }
@@ -148,9 +145,10 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
     try{
         method = method.toUpperCase();
         let allowed_methods = db['Meta'].allowed_methods;
-        console.log('Method : ' + method);
-        console.log(allowed_methods);
-        if(!allowed_methods.includes(method)) throw '';
+        if(!allowed_methods.includes(method)){
+            glib.serverlog("Not allowed method", 0);
+            throw '';
+        }
     }
     catch(err){
         let msg = 'Not allowed request method';
@@ -207,7 +205,7 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
             }
         }
         catch(err){
-            console.log('Authorization failed');
+            glib.serverlog('Authorization failed', 0);
             db.__authorization_failed__(self,err);
             return;
         }
@@ -235,13 +233,13 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
 
             if(data){
                 // Modify the data //
+                data = handler.exclude_private_fields(db, data);
                 data = await handler.deserializeData(data,dbname);
-                // console.log(data);
                 self.res.send(data);
                 return;
             }
             else{
-                console.log(`You need to RETURN data in __get__ function of resource ${dbname}`);
+                glib.serverlog(`You need to RETURN data in __get__ function of resource ${dbname}`, 0);
                 return;
             }
         }
@@ -249,7 +247,6 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
         /// serialize data for database ///
         if(fn == '__update__' || fn == '__insert__'){
             parameters = handler.serializeData(parameters,dbname);
-            console.log("PARAMETERS: " + JSON.stringify(parameters));
         }
 
 
@@ -304,6 +301,23 @@ exports.deserializeData =  function(data, dbname){
         resolve(data);
     })
 
+}
+
+/**
+ * 
+ * @param {*} db : Model Resource Instance
+ * @param {*} data : Data after database query
+ */
+exports.exclude_private_fields = (db, data) => {
+    if(db.private_fields && Array.isArray(db.private_fields)){
+        for(let pf of db.private_fields){
+            if(data[pf]){
+                delete data[pf];
+            }
+        }
+    }
+
+    return data;
 }
 
 exports.modifySendResponse = (res, dbname, fn) => {

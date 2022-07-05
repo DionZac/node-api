@@ -1,186 +1,9 @@
 // MODULE SCRIPT
 var glib = require('./glib.js');
 var fs = require('fs');
-var es = require('event-stream');
 var app = require('./app.js');
 var objects = require('./db.js');
 var dbs     = require('./dbs');
-var request = require('request');
-
-
-//// query all movies and get a list of all unique 'Genres'
-exports.getAllGenres = function(){
-    app.initialize_only_database = true;
-    app.startup('', async () => {
-        let movies = objects.databases.movies;
-        let records = await movies.get();
-        
-        let genres = [];
-    // console.log(records[0]);
-        for(let rec of records){
-            if(!('genres' in rec) || rec.genres == '') continue;
-
-            rec.genres = rec.genres.split('|');
-
-            if(Array.isArray(rec['genres']) && rec['genres'].length > 0){
-                for(let movie_genre of rec.genres){
-                    let exist = false;
-                    for(let genre of genres) if(genre == movie_genre) exist = true;
-                    if(!exist) genres.push(movie_genre);
-                }
-               
-            }
-        }
-
-        console.log(genres);
-    })
-}
-
-//// updates the movies images with image links
-exports.update_images =  function(){
-    /// Start from the first not-updated movie image ///
-    let last_movie_image_updated = 2532;
-
-    app.initialize_only_database = true;
-    app.startup('', async () => {
-        let db = objects.databases.movies;
-        let movies = await db.get();
-        let idx = 0
-        for(let movie of movies){
-            idx ++;
-            let link = movie['movie_imdb_link'];
-            if(idx < last_movie_image_updated || link.indexOf('http') !== 0) continue;
-            let image = await getImage(movie.movie_imdb_link);
-            movie.movie_imdb_link = image;
-            try{
-                await db.update(movie);
-            }
-            catch(err){};
-        }
-    })
-}
-
-/// navigate to the IMDB page of this movie virtually
-/// and get the URL of the image
-var getImage = function(url){
-    return new Promise( (resolve, reject) => {
-        // let url = 'http://www.imdb.com/title/tt0401729/?ref_=fn_tt_tt_1';
-        console.log(url);
-        request.get(url, (err,res) => {
-            // console.log('Error -> ' , err);
-            let html = res.body;
-            var jsdom   = require('jsdom');
-            const { JSDOM } = jsdom;
-            const { window } = new JSDOM();
-            const { document } = (new JSDOM(html)).window;
-            global.document = window;
-            var $ = jQuery = require('jquery')(window);
-
-            let image = jQuery(html).find('.poster').find('img').attr('src');
-
-            resolve(image);
-        })
-    })
-}
-
-exports.load = function(){
-    var totalLines = 0;
-    
-    var columns = [];
-    app.initialize_only_database = true;
-    app.startup('', () => {
-        var s = fs.createReadStream('./movie_metadata.csv')
-        .pipe(es.split())
-        .pipe(es.mapSync(async (line) => {
-            if(totalLines == 0) {
-                // console.log(line);
-                extractColumns(line);
-            }
-            
-            // if(totalLines == 4){
-                // console.log(line);
-            let m = extractMovie(line);
-            // console.log(m);
-            await insert(m);
-                
-                // process.exit(0)
-            // }
-            // let m = extractMovie(line);
-            totalLines ++;
-        }))
-    })
-
-
-    var insert = (obj) => {
-        return new Promise((resolve, reject) => {
-            setTimeout( async () => {
-                try{
-                    let db = objects.databases.movies;
-                    await db.insert(obj);
-                    resolve();
-                }
-                catch(err){
-                    reject(err);
-                }    
-            }, 500)
-        })
-    }
-    
-    var extractColumns = (line) => {
-        var cols = line.split(',');
-        for(var col of cols) columns.push(col);
-
-        console.log(columns);
-    }
-
-    var extractMovie = (line) => {
-        // let fields = ['director_name', 'duration', 'director_facebook_likes' , 'actor_3_facebook_likes', 'actor_2_name', 'actor_1_facebook_likes', 'genres', 'actor_1_name', 'movie_title', 'num_voted_users', 'cast_total_facebook_likes', 'actor_3_name', 'plot_key_words', 'movie_imdb_link', 'num_user_for_reviews', 'language', 'country', 'budget', 'title_year', 'actor_2_facebook_likes', 'imdb_score', 'movie_facebook_likes'     ];
-        
-        let cols = line.split(',');
-        let idx = 0, obj = {};
-        for(let col of cols){
-            switch(columns[idx]){
-                case 'num_critic_for_reviews':
-                case 'duration':
-                case 'director_facebook_likes':
-                case 'actor_3_facebook_likes':
-                case 'actor_1_facebook_likes':
-                case 'gross':
-                case 'num_voted_users':
-                case 'cast_total_facebook_likes':
-                case 'facenumber_in_poster':
-                case 'num_user_for_reviews':
-                case 'budget':
-                case 'actor_2_facebook_likes':
-                case 'movie_facebook_likes':
-                    try{
-                        col = parseInt(col);
-                    }
-                    catch(err){
-                        col = 0;
-                    }
-                    break;
-                case 'imdb_score':
-                case 'aspect_ratio':
-                    try{
-                        col = parseFloat(col);
-                    }
-                    catch(err){
-                        col = 0.00;
-                    }
-                    break;
-                default:
-                    col = col;
-                    break;
-                
-            
-            }
-            obj[columns[idx]] = col;
-            idx ++;
-        }
-        return obj;
-    }
-}
 
 
 const readline = require('readline').createInterface({
@@ -189,11 +12,6 @@ const readline = require('readline').createInterface({
     terminal:false
 })
 
-
-exports.test = function(args){
-    console.log(args);
-    process.exit(0);
-}
 
 ////////////////////////////////////////////////////////////
 // MODULE API: Resets all databases
@@ -211,7 +29,7 @@ exports.reset = function()
   once=true;
 
   var callback = function(err){
-      if(err){ console.log('Error -> ' , err); process.exit(1);}
+      if(err){ glib.serverlog('Error -> ' + err, 1); process.exit(1);}
       process.exit(0);
   }
 
@@ -254,7 +72,7 @@ exports.reset = function()
 exports.resetDatabases = function(callback)
 {
   var self = this;
-  console.log('Reset')
+  glib.serverlog('Reset')
   var idx = 0;
   var docreate = async function(idx) 
   {
@@ -278,34 +96,22 @@ module.exports.update_db_field = async function(dbname, field, callback){
     var self = this;
     app.initialize_only_database = true; /// do NOT initialize the HTTP server ///
     app.startup('', function(err){
-        if(err) { console.log('Failed to initialize database'); process.exit(1); return; }
+        if(err) { glib.serverlog('Failed to initialize database', 1); process.exit(1); return; }    
         
-        // let modelFile = 'models/' + dbname + '.json';
-        // glib.readJSONfile(modelFile).then(model => {
-            // try{ model = JSON.parse(model)}
-            // catch(err){}
-            
-            /// dbname check 
-            if(!(dbname in objects.databases)){ console.log('Database table ' + dbname + ' not found'); process.exit(1); return; }
-
-            var db = objects.databases[dbname];
-            db.updatecolumn(field).then(() => {
-                console.log('Successfully updated ' + dbname + ' table : ' + field.fname);
-                if(callback) callback();
-                else process.exit(0);
-            }).catch(err => {
-                console.log('Failed to update ' + dbname);
-                console.log(err);
-                if(callback) callback(err);
-                process.exit(1);
-            })
-
-
-        // }).catch(err => {
-            // console.log('Failed to load model file');
-            // console.log(err);
-            // process.exit(1)
-        // })
+        /// dbname check 
+        if(!(dbname in objects.databases)){ glib.serverlog('Database table ' + dbname + ' not found', 1); process.exit(1); return; }
+        
+        var db = objects.databases[dbname];
+        db.updatecolumn(field).then(() => {
+            glib.serverlog('Successfully updated ' + dbname + ' table : ' + field.fname, 0);
+            if(callback) callback();
+            else process.exit(0);
+        }).catch(err => {
+            glib.serverlog('Failed to update ' + dbname, 0);
+            glib.serverlog(err, 0);
+            if(callback) callback(err);
+            process.exit(1);
+        })
     })
 }
 
@@ -316,14 +122,14 @@ module.exports.add_db_field = async function(dbname, fname, type='str', len=160 
     var self = this;
     app.initialize_only_database = true; //// do not initialize the HTTP server //// 
     app.startup('', function(err){
-        if(err) { console.log('Failed to initialize database'); process.exit(1); return;}
+        if(err) { glib.serverlog('Failed to initialize database', 0); process.exit(1); return;}
         
         var temp = {fname:fname, type:type, len:len, def:def}
     
-        if(!(dbname in objects.databases)) { console.log('Database table ' + dbname + ' not found '); process.exit(1); return;}
+        if(!(dbname in objects.databases)) { glib.serverlog('Database table ' + dbname + ' not found ', 0); process.exit(1); return;}
         var db = objects.databases[dbname];
         db.addcolumn(temp).then( async () => {
-            console.log('Successfully added ' + fname + ' to ' + dbname);
+            glib.serverlog('Successfully added ' + fname + ' to ' + dbname, 1);
             if(self.called_from_migration_file){
                 if(callback) callback()
             }
@@ -332,7 +138,7 @@ module.exports.add_db_field = async function(dbname, fname, type='str', len=160 
             }
             // process.exit(0);
         }).catch(err => {
-            console.log('Failed to add column');
+            glib.serverlog('Failed to add column', 0);
             if(callback) callback(err);
             else process.exit(1);
         })
@@ -347,21 +153,20 @@ module.exports.remove_db_field = async function(dbname, fname, callback){
     var self = this;
     app.initialize_only_database = true; //// do NOT initialize the HTTP server ////
     app.startup('', (err) => {
-        if(err) { console.log('Failed to initialize database'); process.exit(1); return;}
+        if(err) { glib.serverlog('Failed to initialize database', 0); process.exit(1); return;}
         
         var temp = {fname:fname};
-        if(!(dbname in objects.databases)) { console.log("Database table " + dbname + ' not found'); process.exit(1); return;}
+        if(!(dbname in objects.databases)) { glib.serverlog("Database table " + dbname + ' not found', 0); process.exit(1); return;}
 
         var db = objects.databases[dbname];
         db.removecolumn(temp).then( () => {
-            console.log('Sucessfully removed ' + fname + ' from ' + dbname);
+            glib.serverlog('Sucessfully removed ' + fname + ' from ' + dbname, 1);
             if(self.called_from_migration_file){
                 if(callback) callback();
             }
             else self.remove_field(dbname, fname);
         }).catch(err => {
-            console.log('Failed to remove column');
-            // console.log(err);
+            glib.serverlog('Failed to remove column', 0);
             process.exit(1);
         })
     })
@@ -376,23 +181,21 @@ var remove_once = false;
 module.exports.removemodel = async function(dbname, callback){
     const self = this;
     if(remove_once && !callback) return; // if called from command-line
-    console.log('Removing a database : ', dbname);
+    glib.serverlog('Removing a database : ', dbname, 3);
     remove_once = true;
     app.initialize_only_database = true;
 
     app.startup('', (err) => {
-        if(err) { console.log('Failed to initialize database'); process.exit(1);}
+        if(err) { glib.serverlog('Failed to initialize database', 0); process.exit(1);}
 
         init().then( () => {
-            console.log('Success!');
             if(callback){
                 callback();
                 return;
             }
             process.exit(0);
         }).catch(err => {
-            console.log('Error ');
-            if(err) console.log(err);
+            if(err) glib.serverlog(err, 0);
             if(callback){
                 callback(err);
                 return;
@@ -440,21 +243,19 @@ var once = false;
 module.exports.addmodel = async function(dbname, callback, fromMigration){
     const self = this;
     if(once && !callback) return; /// if called from Command-Line ///
-    console.log('Adding a database ' + dbname);
+    glib.serverlog('Adding a database ' + dbname, 3);
     once = true;
     app.initialize_only_database = true; /// do NOT initialize the HTTP server ///
     app.startup('', (err) => {
-        if(err) { console.log('Failed to intialize database'); process.exit(1); return; }
+        if(err) { glib.serverlog('Failed to intialize database', 0); process.exit(1); return; }
         init().then( () => {
-            console.log('Success!');
             if(callback){
                 callback();
                 return;
             }
             process.exit(0);
         }).catch(err => {
-            console.log('Error ');
-            if(err) console.log(err);
+            if(err) glib.serverlog(err, 0);
             if(callback){
                 callback(err);
                 return;
@@ -481,7 +282,7 @@ module.exports.addmodel = async function(dbname, callback, fromMigration){
 /// ---- Called when a database table is created
 ///////////////////////////////////////////////////////
 var create_resource = function(dbname){
-    console.log('Creating resource .....');
+    glib.serverlog('Creating resource .....' , 3);
     let name = dbname + 'Resource';
     let path = './resources/' + name + '.js';
 
@@ -526,7 +327,7 @@ var create_resource = function(dbname){
                         })
                     }
                     else{
-                        console.log('Terminate process');
+                        glib.serverlog('Terminate process');
                         reject();
                     }  
                  })
@@ -592,7 +393,7 @@ module.exports.update_database_schema = function(operation){
             resolve();
         }
         catch(err){
-            console.log('Failed to update JSON_SCHEMA database ::: ', err);
+            glib.serverlog('Failed to update JSON_SCHEMA database ::: ' + err, 0);
             reject(err);
         }
     })
@@ -608,11 +409,10 @@ module.exports.insert_database_schema = function(dbname){
 
     return new Promise( (resolve, reject) => {
         const filename = './models/' + dbname + '.json';
-        console.log('File name : ' , filename);
         glib.readJSONfile(filename).then(async (table) => {
             var data = table;
             try{ data = JSON.stringify(table, null , 4); }
-            catch(err) { console.log(err); reject(err); return; }
+            catch(err) { glib.serverlog(err,0); reject(err); return; }
             data = data.replaceAt(0, "'");
             data = data.replaceAt(data.length-1, "'");
             
@@ -636,11 +436,11 @@ module.exports.insert_database_schema = function(dbname){
                 resolve();
             }
             catch(err){
-                console.log('Error :::: ' , err);
+                glib.serverlog('Error :::: ' + err, 0);
                 reject(err);
             }
         }).catch(err => {
-            console.log('File ' + filename + ' not found');
+            glib.serverlog('File ' + filename + ' not found', 0);
             reject(err);
         })
     })
@@ -658,17 +458,17 @@ var remove_database_table = function(dbname){
             
             dbs.customQuery(dbs.dbdefs[dbname], query, [])
                 .then( () => {
-                    console.log('Removed table ' + dbname + ' from database');
+                    glib.serverlog('Removed table ' + dbname + ' from database' , 1);
                     resolve();
                 })
                 .catch(err => {
-                    console.log('Failed to remove table ' + dbname + ' from database');
+                    glib.serverlog('Failed to remove table ' + dbname + ' from database' , 0);
                     reject(err);
                 })
         }
         catch(err){
-            console.log('Uncaught error : ' , err);
-            console.log('Failed to remove table ' + dbname + ' from database');
+            glib.serverlog('Uncaught error : ' + err, 0);
+            glib.serverlog('Failed to remove table ' + dbname + ' from database', 0);
             reject(err);
         }
     })
@@ -685,16 +485,16 @@ var remove_from_json_schema = function(dbname){
             let query = 'DELETE FROM json_schema WHERE tablename="' + dbname + '"';
             dbs.customQuery(null,query,[])
                 .then(() => {
-                    console.log('Removed successfully from json_schema');
+                    glib.serverlog('Removed successfully from json_schema' , 1);
                     resolve();
                 })
                 .catch(err => {
-                    console.log('Failed to remove from json_schema');
+                    glib.serverlog('Failed to remove from json_schema', 0);
                     reject(err);
                 })
         }
         catch(err){
-            console.log("Uncaught Error ::: ", err);
+            glib.serverlog("Uncaught Error ::: " + err, 0);
             reject(err);
         }
     })
@@ -712,16 +512,16 @@ var remove_resource_file = function(dbname){
             let filename = 'resources/' + dbname + 'Resource.js';
             fs.unlink(filename, (err) => {
                 if(err){
-                    console.log('Failed to remove Resource file ::: ' ,filename );
+                    glib.serverlog('Failed to remove Resource file ::: ' + filename , 0);
                     reject(err);
                     return;
                 }
-                console.log('Removed resource file ::: ', filename);
+                glib.serverlog('Removed resource file ::: ' + filename,0);
                 resolve();
             })
         }
         catch(err){
-            console.log(err);
+            glib.serverlog(err, 0);
             reject(err);
         }
     })
@@ -737,17 +537,17 @@ var remove_model_json = function(dbname){
         try{
             fs.unlink('./models/' + dbname + '.json', (err) => {
                 if(err){
-                    console.log('Failed to remove model JSON file ::: ' , dbname);
-                    console.log(err);
+                    glib.serverlog('Failed to remove model JSON file ::: ' + dbname, 0);
+                    glib.serverlog(err,0);
                     reject(err);
                 }
 
-                console.log('Removed file :::: ' , dbname);
+                glib.serverlog('Removed file :::: ' + dbname,0);
                 resolve();
             })
         }
         catch(err){
-            console.log(err);
+            glib.serverlog(err,0);
             reject(err);
         }
     })
@@ -778,7 +578,7 @@ var remove_registered_endpoint = function(dbname){
                 let i=0;
                 for(let reg of registered.registered_endpoints){
                     if(reg.dbname == dbname){
-                        console.log('Removing registered endpoint :::: ' , dbname);
+                        glib.serverlog('Removing registered endpoint :::: ' + dbname,0);
                         registered.registered_endpoints.splice(i,1);
                     }
                     i++;
@@ -786,21 +586,21 @@ var remove_registered_endpoint = function(dbname){
 
                 registered = JSON.stringify(registered, null, 4);
                 glib.writeJSONfile('./registered.json', registered).then( () => {
-                    console.log('Completed removing registered endpoint :::: ', dbname);
+                    glib.serverlog('Completed removing registered endpoint :::: ' + dbname,0);
                     resolve();
                 }).catch(err => {
-                    console.log('Failed to remove register endpoint :::: ', dbname);
-                    console.log(err);
+                    glib.serverlog('Failed to remove register endpoint :::: '+ dbname,0);
+                    glib.serverlog(err,0);
                     reject(err);
                 })
             }).catch(err => {
-                console.log('Failed to open JSON file');
-                console.log(err);
+                glib.serverlog('Failed to open JSON file', 0);
+                glib.serverlog(err,0);
                 reject(err);
             })
         }
         catch(err){
-            console.log(err);
+            glib.serverlog(err,0);
             reject(err);
         }
     })
@@ -830,8 +630,7 @@ var update_registered_json = function(dbname) {
                 let i = 0;
                 for(let reg of registered.registered_endpoints){
                     if(reg.dbname == dbname){
-                        console.log('Overwriding registered endpoint for ' + dbname);
-                        // console.log('Aborting process =====> ' + dbname + ' already exists');
+                        glib.serverlog('Overwriding registered endpoint for ' + dbname, 3);
                         registered.registered_endpoints.splice(i,1);
                     }
                     i++;
@@ -841,21 +640,21 @@ var update_registered_json = function(dbname) {
                 registered = JSON.stringify(registered, null ,4);
 
                 glib.writeJSONfile('./registered.json', registered).then(() => {
-                    console.log('Completed adding a registered endpoint');
+                    glib.serverlog('Completed adding a registered endpoint', 1);
                     resolve();
                 }).catch(err => {
-                    console.log('Failed to register endpoint');
-                    console.log(err);
+                    glib.serverlog('Failed to register endpoint',0);
+                    glib.serverlog(err,0);
                     reject(err);
                 })
             }).catch(err => {
-                console.log('Failed to open JSON file');
-                console.log(err);
+                glib.serverlog('Failed to open JSON file',0);
+                glib.serverlog(err,0);
                 reject(err);
             })
         }
         catch(err){
-            console.log(err);
+            glib.serverlog(err,0);
             reject();
         }
     }) 
@@ -870,8 +669,8 @@ var create_database_table = function(dbname){
         var filename = './models/' + dbname + '.json';
         glib.readJSONfile(filename).then( database => {
             if(database && database !== '' && typeof(database) == 'object' && dbname in database){
-                console.log('Terminating process cause of failure');
-                console.log('Database ' + dbname + ' already exists');
+                glib.serverlog('Terminating process cause of failure',0);
+                glib.serverlog('Database ' + dbname + ' already exists',0);
                 reject();
                 return;
             }
@@ -900,8 +699,8 @@ var update_databases_json = function(dbname){
         if(fs.existsSync(filename)){
             glib.readJSONfile(filename).then(databases =>{
                 if(databases && databases !== '' && typeof(databases) == 'object' && dbname in databases){
-                    console.log('Terminating process cause of failure');
-                    console.log('Database ' + dbname + ' already exists');
+                    glib.serverlog('Terminating process cause of failure',0);
+                    glib.serverlog('Database ' + dbname + ' already exists', 0);
                     reject();
                     return;
                 }
@@ -935,16 +734,16 @@ var update_databases_json = function(dbname){
                     databases = JSON.stringify(databases, null , 4);
 
                     glib.writeJSONfile(filename, databases).then(() => {
-                        console.log('Completed database model insert.');
+                        glib.serverlog('Completed database model insert.',1);
                         resolve();
                     }).catch(err => {
-                        console.log(err);
+                        glib.serverlog(err,0);
                         reject();
 
                     })
                 }
             }).catch(err => {
-                console.log(err);
+                glib.serverlog(err,0);
                 reject();
             })
         }
@@ -965,10 +764,10 @@ var update_databases_json = function(dbname){
             databases[dbname] = temp;
             databases = JSON.stringify(databases, null ,4);
             glib.writeJSONfile(filename, databases).then(() => {
-                console.log('Completed database model insert.');
+                glib.serverlog('Completed database model insert.',1);
                 resolve();
             }).catch(err => {
-                console.log(err);
+                glib.serverlog(err,0);
                 reject();
 
             })
@@ -978,7 +777,7 @@ var update_databases_json = function(dbname){
 
 
 var missing_field = function(field){
-    console.log("Missing field : " + field);
+    glib.serverlog("Missing field : " + field,0);
     process.exit(1);
 }
 
@@ -997,7 +796,7 @@ module.exports.remove_field = function(dbname, fname){
         try{ databases = JSON.parse(databases)}
         catch(err) {}
         if(!databases || databases == '' || typeof(databases) !== 'object' || !(dbname in databases)){
-            console.log('No database ' + dbname + ' found');
+            glib.serverlog('No database ' + dbname + ' found',0);
             process.exit(1);
         }
 
@@ -1013,15 +812,15 @@ module.exports.remove_field = function(dbname, fname){
         
         databases = JSON.stringify(databases, null ,4)
         glib.writeJSONfile(filename, databases).then( async () => {
-            console.log('Successfully removed ' + fname + ' from ' + dbname);
+            glib.serverlog('Successfully removed ' + fname + ' from ' + dbname,1);
             await self.insert_database_schema(dbname);
             process.exit(0);
         }).catch(err => {
-            console.log('Failed to write in JSON file.');
+            glib.serverlog('Failed to write in JSON file.',0);
             process.exit(1);
         })
     }).catch( err => {
-        console.log('File + ' + filename + ' not found.');
+        glib.serverlog('File + ' + filename + ' not found.',0);
         process.exit(1);
     })
 }
@@ -1033,7 +832,7 @@ module.exports.remove_field = function(dbname, fname){
 // ========================
 module.exports.add_field = function(dbname, fname, type, len, def, hlp){
     var self = this;
-    console.log('Adding field to model');
+    glib.serverlog('Adding field to model',3);
     if(!dbname) missing_field('"dbname" ------> Table name');
     if(!fname) missing_field('"fname" ----> Field name');
     if(!type) missing_field('"type" ----> Field type');
@@ -1065,7 +864,7 @@ module.exports.add_field = function(dbname, fname, type, len, def, hlp){
         try{ databases = JSON.parse(databases)}
         catch(err) {}
         if(!databases || databases == '' || typeof(databases) !== 'object' || !(dbname in databases)){
-            console.log('No database ' + dbname + ' found');
+            glib.serverlog('No database ' + dbname + ' found',0);
             process.exit(1);
         }
 
@@ -1074,7 +873,7 @@ module.exports.add_field = function(dbname, fname, type, len, def, hlp){
 
         for(let f of fields){
             if(f.fname == fname){
-                console.log('Field ' + fname + ' already exists in ' + dbname);
+                glib.serverlog('Field ' + fname + ' already exists in ' + dbname,0);
                 process.exit(1);
             }
         }
@@ -1093,16 +892,16 @@ module.exports.add_field = function(dbname, fname, type, len, def, hlp){
         
         // glib.writeJSONfile(filenname, databases).then(() => {
         glib.writeJSONfile(filename,databases).then( async () => {
-            console.log('Successfully added field ' + fname);
+            glib.serverlog('Successfully added field ' + fname,1);
             await self.insert_database_schema(dbname);
             process.exit(0);
         }).catch(err => {
-            console.log('Failed to add ' + fname + ' in ' +dbname);
-            console.log(err);
+            glib.serverlog('Failed to add ' + fname + ' in ' +dbname,0);
+            glib.serverlog(err,0);
             process.exit(1);
         })
     }).catch(err => {
-        console.log('File ' + filename + ' not found');
+        glib.serverlog('File ' + filename + ' not found',0);
         process.exit(1);
     })
 }

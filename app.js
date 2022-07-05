@@ -103,12 +103,10 @@ exports.startup = async function(args,callb)
  /// initialize settings from 'settings.json' file ///
   try{
     var settings = await glib.readJSONfile('settings.json')
-    console.log(settings);
     try{ settings = JSON.parse(settings);}
     catch(err){}
   }
   catch(err){
-    // console.log(err);
     throw new Error("Invalid or missing 'settings.json' file.")
   }
   
@@ -120,12 +118,14 @@ exports.startup = async function(args,callb)
 
  /// Init major modules
  /// this should work with promises instead of callbacks ///
-  app.databaseInit(args,function(err){
-    if(err) { console.log('Error') ; callb(err); return;}
+  app.databaseInit(args,async function(err){
+    if(err) { glib.serverlog("Error", 0) ; callb(err); return;}
     if(!app.initialize_only_database){
+      await handler.intialize_resources();
+      await handler.initializeAuthorizationClasses();
+
       app.serverInit(args);
-      handler.intialize_resources();
-      handler.initializeAuthorizationClasses();
+      glib.serverlog("Server started" , 1)
     }
     if(callb) callb();
   });
@@ -143,34 +143,13 @@ exports.startup = async function(args,callb)
 exports.databaseInit = function(args, callb)
 {
   /// make this work with promises instead of callbacks ////
-  console.log(args)
   dbs.init(function(){
-    // var x ;
-    // if(dbs.DB_ENGINE == 'SQLITE3') x = dbs.dbfile;
-    // else if(dbs.DB_ENGINE == 'MySQL') x = { host:'localhost', user:'invibit', password:'inv2012' }
-    // console.log(x)
     dbs.connect(dbs.DB_FILE,function(err){
-      console.log(2)
-    // dbs.connect('pos.db', function(err) {
-    // dbs.connect( { host:'localhost', user:'root', password:'drinkCoffee' }, function(err) {
-    // dbs.connect(x,function(err){
       if(err) { glib.err("startup: db connect failed->"+err); if(callb) callb(err); return; }
-      if(args.indexOf("demodb") != -1) {
-        glib.log("app : Demodb enabled")
-        // dbs.reset(function(err) {
-        //   if(err) { glib.err("startup: db reset failed->"+err); return; }
-        //   demodb.createDemoDatabases(function(err) {
-        //     if(err) { glib.err("startup: db demo init failed->"+err); return; }
-        //     glib.log("app: demo init OK");
-        //   });    
-        // });
-      }else if(callb) callb();
+      
+      if(callb) callb();
     });
-  })
-
-
-  
-  
+  });
 }
 
 ////////////////////////////////////////////////////////////
@@ -241,7 +220,7 @@ exports.serverInit = function(args)
   
   http.listen(port, function() {
     glib.log("startup: server started @ port " + port);
-    glib.log("MEMORY END-INIT: "+util.inspect(process.memoryUsage()));
+    // glib.log("MEMORY END-INIT: "+util.inspect(process.memoryUsage()));
   });
 
 }
@@ -254,9 +233,6 @@ exports.monitorInit = function()
   exports.procMon = null;
   app.procMon     = new Monitor({ probeClass:'Process' });
   app.procMon.connect();
-  /*procMon.on('change', function() {
-    glib.log("PM: free mem "+procMon.get('freemem'));
-  });*/  
 }
 
 ////////////////////////////////////////////

@@ -15,31 +15,6 @@ exports.newdb = class {
     }
   }
 
-  // /** REST API Call Queries */
-
-  // ////// API : 'Filter' (by rowid) //////
-  // get(id){
-  //   if(!id || typeof(id) !== 'number') { this.read(); return; } /// if no id given -- return ALL
-  //   //// else create an object {rowid:id}  --- and call 'filter' function
-  //   var config = {rowid:id};
-  //   this.filter(config);
-  // }
-
-  // ///// API : 'Update'
-  // set(){
-
-  // }
-
-  // //// API : 'Insert'
-  // put(){
-
-  // }
-
-  // //// API : 'Delete'
-  // delete(){
-
-  // }
-
   between(config){
     const generateQuery = (out, config) => {
       /// function to generate query with given date values ////
@@ -184,8 +159,6 @@ exports.newdb = class {
               }
           }
 
-          console.log(out);
-
           dbs.customQuery(this.db, out, [])
             .then(rows => resolve(rows))
             .catch(err => reject(err));
@@ -217,7 +190,6 @@ exports.newdb = class {
       let out = 'SELECT rowid,* FROM ' + this.name + ' WHERE ';
       let first_field = true;
       for(var field in fields){
-        console.log('Field value : ' , fields[field]);
           // add exceptions (i.e. 'limit' will be handled after the loop ends)
           if(!first_field && field !== 'limit') out += ' AND ';
 
@@ -235,7 +207,6 @@ exports.newdb = class {
           }
           else if(field.indexOf('__gte') > -1){
             field = field.split('__gte')[0];
-            console.log(field);
             out += field + '>=' + fields[field + '__gte'];
           }
           else if(field.indexOf('__lte') > -1){
@@ -290,7 +261,7 @@ exports.newdb = class {
   query(fields,values){
     return new Promise((resolve, reject) => {
       dbs.query(this.db, fields, values, (err,rows) => {
-        if(err) {console.log('Error on query database record from table : ' + this.db['name'] + '<br> Error : ' + err); reject(err); return; }
+        if(err) {glib.serverlog('Error on query database record from table : ' + this.db['name'] + '<br> Error : ' + err, 0); reject(err); return; }
         else{ resolve(rows); return; }
       })
     })
@@ -348,7 +319,7 @@ exports.newdb = class {
   remove(rowid){
     return new Promise((resolve, reject) => {
       dbs.remove(this.db, rowid, (err) => {
-        if(err) {console.log('Error on remove database record from table : ' + this.db[name] + '<br> Error : ' + err); reject(err); return; }
+        if(err) {glib.serverlog('Error on remove database record from table : ' + this.db[name] + '<br> Error : ' + err, 0); reject(err); return; }
         else{ resolve(); return; }
       })
     })
@@ -356,10 +327,9 @@ exports.newdb = class {
   
 
   addcolumn(column){
-    console.log('Adding column');
     return new Promise( (resolve, reject) => {
       dbs.alter(this.db, 0, column, (err) => {
-        if(err) { console.log('dbs : Add Column Failed -> ' + err); reject(err); return ;}
+        if(err) { glib.serverlog('dbs : Add Column Failed -> ' + err, 0); reject(err); return ;}
         resolve();
       })
     })
@@ -368,7 +338,7 @@ exports.newdb = class {
   updatecolumn(column){
     return new Promise( (resolve , reject) => {
       dbs.alter(this.db, 1, column, (err) => {
-        if(err) { console.log('dbs: Update column failed -> ' , err); reject(err); return;}
+        if(err) { glib.serverlog('dbs: Update column failed -> ' + err , 0); reject(err); return;}
         resolve();
       })
     })
@@ -377,7 +347,7 @@ exports.newdb = class {
   removecolumn(column){
     return new Promise( (resolve, reject) => {
       dbs.alter(this.db, 2 , column , (err) => {
-        if(err) { console.log('dbs: Remove column Failed -> ' + err); reject(err); return; }
+        if(err) { glib.serverlog('dbs: Remove column Failed -> ' + err, 0); reject(err); return; }
         resolve();
       })
     })
@@ -391,7 +361,7 @@ exports.newdb = class {
       dbs.customQuery(this.db, query, [])
         .then(rows => resolve(rows))
         .catch(err => {
-          console.log('Error on begin transaction : ' , this.db);
+          glib.serverlog('Error on begin transaction : ' + this.db , 0);
           reject(err);
         });
     })
@@ -403,7 +373,7 @@ exports.newdb = class {
       dbs.customQuery(this.db, query, [])
         .then(rows => resolve(rows))
         .catch(err => {
-          console.log('Error on END transaction :  ' , this.db);
+          glib.serverlog('Error on END transaction :  ' + this.db, 0);
           reject(err);
         });
     })
@@ -415,7 +385,7 @@ exports.newdb = class {
       dbs.customQuery(this.db, query, [])
         .then(rows => resolve(rows))
         .catch(err => {
-          console.log('Error on ROLLBACK -> SQL transaction : ' , this.db);
+          glib.serverlog('Error on ROLLBACK -> SQL transaction : '  + this.db, 0);
           reject(err);
         });
     })
@@ -427,7 +397,7 @@ exports.newdb = class {
       dbs.customQuery(this.db, query, [])
         .then(rows => resolve(rows))
         .catch(err => {
-          console.log('Error on COMMIT -> SQL transaction : ' , this.db);
+          glib.serverlog('Error on COMMIT -> SQL transaction : ' + this.db, 0);
           reject(err);
         });
     })

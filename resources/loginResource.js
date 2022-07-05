@@ -11,7 +11,7 @@ exports.usersResource = class extends master.masterResource {
     }
 
     async __insert__(self,params){
-        console.log('LOGIN ATTEMPT');
+        glib.serverlog('LOGIN ATTEMPT');
         self.res.status(404);
         self.res.send('Not found')
     }

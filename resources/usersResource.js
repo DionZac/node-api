@@ -35,11 +35,10 @@
                 let record = dbs.newRecord(this.db.db, params);
                 record.token = this.generateUserToken();
                 let obj = await this.db.insert(record);
-                console.log('Success');
                 res.send({err:0, user:obj });
             }
             catch(err){
-                console.log('Error');
+                glib.serverlog('Error',0);
                 this.__handle_error__(res,err);
             }
         }

@@ -32,11 +32,9 @@ exports.check_endpoint = async function(endpoint){
         catch(err){}
     }
     catch(err){
-        console.log('Failed to read registered endpoints');
+        glib.serverlog('Failed to read registered endpoints', 1);
         return false;
     }
-
-    console.log('Registered : ' + JSON.stringify(registered));
 
     for(let reg of registered.registered_endpoints){
         if(reg.endpoint == endpoint) return reg;
@@ -54,7 +52,7 @@ var check_registered_databases = function(path){
 // uri -> array of what's left after the endpoint is cut ///
 exports.url_mapping = (endpoint, method, uri) => {
     var obj = this.check_endpoint(endpoint);
-    if(!obj){ console.log('No registered endpoint : ' + endpoint); return false;}
+    if(!obj){ glib.serverlog('No registered endpoint : ' + endpoint, 1); return false;}
 
      /// Check request method -- return the proper function ////
     if(uri.length  == 0) {
@@ -81,7 +79,6 @@ exports.url_mapping = (endpoint, method, uri) => {
 
     if(uri.length > 1){
         let out = [];
-        console.log('URI :::::::::::: ' , uri);
         for(let i=0; i<uri.length-1; i++) out.push(uri[i]);
         let last = uri.pop();
         let rowid;
@@ -91,7 +88,7 @@ exports.url_mapping = (endpoint, method, uri) => {
         catch(err){
             out.push(last);
         }
-        console.log('ROWID : ::::::: ' ,rowid);
+        
         //// if more than one --- return all endpoints after /transactions/ ----
         ///// if last is number --- consider it as id 
         if(rowid) return {dbname:endpoint , methods:out, rowid:rowid};

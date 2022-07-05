@@ -34,7 +34,7 @@ exports.masterResource = class {
 
     //// Error:404 (no results found) /////
     __results_not_found__(self){
-        console.log('No results found');
+        glib.serverlog('No results found', 0);
         self.res.status(404);
         self.res.send('No results found')
     }
@@ -43,14 +43,13 @@ exports.masterResource = class {
     // ************************************* AUTHORIZE REQUEST ************************ //
     __authorize__(self){
         let params = glib.getRequestParams(self.req);
-        console.log('Authorizing request....');
         return true;
     }
 
     __token_authorization__(self){
         let params = glib.getRequestParams(self.req);
         if(!('token' in params)){
-            console.log('No token in request');
+            glib.serverlog('No token in request', 0);
             return false;
         }
         
@@ -91,7 +90,7 @@ exports.masterResource = class {
 
     // Handle a failed request and response a passed error message //
     __handle_error__(res, err){
-        console.log('Error : ' , err);
+        glib.serverlog(err, 0);
         res.send(err);
     }
 
@@ -102,7 +101,7 @@ exports.masterResource = class {
             if(err) msg = err;
             else msg = 'Invalid rowid given';
 
-            console.log(msg);
+            glib.serverlog(msg, 0);
             this.__handle_error__(res,msg);
 
             return false;
@@ -123,20 +122,6 @@ exports.masterResource = class {
                 this.__results_not_found__(self);
                 return;
             }
-
-
-            //// if there are private fields in the resource -- do not return them in the GET response ///
-            if(this.private_fields && Array.isArray(this.private_fields)){
-                for(let pr of this.private_fields){
-                    for(let row of t){
-                        for(let fname in row){
-                            if(fname == pr) delete row[fname];
-                        }
-                    }
-                }
-            }
-
-            console.log('Success');
             return t;
         }
         catch(err){
@@ -149,14 +134,11 @@ exports.masterResource = class {
         try{
             params.rowid = kwargs.rowid;
             await this.db.update(params);
-            console.log('Success');
             res.send('OK');
 
         }
         catch(err){
-            console.log('Error');
-            console.log(err);
-            // console.log(err);
+            glib.serverlog(err);
             res.send(err);
         }
     }
@@ -175,29 +157,24 @@ exports.masterResource = class {
                 return;
             }
 
-            console.log('Success');
             res.send(t);
         }
         catch(err){
-            console.log('Error');
-            // console.log(err);
+            glib.serverlog(err,0);
             res.send(err)
         }
         
     }
 
     async __insert__(self,params){
-        console.log(params);
         let res = self.res;
         try{
             let record = dbs.newRecord(this.db.db,params);
             await this.db.insert(record);
-            console.log('Success');
             res.send({err:0});
         }
         catch(err){
-            console.log('Error');
-            // console.log(err);
+            glib.serverlog(err, 0);
             this.__handle_error__(res,err);
         }
     }
@@ -206,12 +183,10 @@ exports.masterResource = class {
         let res = self.res;
         try{
             await this.db.remove(kwargs.rowid);
-            console.log('Success');
             res.send('OK');
         }
         catch(err){
-            console.log('Error');
-            // console.log(err);
+            glib.serverlog(err, 0);
             res.send(err);
         }
     }

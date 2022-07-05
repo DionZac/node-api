@@ -8,7 +8,6 @@ var sqlite3           = require('sqlite3').verbose();
 var mysql             = require('mysql');
 var glib              = require("./glib.js");
 var objects           = require('./db.js');
-// var app               = require('./app.js');
 
 const colors =  require('colors');
 
@@ -113,8 +112,8 @@ exports.init = async function(callb)
     
     if(callb) callb();
   }).catch(err => {
-    console.log('Failed to initialize databases.'.red);
-    console.log('Error -> ' , err);
+    glib.serverlog('Failed to initialize databases.', 0);
+    glib.serverlog(err, 0);
   })
 
  
@@ -150,7 +149,7 @@ exports.connect = function(to, callback)
   if(dbs.DB_ENGINE == ENGINE_SQLITE) {
     db = new sqlite3.Database(to, function(err) {
       if(err) { glib.err("dbs: connect: error->"+err); callback(glib.lasterr()); return; }
-	    console.log("Connected to main database ");
+	    glib.serverlog("Successfully connected to SQLITE3 Database", 1);
       callback();
       return;
     });
@@ -191,7 +190,6 @@ exports.connect = function(to, callback)
 ////////////////////////////////////////////////////////////
 function outputField(fld, idx) 
 {
-  console.log(fld);
   var out = '';
   if(!(fld.type in dbs.types)) { throw "ERR: Caught unsupported type in selected db engine ('"+fld.type+"')"; }
   out += fld.fname + (idx != -1? ('_' + idx) : '') + ' ' + dbs.types[fld.type].sqltype;
@@ -228,7 +226,6 @@ exports.create = function(dbf, callback)
   if(dbs.DB_ENGINE == ENGINE_MYSQL) cmd += ', PRIMARY KEY (rowid)';
   cmd += ')';
 
-  console.log(cmd)
   //== Create (SQLITE3)
   if(dbs.DB_ENGINE == ENGINE_SQLITE) {
     var precmd = 'DROP TABLE IF EXISTS '+dbf.name;
@@ -482,8 +479,7 @@ exports.query = function(dbf , cols , data , callback , admin){
 		out += cols[i] + '=? ';
 		if(i+1 < cols.length) out += 'AND ';
 	}
-  console.log(out);
-  console.log(data);
+
 	//== Issue query
 	if(dbs.DB_ENGINE == ENGINE_MYSQL) {
 		 db.query(out, data , function(sqlerr, rows) { handleReadOutput(dbf, sqlerr, rows, callback); });
@@ -500,7 +496,6 @@ exports.query = function(dbf , cols , data , callback , admin){
 //== Output handler
 
 exports.customQuery = function(dbf,out,data){
-  console.log('Running : ', out);
   return new Promise( (resolve, reject) => {
     if(dbs.DB_ENGINE == ENGINE_MYSQL){
       db.query(out, data, (sqlerr, rows) => {
@@ -567,9 +562,9 @@ exports.alter = async function(dbf,operation,column,callb){
     handle_error_retries ++;
 
     dbs.customQuery(dbf,out, [])
-        .then(() => console.log('TRANSACTION rolled-back.'))
+        .then(() => glib.serverlog('TRANSACTION rolled-back.', 1))
         .catch(err => {
-          console.log('Error -> ' , err);
+          glib.serverlog(err, 1);
           if(handle_error_retries < 10) handle_transaction_error();
         });
   }
@@ -584,7 +579,7 @@ exports.alter = async function(dbf,operation,column,callb){
       out += outputField(column, -1);
 
       if('def' in column) out += ' DEFAULT "' + column.def + '"';
-      console.log(out);
+
       if(dbs.DB_ENGINE == ENGINE_SQLITE){
         db.run(out, function(sqlerr){
           if(sqlerr) { callb("dbs: add column : failed -> " + sqlerr); return;}
@@ -633,7 +628,7 @@ exports.alter = async function(dbf,operation,column,callb){
         })
       }
       catch(err){
-        console.log('Error : Rolling back Database transaction.');
+        glib.serverlog('Error : Rolling back Database transaction.', 1);
         handle_transaction_error();
         callb(err);
       }
@@ -645,11 +640,9 @@ exports.alter = async function(dbf,operation,column,callb){
       /// ## get the database schema /////
       try{
         let json_schema = await objects.databases.json_schema.query(['tablename'],[dbf.name])
-        console.log(json_schema);
         dbf = glib.parseModelSchema(json_schema[0].schema)[dbf.name];
-        console.log(dbf);
       }
-      catch(err){ console.log('Failed to load JSON schema ::: ' , err); callb('JSON schema load failed'); return; }
+      catch(err){ glib.serverlog('Failed to load JSON schema ::: ' + err, 1); callb('JSON schema load failed'); return; }
 
       /// ## START DATABASE TRANSACTION ///
       let begin = 'BEGIN TRANSACTION';
@@ -748,7 +741,6 @@ exports.newRecord = function(dbf, template)
   for(var i=0; i<dbf.fields.length; i++) {
     f = dbf.fields[i];
     if(template && (f.fname in template)) v = template[f.fname]; else v = f.def;
-    console.log(f.fname + ' : ' + v);
     rec[f.fname] = glib.cloneObj(v);
   }
   rec.rowid = 0;
@@ -762,28 +754,23 @@ exports.newRecord = function(dbf, template)
 exports.updateRecord = async function(dbf,template,rowid,callb)
 {
   try{
-    console.log('Db: ' + dbf.name);
     var database = objects.databases[dbf.name];
     var EXISTING_RECORD = await database.filter({rowid:rowid});
     EXISTING_RECORD = EXISTING_RECORD[0];
-    console.log('Previus -> ', EXISTING_RECORD);
     EXISTING_RECORD = dbs._validate(dbf, EXISTING_RECORD);
-    console.log(EXISTING_RECORD);
   }
   catch(err){
-    console.log('Error');
-    // if(dbs.LOGSQL > 0) console.log('Failed to get the object');
+    glib.serverlog(err,1);
     throw new Error(err);
   }
   var v, f, rec = {};
   for(var i=0; i<dbf.fields.length; i++) {
     f = dbf.fields[i];
     if(template && (f.fname in template)) v = template[f.fname]; else v = EXISTING_RECORD[f.fname];
-    console.log(v);
+
     rec[f.fname] = glib.cloneObj(v);
   }
   rec.rowid = EXISTING_RECORD.rowid;
-  console.log(rec);
   callb(rec);
 }
 

@@ -9,19 +9,19 @@
     "height": 600
   },
   "dependencies": {
-    "body-parser": "^1.14.2",
+    "body-parser": "^1.20.0",
     "colors": "^1.4.0",
     "event-stream": "^4.0.1",
-    "express": "^4.13.3",
+    "express": "^4.18.1",
     "jquery": "^3.6.0",
-    "jsdom": "^15.2.1",
-    "mysql": "^2.10.1",
+    "jsdom": "^20.0.0",
+    "mysql": "^2.18.1",
     "node-monitor": "^0.3.11",
-    "readline-promise": "^1.0.4",
-    "readline-sync": "^1.4.9",
+    "readline-promise": "^1.0.5",
+    "readline-sync": "^1.4.10",
     "require-all": "^3.0.0",
-    "run-func": "^1.0.2",
-    "socket.io": "^1.4.4",
+    "run-func": "^1.1.5",
+    "socket.io": "^4.5.1",
     "stack-trace": "0.0.9"
   },
   "scripts": {
@@ -39,9 +39,9 @@
     "get_genres": "run-func module.js getAllGenres"
   },
   "devDependencies": {
-    "moment": "^2.22.2",
+    "moment": "^2.29.3",
     "monitor": "^0.6.10",
-    "request": "^2.88.0",
+    "request": "^2.88.2",
     "sqlite3": "^4.2.0"
   }
 }

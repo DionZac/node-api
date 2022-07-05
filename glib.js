@@ -1,19 +1,35 @@
 //*********************************************************************
 // Generic functions
 //*********************************************************************
-var util  		= require('util');
 var stack 		= require('stack-trace');
-var moment      = require('moment');
 const fs        = require('fs');
-var trace		= stack.get();
+var colors = require('colors');
 
 var glib = this;
 var dbs  = require('./dbs.js');
 
 exports.logged = [];
 
+exports.serverlog = function(msg,type){
+  if(type == 0){
+    console.log(colors.red(msg));
+  }
+  else if(type == 1){ 
+    console.log(colors.green(msg));
+  }
+  else if(type == 2){
+    console.log(colors.yellow(msg));
+  }
+  else if(type == 3){
+    console.log(colors.blue(msg));
+  }
+  else{
+    if(type) console.log(msg, type);
+    else console.log(msg);
+  }
+}
+
 exports.not_found_error = function(res){
-  console.log('Request not found');
   res.send('Request not found');
 }
 
@@ -21,10 +37,8 @@ exports.loadMigrationFiles = function(){
   let dirname = './migrations/';
   var objects = {};
 
-  console.log('Loading migration files...');
   return new Promise( (resolve, reject) => {
     fs.readdir(dirname, async(err , filenames) => {
-      console.log(filenames);
       if(err) { reject(err); return; }
       resolve(filenames);
     })
@@ -34,15 +48,14 @@ exports.loadMigrationFiles = function(){
 exports.loadModelFiles = function(){
   let dirname =  './models/';
   var objects = {};
-  console.log('Loading model files....');
   return new Promise( (resolve, reject) => {
     fs.readdir('./models', async (err, filenames) => {
-      // console.log(filenames);
       if(err) { reject(err); return; }
     
       for(let f of filenames){
         objects[f.replace('.json', '')] = await this.readJSONfile(dirname + f);
       }
+
       resolve(objects);
     })
   })
@@ -178,7 +191,6 @@ exports.dateTimeStr = function(d, format)
 exports.getRequestParams = function(req)
 {
   if(!('method' in req)) return({});
-  console.log("BODY -------------------------> " , req.query);
   if(!glib.objectIsEmpty(req.query)) return req.query;
   
   switch(req.method) 
@@ -210,8 +222,6 @@ exports._log = function(data, type)
   };
   loghist.head++; loghist.head &= 255;
   if(loghist.head == loghist.tail) { loghist.tail++; loghist.head &= 255; }
-  if(type==1) console.log(data,true)
-  else console.log(data);
 }
 
 exports.log    = function(data, type) { exports._log(data, type); }

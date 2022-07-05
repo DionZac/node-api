@@ -8,7 +8,7 @@ const colors = require('colors');
 
 
 var migration_error = function(err){
-    console.log("Migration error : -> " , err);
+    glib.serverlog("Migration error : -> " + err,0);
     process.exit(1);
 }
 
@@ -63,7 +63,7 @@ module.exports.createmigrations = function(){
                                 
                                 schema=JSON.parse(schema);
                             }
-                            catch(err){console.log(err); var schema = row.schema}
+                            catch(err){glib.serverlog(err,0); var schema = row.schema}
                             
                             for(let schema_name in schema){
                                 if(schema_name == dbname){
@@ -97,7 +97,6 @@ module.exports.createmigrations = function(){
                                                 }
                                                 
                                                 if(diff.length > 0){
-                                                    console.log('DIFFERENCE -> ' , diff);
                                                     migrations.push({type:'update_field', dbname:dbname, field:json_field});
                                                 }
                                             }
@@ -117,17 +116,17 @@ module.exports.createmigrations = function(){
                     }
                 }
             }
-            console.log('migrations -> ' , migrations);
+            glib.serverlog(migrations,2);
             self.create_migration_files(migrations)
 
         })
         .catch(err => {
-            console.log('Failed to load the JSON schema database.');
-            console.log('Error -> ' ,err); 
+            glib.serverlog('Failed to load the JSON schema database.',0);
+            glib.serverlog('Error -> ' + err,0); 
             process.exit(1);
         })
     }).catch(err => {
-        console.log('Failed to load tables json files ' , err);
+        glib.serverlog('Failed to load tables json files ' + err,0);
         process.exit(1);
     })
     })
@@ -143,7 +142,7 @@ module.exports.createmigrations = function(){
 ////////////////////////////////////////////////////////
 
 module.exports.create_migration_files = async function(list){
-    if(list.length == 0){ console.log('No changes in the models. \n0 Migrations created'.red); process.exit(0);}
+    if(list.length == 0){ glib.serverlog('No changes in the models. \n0 Migrations created'.red); process.exit(0);}
 
     let script = '';
     //// GENERATE SCRIPT FOR MIGRATION FILE /////
@@ -155,12 +154,12 @@ module.exports.create_migration_files = async function(list){
 
     list.forEach(migration => {
         if(!('type' in migration)){
-            console.log('No migration type found');
+            glib.serverlog('No migration type found',0);
             return;
         }
 
         if(!('dbname' in migration)){
-            console.log('No migration dbname found');
+            glib.serverlog('No migration dbname found',0);
             return;
         }
 
@@ -176,11 +175,11 @@ module.exports.create_migration_files = async function(list){
     try{
         let path = './migrations/' + migration_name + '.js';
         fs.writeFile(path, script, function(err){
-            if(err) console.log(err)
+            if(err) glib.serverlog(err,0)
             process.exit(0);
         })
     }
-    catch(err){ console.log('Error -> ' , err);}
+    catch(err){ glib.serverlog('Error -> ' + err,0);}
 }
 
 
@@ -232,7 +231,7 @@ module.exports.runmigrations = function(MIGRATION_NUMBER){
                         /// extra check if given number to apply a migration instead of running all available migrations ///
                         if(MIGRATION_NUMBER && MIGRATION_NUMBER < num) continue;
 
-                        console.log('Running migration ', num);
+                        glib.serverlog('Running migration ' + num,2);
                         at_least_one_migration = true;
                         /// run this migration ////
 
@@ -241,12 +240,12 @@ module.exports.runmigrations = function(MIGRATION_NUMBER){
                             await add_migration_record(migration);
                         }
                         catch(err){
-                            console.log('Failed to apply migration ::: ', num);
+                            glib.serverlog('Failed to apply migration ::: '+ num,0);
                         }
                     }
                     else if(unapply){
                         at_least_one_migration = true;
-                        console.log('Unaply migration ', num);
+                        glib.serverlog('Unaply migration ' + num,2);
                         try{
                             await run_migration(migration, unapply);
                             await remove_migration_record(migration);
@@ -255,12 +254,12 @@ module.exports.runmigrations = function(MIGRATION_NUMBER){
                             last_migration_applied = parseInt(migration);
                         }
                         catch(err){
-                            console.log('Failed to unapply migration ::: ', num);
+                            glib.serverlog('Failed to unapply migration ::: ' + num, 0);
                         }
                     }
                 }
 
-                if(!at_least_one_migration) console.log('No migrations to apply.');
+                if(!at_least_one_migration) glib.serverlog('No migrations to apply.',3);
 
                 process.exit(0);
             })
@@ -270,8 +269,8 @@ module.exports.runmigrations = function(MIGRATION_NUMBER){
         })
     }
     catch(err){
-        console.log('Migration run failed -> ');
-        console.log('Reason ::: ', err);
+        glib.serverlog('Migration run failed -> ',0);
+        glib.serverlog(err,0);
     }
 
 }
@@ -289,13 +288,13 @@ module.exports.runmigrations = function(MIGRATION_NUMBER){
 
 function run_migration(migration,unapply){
     return new Promise( async (resolve, reject) => {
-        console.log('Running migration ' + migration);
+        glib.serverlog('Running migration ' + migration,3);
         /// update the schema on the database ///
         /// update the database ////
         var file = require('./migrations/' + migration);
         var operations = file.migration.operations;
         if(operations.length == 0) {
-            console.log('Empty migration file');
+            glib.serverlog('Empty migration file',0);
             resolve();
             return;
         }
@@ -311,11 +310,11 @@ function run_migration(migration,unapply){
                         /// undo the update_field operation ///
                     }
                 }
-                console.log('Running operation : ' + op.type + ' ' +  op.dbname);
+                glib.serverlog('Running operation : ' + op.type + ' ' +  op.dbname, 3);
                 switch(op.type){
                     case 'add_database':
                         if(!('dbname' in op)){
-                            console.log('No dbname in add database migration at file : ' + migration);
+                            glib.serverlog('No dbname in add database migration at file : ' + migration,0);
                             continue;
                         }
                         main.called_from_migration_file = true;
@@ -323,7 +322,7 @@ function run_migration(migration,unapply){
                         break;
                     case 'remove_database':
                         if(!('dbname' in op)){
-                            console.log('No dbname in remove database migration at file : ' + migration);
+                            glib.serverlog('No dbname in remove database migration at file : ' + migration,0);
                             continue;
                         }
                         main.called_from_migration_file = true;
@@ -331,11 +330,11 @@ function run_migration(migration,unapply){
                         break;
                     case 'remove_field':
                         if(!('dbname' in op)){
-                            console.log('No dbname in remove field at file : ' + migration);
+                            glib.serverlog('No dbname in remove field at file : ' + migration,0);
                             continue;
                         }
                         if(!('field' in op)){
-                            console.log('No fname in remove field at file : ' + migration);
+                            glib.serverlog('No fname in remove field at file : ' + migration,0);
                             continue;
                         }
     
@@ -346,11 +345,11 @@ function run_migration(migration,unapply){
                         break;
                     case 'add_field':
                         if(!('dbname' in op)){
-                            console.log('No dbname in add field at file : ' + migration);
+                            glib.serverlog('No dbname in add field at file : ' + migration,0);
                             continue;
                         }
                         if(!('field' in op)){
-                            console.log('No field in add field at file : ' + migration);
+                            glib.serverlog('No field in add field at file : ' + migration,0);
                             continue;
                         }
                         main.called_from_migration_file = true;
@@ -360,11 +359,11 @@ function run_migration(migration,unapply){
                         break;
                     case 'update_field':
                         if(!('dbname' in op)){
-                            console.log('No dbname in remove field at file : ' + migration);
+                            glib.serverlog('No dbname in remove field at file : ' + migration,0);
                             continue;
                         }
                         if(!('field' in op)){
-                            console.log('No fname in remove field at file : ' + migration);
+                            glib.serverlog('No fname in remove field at file : ' + migration,0);
                             continue;
                         }
                         //// just update the database cause the changes will come ONLY from schema ////
@@ -374,7 +373,7 @@ function run_migration(migration,unapply){
                         await main.update_database_schema(op);
                         break;
                     default:
-                        console.log('Unknown type of migration in : ' + migration);
+                        glib.serverlog('Unknown type of migration in : ' + migration,0);
                         continue;
                 }
             }
@@ -433,7 +432,6 @@ function addmodel(dbname){
 ///////////////////////////////////////////////////////
 
 function addfield(operation){
-    console.log(operation);
     return new Promise( async ( resolve , reject) => {
         try{
             main.add_db_field(operation.dbname, operation.field.fname, operation.field.type, operation.field.len, operation.field.def, function(err){
@@ -502,7 +500,7 @@ function remove_migration_record(migration){
         dbs.customQuery(null,query,[])
             .then(resolve)
             .catch( (err) => {
-                console.log('Remove migration record error ::: ', err);
+                glib.serverlog('Remove migration record error ::: ' + err, 0);
                 reject(err);
             })
     })
@@ -526,7 +524,7 @@ function add_migration_record(migration){
         dbs.customQuery(dbs.dbdefs.migrations, out , [])
             .then(resolve)
             .catch(err => {
-                console.log('Insert migration error ::: ', err);
+                glib.serverlog('Insert migration error ::: ' + err,0);
                 reject(err);
             })
     })
@@ -557,7 +555,7 @@ var generate_migration_name = async function(list){
         if('field' in list[0]) name += list[0].field.fname;
         else name += list[0].dbname;
 
-        console.log('Name : ' , name);
+        glib.serverlog('Generate migration name : ' + name, 3);
         resolve(name);
     })
 }
