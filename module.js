@@ -404,15 +404,31 @@ module.exports.removemodel = async function(dbname, callback){
 
     const init = async function(){
 
-        await remove_model_json(dbname);
+        try{
+            await remove_model_json(dbname);
+        }
+        catch(e){};
 
-        await remove_resource_file(dbname);
+        try{
+            await remove_resource_file(dbname);
+        }
+        catch(e){};
 
-        await remove_registered_endpoint(dbname);
+        try{
+            await remove_registered_endpoint(dbname);
+        }
+        catch(e){}
         
-        await remove_database_table(dbname);
+        try{
+            await remove_database_table(dbname);
+        }
+        catch(e){};
         
-        await remove_from_json_schema(dbname);
+        try{
+            await remove_from_json_schema(dbname);
+        }
+        catch(e){};
+        
         /// remove row from json_schema table ///
     }
 }

@@ -249,6 +249,7 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
         /// serialize data for database ///
         if(fn == '__update__' || fn == '__insert__'){
             parameters = handler.serializeData(parameters,dbname);
+            console.log("PARAMETERS: " + JSON.stringify(parameters));
         }
 
 
@@ -265,7 +266,7 @@ exports.serializeData = function(data,dbname){
     let fields = objects.databases[dbname].db.fields;
 
     for(let f of fields){
-        if(!(f.fname in data)) continue;
+        // if(!(f.fname in data)) continue;
         let serialize_function_name = 'serialize_' + f.fname;
         if(serialize_function_name in db){
             try{
