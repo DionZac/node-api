@@ -10,10 +10,8 @@ class defaultView {
         this.view = options;
     }
 
-    render(res){
-        let fullpath = `${appRoot}/${Settings.PROJECT_INCLUDE_FOLDER}/${this.view.folderpath}/${this.view.filename}`;
-
-        res.sendFile(fullpath);
+    render(template,res){
+        res.sendFile(template,fullpath);
     }
 }
 

@@ -16,8 +16,8 @@ exports.setupViewResponse = function(view, res){
     let viewModule = viewModules[view.name] || require('./views/' + view.module + '.js');
 
     let viewInstance = new viewModule(view);
-
-    viewInstance.render(res);
+    let template = `${appRoot}/${Settings.PROJECT_INCLUDE_FOLDER}/${view.folderpath}/${view.filename}`;
+    viewInstance.render(template,res);
 }
 
 var get_function_name_from_method = function(method){
