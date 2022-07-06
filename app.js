@@ -38,6 +38,7 @@ var count = 0;
 
 var app         = this;
 
+appRoot = __dirname;
 Settings = {};
 
 //**********************************************************
@@ -113,7 +114,10 @@ exports.startup = async function(args,callb)
   this.settings = settings;
   Settings = settings; /// global inform 
   
-  glib.updateSettingsVariables(settings);
+  //Update the corresponding variables of 'dbs.js' class
+  dbs.DB_FILE = settings.DB_FILE;
+	dbs.LOGSQL  = settings.LOGSQL;
+	dbs.DB_ENGINE = settings.database;
 
  /// Init major modules
  /// this should work with promises instead of callbacks ///
@@ -207,7 +211,12 @@ exports.serverInit = async function(args)
   try{
     /// set which folders are being included in 'settings.json' -- if null do not include anything ///
     if(this.settings.PROJECT_INCLUDE_FOLDER){
-      server.use(express.static(`${__dirname}/${this.settings.PROJECT_INCLUDE_FOLDER}`));
+      // try{
+      //   server.use(express.static(`${__dirname}/${this.settings.PROJECT_INCLUDE_FOLDER}`));
+      // }
+      // catch(e){
+      //   glib.serverlog(`Failed to include project directory : ${__dirname}/${this.settings.PROJECT_INCLUDE_FOLDER}`, 0);
+      // }
     }
     
     let views = await glib.readJSONfile("./views.json");
@@ -216,10 +225,10 @@ exports.serverInit = async function(args)
 
     for(let path in views){
       let view = views[path];
-      let fullpath = `${__dirname}/${this.settings.PROJECT_INCLUDE_FOLDER}/${view.path}/${view.filename}`;
-      server.get(view.path, function(req,res){
-        res.sendFile(fullpath);
-      })
+
+      server.get(view.endpoint, function(req,res){
+        urls.setupViewResponse(view, res);
+      });
     }
   }
   catch(err){

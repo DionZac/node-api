@@ -1,11 +1,17 @@
 {
     "default":{
-        "path": "",
-        "filename": "index.html"
+        "name": "default",
+        "endpoint": "/",
+        "folderpath": "",
+        "filename": "index.html",
+        "module": "defaultView"
     },
 
     "admin":{
-        "path": "admin/",
-        "filename": "admin.html"
+        "name": "admin",
+        "endpoint": "/admin",
+        "folderpath": "/",
+        "filename": "admin.html",
+        "module" : "adminView"
     }
 }

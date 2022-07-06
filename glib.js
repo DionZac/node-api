@@ -6,7 +6,6 @@ const fs        = require('fs');
 var colors = require('colors');
 
 var glib = this;
-var dbs  = require('./dbs.js');
 
 exports.logged = [];
 
@@ -99,16 +98,6 @@ exports.parseModelSchema = function(schema){
   catch(err){}
 
   return schema;
-}
-
-/**
- * Get the @settings object 
- * Update the corresponding variables of 'dbs.js' class
- */
-exports.updateSettingsVariables = function(settings){
-	dbs.DB_FILE = settings.DB_FILE;
-	dbs.LOGSQL  = settings.LOGSQL;
-	dbs.DB_ENGINE = settings.database;
 }
 
 exports.addZero = function(num){

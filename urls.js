@@ -4,10 +4,20 @@ var handler     = require('./handler.js');
 var appRequests = require('./appRequests');
 // var registered  = require('./registered.js');
 
+var viewModules = {};
+
 exports.registerRequestServices = function(server){
     server.all('/login', appRequests.login);
 
     server.all('/api/v1/*', handler.call);
+}
+
+exports.setupViewResponse = function(view, res){
+    let viewModule = viewModules[view.name] || require('./views/' + view.module + '.js');
+
+    let viewInstance = new viewModule(view);
+
+    viewInstance.render(res);
 }
 
 var get_function_name_from_method = function(method){
