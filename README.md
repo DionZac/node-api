@@ -285,7 +285,7 @@ constructor(){
     super();
     this.testmodel = objects.databases.testmodel;
 
-    private_fields:[
+    this.private_fields = [
         "test"
     ]
 
@@ -310,7 +310,9 @@ constructor() {
     super();
     this.testmodel = objects.databases.testmodel;
 
-    ALLOWED_METHODS: ["GET", "POST", "PUT"];
+    this.Meta = {
+        allowed_methods : ['GET', 'POST', 'PUT', 'DELETE']
+    }
 
     super.initialize();
 }
@@ -328,7 +330,9 @@ constructor() {
     super();
     this.testmodel = objects.databases.testmodel;
 
-    SAFE_AUTH_METHODS: ["GET"];
+    this.META = {
+        SAFE_AUTH_METHODS: ["GET"]
+    }
 
     super.initialize();
 }
@@ -380,3 +384,176 @@ Once again , go back to the terminal and run the command
 This command will search to execute any migration scripts that are not executed yet.
 
 Now our testmodel has a new `random_id` field in the database.
+
+# Global Authorization Modules
+
+Instead of rewriting an authorization function on every resource handler module, 
+you can create a global authorization module and import it in any handler you want.
+
+First, you need to add the auth function in the `authorizations.json` file, which
+is the list of auth functions in the project. 
+
+You will see some examples inside this file like this :
+
+```
+{
+    "filename":"auth.js",
+    "name":"TokenAuthorization",
+    "classname":"TokenAuthorization"
+}
+```
+
+* filename : Set the file location where your class exists.
+* name : Set the name on how to import the auth function in the resource
+* classname : Classname that will be used to run the authorize function
+
+Since you added the new authentication class you have to create it.
+
+In the example above, we have created a `TokenAuthorization` class in the `auth.js` file.
+
+Open the `auth.js` file and you should see this class inside 
+
+```
+exports.TokenAuthorization = class {
+    constructor(){
+        this.profiles_name = app.settings.profiles_name || 'users';
+        this.users = objects.databases[this.profiles_name];
+    }
+
+    authorize(params,method,safe){
+        return new Promise(async (resolve, reject) => {
+            if(safe && this.is_safe_method(method,safe)){
+                resolve({safe:true});
+                return;
+            }
+
+            if(!('token' in params)){
+                reject('No token parameter');
+                return;
+            }
+
+            let token = params.token;
+
+            let user = await this.users.filter({token:token});
+            if(user && user.length > 0){
+                user = user[0];
+                resolve(user);
+            }
+
+            reject('Token is invalid or expired');
+        })
+    }
+
+    is_safe_method(method,safe){
+        if(safe.includes(method)) return true;
+
+        return false;
+    }
+}
+```
+
+**It is REQUIRED to add a function `authorize()` in your class, which is the 
+actual function that will be called to decide if the client is authorized for the request.**
+
+This function takes three arguments : 
+
+* **params** : The request parameters taken from body of request
+* **method** : The HTTP method of the request
+* **safe**   : The list of safe methods for the specific request, to decide if you want to bypass authentication
+
+Next, we need to add the authorization class in a resource.
+
+All you need to do, is to add the **Authorization Name** in the META attributes of 
+the resource you want to include this authorize function.
+
+```
+constructor() {
+    super();
+    this.testmodel = objects.databases.testmodel;
+
+    this.META = {
+        AUTHORIZATION_CLASS: ["TokenAuthorization"]
+    }
+
+    super.initialize();
+}
+```
+
+That's it , now all the requests in our testmodel will pass through the TokenAuthorization 
+function to decide whether to response with `403 Unauthorized Request`!
+
+# Views
+
+How can the server respond with HTML pages? 
+
+That's where the Views come into play. For every HTML page you want to have in our project , 
+you need to create a View.
+
+First, open the `views.json` file , which is the file that lists all the Views in the project.
+
+In this example , you will see two different views. The `default` view that will respond 
+with the main HTML file, and the `admin` view that will respond with the admin HTML file.
+
+```
+{
+    "default":{
+        "name": "default",
+        "endpoint": "/",
+        "folderpath": "",
+        "filename": "index.html",
+        "module": "defaultView"
+    },
+
+    "admin":{
+        "name": "admin",
+        "endpoint": "/admin",
+        "folderpath": "/",
+        "filename": "admin.html",
+        "module" : "adminView"
+    }
+}
+```
+
+Every view object must contain the following parameters :
+
+* **name** : The name of the view (you will never use this).
+* **endpoint** : The endpoint that server will respond with this View.
+* **folderPath**: The folder path where the HTML file exists.
+* **filename** : The filename of the HTML file.
+* **module** : The module that will handle the response (it has to be in the `./views` directory)
+
+After that, all you have to do is to create the View Module.
+
+In the `./views` directory open the `adminView.js` file.
+
+```
+class adminView {
+    constructor(options){
+        if(!options){
+            glib.serverlog("View initialization - missing options", 0);
+            return;
+        }
+        
+        this.view = options;
+    }
+
+    render(template,res){
+        res.sendFile(template);
+    }
+}
+
+module.exports = adminView;
+```
+
+**It is REQUIRED to add a function `render()` in your View class, which is the function 
+that will be called to response the HTML file in the client.**
+
+This function takes two arguments : 
+
+* **template** : The resolved path of the HTML file.
+* **res** : The response object to call `res.sendFile(template)`
+
+When you're done, just type in the browser URL `http://localhost:9000/admin` and the 
+server will respond with the admin.html file.
+
+
