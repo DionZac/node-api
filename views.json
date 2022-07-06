@@ -1,0 +1,11 @@
+{
+    "default":{
+        "path": "",
+        "filename": "index.html"
+    },
+
+    "admin":{
+        "path": "admin/",
+        "filename": "admin.html"
+    }
+}

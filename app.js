@@ -37,7 +37,6 @@ var logStdout = process.stdout;
 var count = 0;
 
 var app         = this;
-var static_root = '/nweb1';
 
 Settings = {};
 
@@ -155,7 +154,7 @@ exports.databaseInit = function(args, callb)
 ////////////////////////////////////////////////////////////
 // APP: Init server & comms
 ////////////////////////////////////////////////////////////
-exports.serverInit = function(args)
+exports.serverInit = async function(args)
 {
   /////////////////////////// Express server setup
 
@@ -205,15 +204,32 @@ exports.serverInit = function(args)
     next();
   });
 
-  /// Set the default index from 'setting.json' -- if null do not allow it ///
-  server.get('/', function(req, res) { res.sendFile(__dirname + static_root + '/index.html'); });
+  try{
+    /// set which folders are being included in 'settings.json' -- if null do not include anything ///
+    if(this.settings.PROJECT_INCLUDE_FOLDER){
+      server.use(express.static(`${__dirname}/${this.settings.PROJECT_INCLUDE_FOLDER}`));
+    }
+    
+    let views = await glib.readJSONfile("./views.json");
+    try{views = JSON.parse(views)}
+    catch(err){};
+
+    for(let path in views){
+      let view = views[path];
+      let fullpath = `${__dirname}/${this.settings.PROJECT_INCLUDE_FOLDER}/${view.path}/${view.filename}`;
+      server.get(view.path, function(req,res){
+        res.sendFile(fullpath);
+      })
+    }
+  }
+  catch(err){
+    glib.serverlog("Failed to setup views " , 0);
+    glib.serverlog(err,0);
+  }
   
   //// set the limit in 'settings.json' -- if null do not configure it ///
   server.use(bodyParser.json({limit:'20mb'}));
   server.use(bodyParser.urlencoded({limit: '20mb', extended: true}));
-
-  /// set which folders are being included in 'settings.json' -- if null do not include anything ///
-  server.use(express.static(__dirname + static_root));
 
   // configure all accepted requests //
   urls.registerRequestServices(server);
