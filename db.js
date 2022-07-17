@@ -7,8 +7,8 @@ exports.databases = {};
 exports.newdb = class {
   constructor(name){
     this.name = name;
-    if(name in dbs.dbdefs){
-      this.db = dbs.dbdefs[name];
+    if(name in db.objects){
+      this.db = db.objects[name];
     }
     else{
       throw 'No db ' + name + ' found.';

@@ -1,6 +1,4 @@
 var glib    = require("../glib.js");
-var objects = require("../db.js");
-var dbs     = require("../dbs.js");
 var master  = require("./master.js");
 
 exports.usersResource = class extends master.masterResource {

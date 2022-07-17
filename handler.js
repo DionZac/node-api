@@ -1,5 +1,4 @@
 var glib    = require('./glib.js');
-var objects = require('./db.js');
 var app     = require('./app.js');
 var urls    = require('./urls.js');
 var __auth__    = require('./auth.js');
@@ -21,7 +20,7 @@ const modify_object_methods = [
     'DELETE'
 ]
 
-exports.intialize_resources = async() => {
+exports.initialize_resources = async() => {
     var registered = await glib.readJSONfile('./registered.json');
 
     registered = JSON.parse(registered);
@@ -43,8 +42,8 @@ exports.intialize_resources = async() => {
                         continue;
                     }
 
-                    var db = new resources[end.resource][end.resource]();
-                    handler[end.dbname] = db;
+                    var r = new resources[end.resource][end.resource]();
+                    handler[end.dbname] = r;
                 }
             }
         }
@@ -117,11 +116,11 @@ exports.call = async (req,res) => {
 
 
 var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
-    if(!objects.databases[dbname]) { throw new Error("Resource " + dbname + "  model missing"); }
+    if(!db[dbname]) { throw new Error("Resource " + dbname + "  model missing"); }
 
-    var dbmodel = objects.databases[dbname];
+    var dbmodel = db[dbname].model;
 
-    var resourceName = dbmodel.db.resourceName;
+    var resourceName = dbmodel.resourceName;
 
     if(!handler[dbname]) {
 
@@ -136,17 +135,17 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
             self.res.send('Failed');
             return;
         }
-        var db = new resources[resourceName][resourceName]();
-        handler[dbname] = db;
+        var resource = new resources[resourceName][resourceName]();
+        handler[dbname] = resource;
     }
     else{
-        var db = handler[dbname];
+        var resource = handler[dbname];
     }
 
     /// Check if request Method is allowed on this endpoint ////
     try{
         method = method.toUpperCase();
-        let allowed_methods = db['Meta'].allowed_methods;
+        let allowed_methods = resource['Meta'].allowed_methods;
         if(!allowed_methods.includes(method)){
             glib.serverlog("Not allowed method", 0);
             throw '';
@@ -154,7 +153,7 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
     }
     catch(err){
         let msg = 'Not allowed request method';
-        db.__handle_not_allowed_method__(self.res,msg);
+        resource.__handle_not_allowed_method__(self.res,msg);
         return;
     }
 
@@ -164,10 +163,10 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
     // ========================================
 
     var auth_classes = app.settings.AUTHORIZATION_CLASS;
-    var META_ATTRIBUTES = db.Meta;
+    var META_ATTRIBUTES = resource.Meta;
 
-    if('Meta' in db && 'AUTHORIZATION_CLASS' in db['Meta']){
-        auth_classes = db['Meta'].AUTHORIZATION_CLASS;
+    if('Meta' in resource && 'AUTHORIZATION_CLASS' in resource['Meta']){
+        auth_classes = resource['Meta'].AUTHORIZATION_CLASS;
     }
     
     if(Array.isArray(auth_classes)){
@@ -183,11 +182,11 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
                         /// to check for access to modify specific object 
                         if('modify_object' in __authorization__){
                             if(kwargs && 'rowid' in kwargs && kwargs.rowid > -1){
-                                let __obj__ = await objects.databases[dbname].get(kwargs.rowid);
+                                let __obj__ = await db[dbname].get(kwargs.rowid);
                                 
                                 let has_access_to_this_object = __authorization__.modify_object(parameters, __obj__[0]);
                                 if(!has_access_to_this_object){
-                                    db.__authorization_failed__(self,'No access to modify this object')
+                                    resource.__authorization_failed__(self,'No access to modify this object')
                                     return;
                                 }
                             }
@@ -208,7 +207,7 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
         }
         catch(err){
             glib.serverlog('Authorization failed', 0);
-            db.__authorization_failed__(self,err);
+            resource.__authorization_failed__(self,err);
             return;
         }
     }
@@ -218,24 +217,25 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
 
     try{
         //// if failed to find the database reference given /////
-        // if(db.__handle_reference_error__(res)) return;
+        // if(resource.__handle_reference_error__(res)) return;
 
         if(fn == '__update__' || fn == '__remove__'){
             /// check if the rowid given is valid ///
-            if(!db.__check_rowid__(self.res,kwargs)) return;
+            if(!resource.__check_rowid__(self.res,kwargs)) return;
         }
 
         /// deserialize data for client ///
         if(fn == '__get__'){
             let data;
-            if('filter_by' in parameters){
-                data = await db.filter_by(self, parameters, kwargs);
+            if('filter_by' in parameters && 'filter_by' in resource){
+                // Resource must include "filter_by" function to make this work //
+                data = await resource.filter_by(self, parameters, kwargs);
             }
-            else data = await db[fn](self,parameters,kwargs);
+            else data = await resource[fn](self,parameters,kwargs);
 
             if(data){
                 // Modify the data //
-                data = handler.exclude_private_fields(db, data);
+                data = handler.exclude_private_fields(resource, data);
                 data = await handler.deserializeData(data,dbname);
                 self.res.send(data);
                 return;
@@ -252,24 +252,24 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
         }
 
 
-        db[fn](self, parameters, kwargs);
+        resource[fn](self, parameters, kwargs);
     }
     catch(err){
-        db.__function_not_found__(self.res);
+        resource.__function_not_found__(self.res);
         throw new Error(err);
     }
 }
 
 exports.serializeData = function(data,dbname){
-    let db = handler[dbname];
-    let fields = objects.databases[dbname].db.fields;
+    let resource = handler[dbname];
+    let fields = db[dbname].model.fields
 
     for(let f of fields){
         // if(!(f.fname in data)) continue;
         let serialize_function_name = 'serialize_' + f.fname;
-        if(serialize_function_name in db){
+        if(serialize_function_name in resource){
             try{
-                data[f.fname] = db[serialize_function_name](data[f.fname]);
+                data[f.fname] = resource[serialize_function_name](data[f.fname]);
             }
             catch(err){}
         }
@@ -280,17 +280,17 @@ exports.serializeData = function(data,dbname){
 
 exports.deserializeData =  function(data, dbname){
     return new Promise( async (resolve,  reject) => {
-        let db = handler[dbname];
-        let fields = objects.databases[dbname].db.fields;
+        let resource = handler[dbname];
+        let fields = db[dbname].model.fields;
 
         let i = 0;
         for(let entry of data){
             for(let f of fields){
                 if(!(f.fname in entry)) continue;
                 let deserialize_function_name = 'deserialize_' + f.fname;
-                if(deserialize_function_name in db){
+                if(deserialize_function_name in resource){
                     try{
-                        entry[f.fname] = await db[deserialize_function_name](entry[f.fname]);
+                        entry[f.fname] = await resource[deserialize_function_name](entry[f.fname]);
                     }
                     catch(err){
                     }
@@ -307,14 +307,14 @@ exports.deserializeData =  function(data, dbname){
 
 /**
  * 
- * @param {*} db : Model Resource Instance
+ * @param {*} resource : Model Resource Instance
  * @param {*} data : Data after database query
  */
-exports.exclude_private_fields = (db, data) => {
-    if(db.private_fields && Array.isArray(db.private_fields)){
-        for(let pf of db.private_fields){
+exports.exclude_private_fields = (resource, data) => {
+    if(resource.private_fields && Array.isArray(resource.private_fields)){
+        for(let pf of resource.private_fields){
             for(let rec of data){
-                if(rec[pf]) delete rec[pf];
+                if(pf in rec) delete rec[pf];
             }
         }
     }

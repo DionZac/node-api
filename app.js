@@ -10,73 +10,29 @@ win.showDevTools();
 //**********************************************************
 var fs = require('fs');
 
-var express     = require('express');
-var server      = express();
-var http        = require('http').Server(server);
-var bodyParser  = require('body-parser');
-var util        = require('util');
-var Monitor     = require('monitor');
-var port        = /*process.argv[2] || */80;
+var express = require('express');
+var server = express();
+var http = require('http').Server(server);
+var bodyParser = require('body-parser');
+var util = require('util');
+var Monitor = require('monitor');
+var port = /*process.argv[2] || */80;
 var cluster = require('cluster');
 
-
-
-
+// Database Engine
+var database = require('./modules/db/database.js');
 
 // App
-var dbs         = require('./dbs.js');
-var glib        = require('./glib.js');
-var handler     = require('./handler.js');
-var urls        = require('./urls.js');
+var glib = require('./glib.js');
+var handler = require('./handler.js');
+var urls = require('./urls.js');
 
-var logFile = fs.createWriteStream('log.txt',{flags:'a'});
-var logStdout = process.stdout;
+var app = this;
 
-
-
-var count = 0;
-
-var app         = this;
-
+// Global Reference
 appRoot = __dirname;
 Settings = {};
-
-//**********************************************************
-// Global defs
-
-exports.local = [];
-
-
-
-
-/////////////////////////////////////// SSH TESTS /////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-//**********************************************************
-
+db = new database();
 
 ////////////////////////////////////////////////////////////
 // APP: Startup sequence
@@ -84,58 +40,53 @@ exports.local = [];
 ////////////////////////////////////////////////////////////
 exports.settings = {};
 exports.initialize_only_database = false;
-exports.startup = async function(args,callb)
-{
-	if (cluster.isMaster && !app.initialize_only_database) {
-  cluster.fork();
-  
-  
-   
-  cluster.on('exit', function(worker, code, signal) {
+exports.startup = async function (args, callb) {
+  if (0==1 && cluster.isMaster && !app.initialize_only_database) {
     cluster.fork();
-  });
-}
-  
-  else{
-	  if(!args) args = [];  // can plug in default
 
-
- /// initialize settings from 'settings.json' file ///
-  try{
-    var settings = await glib.readJSONfile('settings.json')
-    try{ settings = JSON.parse(settings);}
-    catch(err){}
+    cluster.on('exit', function (worker, code, signal) {
+      cluster.fork();
+    });
   }
-  catch(err){
-    throw new Error("Invalid or missing 'settings.json' file.")
-  }
-  
-  port = settings.PORT;
-  this.settings = settings;
-  Settings = settings; /// global inform 
-  
-  //Update the corresponding variables of 'dbs.js' class
-  dbs.DB_FILE = settings.DB_FILE;
-	dbs.LOGSQL  = settings.LOGSQL;
-	dbs.DB_ENGINE = settings.database;
 
- /// Init major modules
- /// this should work with promises instead of callbacks ///
-  app.databaseInit(args,async function(err){
-    if(err) { glib.serverlog(err, 0) ; callb(err); return;}
-    if(!app.initialize_only_database){
-      await handler.intialize_resources();
-      await handler.initializeAuthorizationClasses();
+  else {
+    if (!args) args = [];  // can plug in default
 
-      app.serverInit(args);
-      glib.serverlog(`Server started @port : ${port}` , 1)
+    // initialize settings from 'settings.json' file ///
+    try {
+      var settings = await glib.readJSONfile('settings.json')
+      try { settings = JSON.parse(settings); }
+      catch (err) { }
     }
-    if(callb) callb();
-  });
-  
+    catch (err) {
+      throw new Error("Invalid or missing 'settings.json' file.")
+    }
 
-  /// Startup web UI 
-  //window.location.replace("http://127.0.0.1/index.html");
+    port = settings.PORT;
+    this.settings = settings;
+    Settings = settings; /// global inform 
+
+    // Update the corresponding variables of Database Global object //
+    db.settings.DB_FILE = settings.DB_FILE;
+    db.settings.DB_LOG = settings.DB_LOG;
+    db.settings.DB_ENGINE = settings.DB_ENGINE;
+
+    // Initialize major modules and server //
+    try {
+      await app.databaseInit();
+      if (!app.initialize_only_database) {
+        await handler.initialize_resources();
+        await handler.initializeAuthorizationClasses();
+
+        app.serverInit(args);
+        glib.serverlog(`Server started @port : ${port}`, 1);
+      }
+    }
+    catch (e) {
+      glib.serverlog(e,0);
+      process.exit(1);
+    }
+
   }
 }
 
@@ -143,23 +94,30 @@ exports.startup = async function(args,callb)
 // APP: Init database manager
 ////////////////////////////////////////////////////////////
 
-exports.databaseInit = function(args, callb)
-{
-  /// make this work with promises instead of callbacks ////
-  dbs.init(function(){
-    dbs.connect(dbs.DB_FILE,function(err){
-      if(err) { glib.err("startup: db connect failed->"+err); if(callb) callb(err); return; }
-      
-      if(callb) callb();
-    });
-  });
+exports.databaseInit = async () => {
+  // Call the initialization function for the Database //
+  try {
+    await db.init();
+  }
+  catch (err) {
+    glib.dblog("Database initialization failed for : " + JSON.stringify(err), 0)
+    return;
+  }
+
+  // Connect to the database //
+  try {
+    await db.engine.connect();
+  }
+  catch (err) {
+    glib.dblog("Database connection failed for : " + JSON.stringify(err), 0)
+  }
+
 }
 
 ////////////////////////////////////////////////////////////
 // APP: Init server & comms
 ////////////////////////////////////////////////////////////
-exports.serverInit = async function(args)
-{
+exports.serverInit = async function (args) {
   /////////////////////////// Express server setup
 
 
@@ -178,27 +136,26 @@ exports.serverInit = async function(args)
        });
   */
   server.enable('etag', 'weak');
-  server.all('/*', function(req, res, next) {
-     res.header("Access-Control-Allow-Origin", "*");
-     res.header("Access-Control-Allow-Methods", "*")
-     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-     next();
+  server.all('/*', function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "*")
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
   });
-  
- 
 
-  server.use(function(req, res, next) 
-  {   
-    if(req.url.indexOf('.manifest') != -1) {
+
+
+  server.use(function (req, res, next) {
+    if (req.url.indexOf('.manifest') != -1) {
       res.header('Content-Type', 'text/cache-manifest');
       res.header('Cache-Control', 'max-age=0, no-cache, no-store, must-revalidate');
       res.header('Pragma', 'no-cache');
       res.header('Expires', 'Thu, 01 Jan 1970 00:00:01 GMT');
       next();
       return;
-    } 
-  
-    if(req.url.match(/(.png|.jpg|.jpeg|.svg|.woff|.woff2|.ttf|.otf|.eot)/)) {
+    }
+
+    if (req.url.match(/(.png|.jpg|.jpeg|.svg|.woff|.woff2|.ttf|.otf|.eot)/)) {
       res.header('Cache-Control', 'max-age=691200');
     } else {
       res.header('Cache-Control', 'max-age=0, no-cache, no-store, must-revalidate');
@@ -208,9 +165,9 @@ exports.serverInit = async function(args)
     next();
   });
 
-  try{
+  try {
     /// set which folders are being included in 'settings.json' -- if null do not include anything ///
-    if(this.settings.PROJECT_INCLUDE_FOLDER){
+    if (this.settings.PROJECT_INCLUDE_FOLDER) {
       // try{
       //   server.use(express.static(`${__dirname}/${this.settings.PROJECT_INCLUDE_FOLDER}`));
       // }
@@ -218,32 +175,32 @@ exports.serverInit = async function(args)
       //   glib.serverlog(`Failed to include project directory : ${__dirname}/${this.settings.PROJECT_INCLUDE_FOLDER}`, 0);
       // }
     }
-    
-    let views = await glib.readJSONfile("./views.json");
-    try{views = JSON.parse(views)}
-    catch(err){};
 
-    for(let path in views){
+    let views = await glib.readJSONfile("./views.json");
+    try { views = JSON.parse(views) }
+    catch (err) { };
+
+    for (let path in views) {
       let view = views[path];
 
-      server.get(view.endpoint, function(req,res){
+      server.get(view.endpoint, function (req, res) {
         urls.setupViewResponse(view, res);
       });
     }
   }
-  catch(err){
-    glib.serverlog("Failed to setup views " , 0);
-    glib.serverlog(err,0);
+  catch (err) {
+    glib.serverlog("Failed to setup views ", 0);
+    glib.serverlog(err, 0);
   }
-  
+
   //// set the limit in 'settings.json' -- if null do not configure it ///
-  server.use(bodyParser.json({limit:'20mb'}));
-  server.use(bodyParser.urlencoded({limit: '20mb', extended: true}));
+  server.use(bodyParser.json({ limit: '20mb' }));
+  server.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
 
   // configure all accepted requests //
   urls.registerRequestServices(server);
-  
-  http.listen(port, function() {
+
+  http.listen(port, function () {
     glib.log("startup: server started @ port " + port);
     // glib.log("MEMORY END-INIT: "+util.inspect(process.memoryUsage()));
   });
@@ -253,10 +210,9 @@ exports.serverInit = async function(args)
 ////////////////////////////////////////////////////////////
 // APP: Init process monitor
 ////////////////////////////////////////////////////////////
-exports.monitorInit = function()
-{
+exports.monitorInit = function () {
   exports.procMon = null;
-  app.procMon     = new Monitor({ probeClass:'Process' });
+  app.procMon = new Monitor({ probeClass: 'Process' });
   app.procMon.connect();
 }
 

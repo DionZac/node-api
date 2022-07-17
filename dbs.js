@@ -28,10 +28,6 @@ var ENGINE_MYSQL      = "MySQL";        // MYSQL database engine selection
 
 exports.LOGSQL;
 
-exports.DB_ENGINE;
-// var dbs.DB_ENGINE         = ENGINE_SQLITE;  // Select one of the database engines avail
-// var dbs.DB_ENGINE         = ENGINE_MYSQL;  // Select one of the database engines avail
-
 //**********************************************************
 // DATA TYPES
 //**********************************************************
@@ -84,7 +80,6 @@ exports.init = async function(callb)
   //********************************************
   // Open/init
   //********************************************
-  dbs.dbfile      = dbs.DB_FILE;
   dbdefs.dblist   = [];
 
   glib.loadModelFiles().then(dbfiles => {

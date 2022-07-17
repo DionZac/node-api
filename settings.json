@@ -1,8 +1,8 @@
 {
-    "database": "SQLITE3",
+    "DB_ENGINE": "SQLITE3",
     "PORT":9000,
     "DB_FILE":"menu.db",
-    "LOGSQL":1,
+    "DB_LOG":true,
     "api_endpoint": "/api/v1/",
     "profiles_name":"users",
     "AUTHORIZATION_CLASS":"TokenAuthorization",

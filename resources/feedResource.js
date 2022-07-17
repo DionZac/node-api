@@ -1,26 +1,23 @@
-    var glib    = require("../glib.js");
-    var objects = require("../db.js");
-    var dbs     = require("../dbs.js");
-    var master  = require("./master.js");
-    
-    exports.feedResource = class extends master.masterResource {
-        constructor(){
-            super();
-            this.feed = objects.databases.feed;
+var glib = require("../glib.js");
+var master = require("./master.js");
 
-            this.Meta = {
-                AUTHORIZATION_CLASS:[
-                    'TokenAuthorization',
-                    'feedAuthorization'
-                ],
-                allowed_methods:['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
-            }
+exports.feedResource = class extends master.masterResource {
+    constructor() {
+        super();
+        this.feed = db.feed;
 
-            this.private_fields = [
-                'token'
-            ]
-
-            super.initialize(this.feed);
+        this.Meta = {
+            AUTHORIZATION_CLASS: [
+                'feedAuthorization'
+            ],
+            allowed_methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+            SAFE_AUTH_METHODS:['GET', 'POST','PUT']
         }
+
+        this.private_fields = [
+            'token'
+        ]
+
+        super.initialize(this.feed);
     }
-    
+}

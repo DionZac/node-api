@@ -4,8 +4,6 @@
 //*******************************************************************************************
 var app         = require('./app.js');
 var glib        = require('./glib.js');
-var dbs         = require('./dbs.js');
-var objects		= require('./db.js');
 var handler     = require('./handler.js');
 
 var appReq      = {};
@@ -15,7 +13,7 @@ var appReq      = {};
 
 
 exports.login = async (req,res) => {
-	let users = await objects.databases.users.get();
+	let users = await db.users.get();
 
 	// delete users[0]['rowid'];
 	res.send(users[0]);

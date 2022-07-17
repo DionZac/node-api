@@ -1,14 +1,11 @@
 var app = require('./app.js');
-var objects = require('./db.js');
-
-
 
 //// Set this class to a resource 'Meta.AUTHORIZATION_CLASS' in order to include token auth in all requests of it's endpoint ///
 /// resource can have safe auth methods that will pass authorization ///
 exports.TokenAuthorization = class {
     constructor(){
         this.profiles_name = app.settings.profiles_name || 'users';
-        this.users = objects.databases[this.profiles_name];
+        this.users = db[this.profiles_name];
     }
 
     authorize(params,method,safe){

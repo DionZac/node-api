@@ -11,7 +11,7 @@ class defaultView {
     }
 
     render(template,res){
-        res.sendFile(template,fullpath);
+        res.sendFile(template);
     }
 }
 

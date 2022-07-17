@@ -1,6 +1,4 @@
-var dbs = require('../dbs.js');
 var glib = require('../glib.js');
-
 
 exports.masterResource = class {
     constructor(){
@@ -11,7 +9,7 @@ exports.masterResource = class {
 
     initialize(database){
         this.db = database;
-        let temp = this.db.db; /// temporary database configuration object ///
+        let temp = this.db.model; /// temporary database configuration object ///
         
         if('readOnly' in temp && temp.readOnly){
             this.setReadOnly();
@@ -169,8 +167,7 @@ exports.masterResource = class {
     async __insert__(self,params){
         let res = self.res;
         try{
-            let record = dbs.newRecord(this.db.db,params);
-            await this.db.insert(record);
+            await this.db.insert(params);
             res.send({err:0});
         }
         catch(err){

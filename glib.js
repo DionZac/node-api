@@ -28,6 +28,12 @@ exports.serverlog = function(msg,type){
   }
 }
 
+exports.dblog = function(msg, type) {
+  if(!db.settings || !db.settings.DB_LOG) return;
+
+  glib.serverlog(msg, type);
+}
+
 exports.not_found_error = function(res){
   res.send('Request not found');
 }
