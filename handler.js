@@ -237,6 +237,7 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
                 // Modify the data //
                 data = handler.exclude_private_fields(resource, data);
                 data = await handler.deserializeData(data,dbname);
+                console.log(data);
                 self.res.send(data);
                 return;
             }
@@ -286,6 +287,11 @@ exports.deserializeData =  function(data, dbname){
         let i = 0;
         for(let entry of data){
             for(let f of fields){
+                // If table field is array - deserialize the data properly //
+                if(f.size && f.size > 1){
+                    entry = this.deserialize_array_field_data(entry,f);
+                }
+
                 if(!(f.fname in entry)) continue;
                 let deserialize_function_name = 'deserialize_' + f.fname;
                 if(deserialize_function_name in resource){
@@ -303,6 +309,17 @@ exports.deserializeData =  function(data, dbname){
         resolve(data);
     })
 
+}
+
+exports.deserialize_array_field_data = (data, field) => {
+    data[field.fname] = [];
+    for(let i=0; i<field.size; i++){
+        let name = field.fname + '_' + i;
+        data[field.fname].push(data[name]);
+        delete data[name];
+    }
+
+    return data;
 }
 
 /**
