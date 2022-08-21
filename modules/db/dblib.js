@@ -30,8 +30,32 @@ exports.newRecord = function(dbf, template)
 
   for(var i=0; i<dbf.fields.length; i++) {
     f = dbf.fields[i];
-    if(template && (f.fname in template)) v = template[f.fname]; else v = f.def;
-    rec[f.fname] = glib.cloneObj(v);
+    if(template && (f.fname in template)){
+      if(f.size && f.size > 1){
+        for(let j=0; j<f.size; j++){
+          let t_rec = template[f.fname][j];
+          if(t_rec){
+            rec[`${f.fname}_${j}`] = t_rec
+          }
+          else{
+            rec[`${f.fname}_${j}`] = f.def;
+          }
+        }
+      }
+      else{ 
+        rec[f.fname] = template[f.fname]
+      }
+    }
+    else{
+      if(f.size && f.size > 1){
+        for(let j=0; j<f.size; j++){
+          rec[`${f.fname}_${j}`] = f.def;
+        }
+      }
+      else{
+        rec[f.fname] = f.def;
+      }
+    }
   }
   rec.rowid = 0;
   return(rec);
@@ -54,7 +78,32 @@ exports.updateRecord = async function(dbf,template,rowid,callb)
   var v, f, rec = {};
   for(var i=0; i<dbf.fields.length; i++) {
     f = dbf.fields[i];
-    if(template && (f.fname in template)) v = template[f.fname]; else v = EXISTING_RECORD[f.fname];
+    if(template && (f.fname in template)){
+      if(f.size && f.size > 1){
+        for(let j=0; j<f.size; j++){
+          let t_rec = template[f.fname][j];
+          if(t_rec){
+            rec[`${f.fname}_${j}`] = t_rec
+          }
+          else{
+            rec[`${f.fname}_${j}`] = f.def;
+          }
+        }
+      }
+      else{
+        rec[f.fname] = EXISTING_RECORD[f.fname];
+      }
+    }
+    else {
+      if(f.size && f.size > 1){
+        for(let j=0; j<f.size; j++){
+          rec[`${f.fname}_${j}`] = EXISTING_RECORD[`${f.fname}_${j}`];
+        }
+      }
+      else{
+        rec[f.fname] = EXISTING_RECORD[f.fname];
+      }
+    }
 
     rec[f.fname] = glib.cloneObj(v);
   }

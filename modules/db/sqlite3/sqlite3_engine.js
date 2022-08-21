@@ -86,8 +86,18 @@ class sqlite3Engine {
 
             for (let [idx, field] of dbf.fields.entries()) {
                 if (idx) query += ',';
-                let value = rec[field.fname];
-                query += fieldOutput(field, value);
+                if(field.size && field.size > 1){
+                    for(let j=0; j < field.size; j++){
+                        if(j > 0) query += ',';
+
+                        let value = rec[`${field.fname}_${j}`];
+                        query += fieldOutput(field, value);
+                    }
+                }
+                else{
+                    let value = rec[field.fname];
+                    query += fieldOutput(field, value);
+                }
             }
 
             query += ` WHERE rowid=${rec.rowid};`;
@@ -122,15 +132,35 @@ class sqlite3Engine {
 
             for (let [idx, field] of dbf.fields.entries()) {
                 if (idx) query += ',';
-                query += field.fname;
+                if(field.size && field.size > 1){
+                    for(let j=0; j < field.size; j++){
+                        if(j > 0) query += ',';
+
+                        query += `${field.fname}_${j}`;
+                    }
+                }
+                else{
+                    query += field.fname;
+                }
             }
 
             query += `) VALUES (`;
 
             for (let [idx, field] of dbf.fields.entries()) {
                 if (idx) query += ',';
-                let value = rec[field.fname];
-                query += fieldOutput(field, value);
+
+                if(field.size && field.size > 1){
+                    for(let j=0; j < field.size; j++){
+                        if(j > 0) query += ',';
+
+                        let value = rec[`${field.fname}_${j}`];
+                        query += fieldOutput(field, value);
+                    }
+                }
+                else{
+                    let value = rec[field.fname];
+                    query += fieldOutput(field, value);
+                }
             }
 
             query += ');';
