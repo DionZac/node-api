@@ -38,7 +38,16 @@ class sqlite3Engine {
             let query = `CREATE TABLE ${dbf.name} (`;
             for (let [idx, field] of dbf.fields.entries()) {
                 if (idx) query += ',';
-                query += dblib.outputField(field, -1);
+                if(field.size && field.size > 1){
+                    for(let j=0; j<field.size; j++){
+                        if(j>0) query += ',';
+                        
+                        let temp_field = JSON.parse(JSON.stringify(field));
+                        temp_field.fname = `${field.fname}_${j}`;
+                        query += dblib.outputField(temp_field, -1);
+                    }
+                }
+                else query += dblib.outputField(field, -1);
             }
 
             query += ')';
