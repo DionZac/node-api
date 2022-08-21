@@ -331,7 +331,22 @@ class sqlite3Engine {
                     /// ## REMOVE THE COLUMN FROM database SCHEMA ////
                     var temp = JSON.parse(JSON.stringify(dbf));
                     temp['name'] = '__' + dbf.name + '__';
-                    for (let i = 0; i < temp.fields.length; i++) if (temp.fields[i].fname == fname) temp.fields.splice(i, 1);
+                    for (let i = 0; i < temp.fields.length; i++){
+                        let f = temp.fields[i];
+                        if (f.fname == fname) temp.fields.splice(i, 1);
+                        else {
+                            /// If array field - replace the normal field with "x" number of fields with _{j} suffix ///
+                            if(f.size && f.size > 1){
+                                for(let j=0; j<f.size; j++){
+                                    let t = JSON.parse(JSON.stringify(f));
+                                    delete t['size'];
+                                    t.fname = `${f.fname}_${j}`;
+                                    temp.fields.push(t);
+                                }
+                                temp.fields.splice(i,1);
+                            }
+                        }
+                    }
 
                     //// ## CREATE THE BACKUP TABLE ////
                     this.create(temp, async (err) => {
@@ -339,7 +354,9 @@ class sqlite3Engine {
 
                         // ## INSERT RECORDS TO BACKUP TABLE ## //
                         let q = 'INSERT INTO ' + temp['name'] + ' SELECT';
-                        for (let f of temp.fields) q += ' ' + f.fname + ',';
+                        for (let f of temp.fields){
+                            q += ' ' + f.fname + ',';
+                        }
                         q = q.substr(0, q.length - 1); /// remove the ',' 
                         q += ' FROM ' + dbf.name + ';';
                         await this.customQuery(dbf, q, []);
@@ -371,6 +388,70 @@ class sqlite3Engine {
             return;
         }
     }
+
+    /**
+     * SQLITE3 Engine : "BEGIN TRANSACTION"
+     */
+    begin(callback){
+        if(!callback){ callback = function(){};};
+
+        return new Promise((resolve, reject) => {
+            try{
+                let query = 'BEGIN TRANSACTION;';
+                glib.dblog(query, 2);
+                this.sqlite3.all(query,function() {
+                    callback();
+                    resolve();
+                })
+            }
+            catch(e){
+                reject(e);
+            }
+        })
+    }
+
+    /**
+     * SQLITE3 Engine : "ROLLBACK"
+     */
+     rollback(callback){
+        if(!callback){ callback = function(){};};
+
+        return new Promise((resolve, reject) => {
+            try{
+                let query = 'ROLLBACK;';
+                glib.dblog(query, 2);
+                this.sqlite3.all(query,function() {
+                    callback();
+                    resolve();
+                })
+            }
+            catch(e){
+                reject(e);
+            }
+        })
+    }
+
+    /**
+     * SQLITE3 Engine : "COMMIT"
+     */
+     commit(callback){
+        if(!callback){ callback = function(){};};
+
+        return new Promise((resolve, reject) => {
+            try{
+                let query = 'COMMIT;';
+                glib.dblog(query, 2);
+                this.sqlite3.all(query,function() {
+                    callback();
+                    resolve();
+                })
+            }
+            catch(e){
+                reject(e);
+            }
+        })
+    }
+    
 }
 
 module.exports = sqlite3Engine;

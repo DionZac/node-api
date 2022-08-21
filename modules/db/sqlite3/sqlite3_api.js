@@ -1,4 +1,5 @@
 var dblib = require('../dblib.js');
+var glib = require('../../../glib.js');
 
 
 class sqlite3API {

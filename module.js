@@ -53,30 +53,65 @@ module.exports.update_db_field = async function(dbname, field, callback){
 ///////////////////////////////////////////////////
 ///// CMD API & MIGRATION API : Adding a field inside the table
 ///////////////////////////////////////////////////
-module.exports.add_db_field = async function(dbname, fname, type='str', len=160 , def='Test field', callback){
+module.exports.add_db_field = async function(dbname, field, callback){
+    if(!dbname) missing_field('"dbname" -----> Table name');
+    if(!field.fname) missing_field('"field.fname" -----> Field name');
+    if(!field.type) missing_field('"field.type" -----> Field type');
+
     var self = this;
     app.initialize_only_database = true; //// do not initialize the HTTP server //// 
-    app.startup('').then(err => {
+    app.startup('').then(async (err) => {
         if(err) { glib.serverlog('Failed to initialize database', 0); process.exit(1); return;}
-        
-        var temp = {fname:fname, type:type, len:len, def:def}
     
         if(!(dbname in db)) { glib.serverlog('Database table ' + dbname + ' not found ', 0); process.exit(1); return;}
         var _db = db[dbname];
-        _db.addcolumn(temp).then( async () => {
-            glib.serverlog('Successfully added ' + fname + ' to ' + dbname, 1);
-            if(self.called_from_migration_file){
-                if(callback) callback()
+        if(field.size && field.size > 1) {
+            try{
+                // Begin transaction to add all columns for this field
+                await db.engine.begin();
+
+                for(let i=0; i<field.size; i++){
+                    let temp = JSON.parse(JSON.stringify(field)); // clone field
+                    temp.fname = `${field.fname}_${i}`; // e.g "fname": "scores" ---> "temp.fname": "scores_0"
+                    await _db.addcolumn(temp);
+                }
+
+                // Commit transaction
+                await db.engine.commit();
+
+                glib.serverlog('Successfully added ' + field.fname + ' to ' + dbname, 1);
+                if(self.called_from_migration_file){
+                    if(callback) callback();
+                }
+                else{
+                    self.add_db_field(dbname, field);
+                }
             }
-            else{
-                self.add_field(dbname, fname, type, len, def);
+            catch(err){
+                await db.engine.rollback();
+
+                glib.serverlog('Failed to add column ' + field.fname + ' to ' + dbname , 0);
+                if(callback) callback();
+                else process.exit(1);
             }
-            // process.exit(0);
-        }).catch(err => {
-            glib.serverlog('Failed to add column', 0);
-            if(callback) callback(err);
-            else process.exit(1);
-        })
+        }
+        else {
+            _db.addcolumn(field).then( async () => {
+                glib.serverlog('Successfully added ' + field.fname + ' to ' + dbname, 1);
+                if(self.called_from_migration_file){
+                    if(callback) callback()
+                }
+                else{
+                    self.add_field(dbname, field);
+                }
+                // process.exit(0);
+            }).catch(err => {
+                glib.serverlog('Failed to add column ' + field.fname + ' to ' + dbname , 0)
+                if(callback) callback(err);
+                else process.exit(1);
+            })
+        }
+        
     })
 
 }
@@ -84,24 +119,25 @@ module.exports.add_db_field = async function(dbname, fname, type='str', len=160 
 //////////////////////////////////////////////////////
 //// CMD API & MIGRATION API : Removing a field from table
 //////////////////////////////////////////////////////
-module.exports.remove_db_field = async function(dbname, fname, callback){
+module.exports.remove_db_field = async function(dbname, field, callback){
     var self = this;
     app.initialize_only_database = true; //// do NOT initialize the HTTP server ////
     app.startup('').then(err => {
         if(err) { glib.serverlog('Failed to initialize database', 0); process.exit(1); return;}
         
-        var temp = {fname:fname};
+        var temp = {fname:field.fname};
         if(!(dbname in db)) { glib.serverlog("Database table " + dbname + ' not found', 0); process.exit(1); return;}
 
         var _db = db[dbname];
+        
         _db.removecolumn(temp).then( () => {
-            glib.serverlog('Sucessfully removed ' + fname + ' from ' + dbname, 1);
+            glib.serverlog('Sucessfully removed ' + field.fname + ' from ' + dbname, 1);
             if(self.called_from_migration_file){
                 if(callback) callback();
             }
-            else self.remove_field(dbname, fname);
+            else self.remove_field(dbname, field.fname);
         }).catch(err => {
-            glib.serverlog('Failed to remove column', 0);
+            glib.serverlog('Failed to remove column ----->' + err, 0);
             process.exit(1);
         })
     })
@@ -763,13 +799,16 @@ module.exports.remove_field = function(dbname, fname){
 // MODULE API : Import field in schema(database) JSON file.
 //// ---- Call 'add_db_field' to also append it in the database ----
 // ========================
-module.exports.add_field = function(dbname, fname, type, len, def, hlp){
+module.exports.add_field = function(dbname, field){
+    let fname = field.fname;
+    let type = field.type;
+    let len = field.len;
+    let def = field.def;
+    let size = field.size;
+    let hlp  = field.hlp;
+    
     var self = this;
     glib.serverlog('Adding field to model',3);
-    if(!dbname) missing_field('"dbname" ------> Table name');
-    if(!fname) missing_field('"fname" ----> Field name');
-    if(!type) missing_field('"type" ----> Field type');
-    
 
     if(!len) len = 160;
     if(!def){
@@ -815,8 +854,9 @@ module.exports.add_field = function(dbname, fname, type, len, def, hlp){
             fname:fname,
             type:type,
             len:parseInt(len),
-            def:def
+            def:def,
         }
+        if(size) temp['size'] = size;
         if(hlp) temp['hlp'] = hlp;
 
         fields.push(temp);

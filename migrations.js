@@ -432,7 +432,7 @@ function addmodel(dbname){
 function addfield(operation){
     return new Promise( async ( resolve , reject) => {
         try{
-            main.add_db_field(operation.dbname, operation.field.fname, operation.field.type, operation.field.len, operation.field.def, function(err){
+            main.add_db_field(operation.dbname, operation.field, function(err){
                 if(err) { reject(err);}
                 else resolve();
             });
@@ -473,7 +473,7 @@ function updatefield(operation){
 function removefield(operation){
     return new Promise( (resolve, reject) => {
         try{
-            main.remove_db_field(operation.dbname, operation.field.fname, function(err){
+            main.remove_db_field(operation.dbname, operation.field, function(err){
                 if(err) reject(err);
                 else resolve()
             })
