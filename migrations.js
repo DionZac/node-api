@@ -1,7 +1,7 @@
 var main = require('./module.js');
 var app  = require('./app.js');
 var glib = require('./glib.js');
-var dbs  = require('./dbs.js');
+// var dbs  = require('./dbs.js');
 var fs   = require('fs');
 
 const colors = require('colors');
@@ -31,12 +31,12 @@ module.exports.createmigrations = function(){
     var self = this;
     
     app.initialize_only_database = true; /// do not initialize HTTP server
-    app.startup('', function(){
+    app.startup('').then(err => {
         var migrations = [];
 
     glib.loadModelFiles().then( dbfiles =>{
         let query = "SELECT * FROM json_schema;";
-        dbs.customQuery(dbs.dbdefs.json_schema, query, []).then(rows => {
+        db.engine.customQuery(null, query, []).then(rows => {
             for(let dbfile in dbfiles){
                 let database = dbfiles[dbfile];
                 try{ database = JSON.parse(database)}
@@ -197,10 +197,10 @@ module.exports.runmigrations = function(MIGRATION_NUMBER){
     /// MIGRATION NUMBER VARIABLE WILL BE USED TO MIGRATE IN SPECIFIC MIGRATION ///
     try{
         app.initialize_only_database = true; /// do NOT initialize the HTTP web server
-        app.startup('', () => {
+        app.startup('').then(err => {
             /// Get the migration already applied ////
             let out = 'SELECT rowid,* FROM migrations;';
-            dbs.customQuery(dbs.dbdefs.migrations, out, []).then(async (rows) => {
+            db.engine.customQuery(null, out, []).then(async (rows) => {
                 var migrations = [];
                 migrations = await glib.loadMigrationFiles();
 
@@ -495,7 +495,7 @@ function remove_migration_record(migration){
         let number = migration.split('_')[0];
 
         let query = 'DELETE FROM migrations WHERE number="' + number + '"';
-        dbs.customQuery(null,query,[])
+        db.engine.customQuery(null,query,[])
             .then(resolve)
             .catch( (err) => {
                 glib.serverlog('Remove migration record error ::: ' + JSON.stringify(err), 0);
@@ -519,7 +519,7 @@ function add_migration_record(migration){
         let number = migration.split('_')[0];
 
         let out = 'INSERT INTO migrations(name,number) VALUES("' + migration + '","' + number + '")';
-        dbs.customQuery(dbs.dbdefs.migrations, out , [])
+        db.engine.customQuery(null, out , [])
             .then(resolve)
             .catch(err => {
                 glib.serverlog('Insert migration error ::: ' + JSON.stringify(err),0);

@@ -30,7 +30,7 @@ exports.called_from_migration_file = false;
 module.exports.update_db_field = async function(dbname, field, callback){
     var self = this;
     app.initialize_only_database = true; /// do NOT initialize the HTTP server ///
-    app.startup('', function(err){
+    app.startup('').then(err => {
         if(err) { glib.serverlog('Failed to initialize database', 1); process.exit(1); return; }    
         
         /// dbname check 
@@ -56,7 +56,7 @@ module.exports.update_db_field = async function(dbname, field, callback){
 module.exports.add_db_field = async function(dbname, fname, type='str', len=160 , def='Test field', callback){
     var self = this;
     app.initialize_only_database = true; //// do not initialize the HTTP server //// 
-    app.startup('', function(err){
+    app.startup('').then(err => {
         if(err) { glib.serverlog('Failed to initialize database', 0); process.exit(1); return;}
         
         var temp = {fname:fname, type:type, len:len, def:def}
@@ -87,7 +87,7 @@ module.exports.add_db_field = async function(dbname, fname, type='str', len=160 
 module.exports.remove_db_field = async function(dbname, fname, callback){
     var self = this;
     app.initialize_only_database = true; //// do NOT initialize the HTTP server ////
-    app.startup('', (err) => {
+    app.startup('').then(err => {
         if(err) { glib.serverlog('Failed to initialize database', 0); process.exit(1); return;}
         
         var temp = {fname:fname};
