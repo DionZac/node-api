@@ -212,7 +212,7 @@ class sqlite3Engine {
                 })
             }
             catch (e) {
-                glib.dblog("Database: Custom Query failed -> " + JSON.stringify(err), 0);
+                glib.dblog("Database: Custom Query failed -> " + JSON.stringify(e), 0);
                 reject(e);
             }
         })

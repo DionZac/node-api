@@ -2,8 +2,8 @@
 var glib = require('./glib.js');
 var fs = require('fs');
 var app = require('./app.js');
-var objects = require('./db.js');
-var dbs     = require('./dbs');
+// var objects = require('./db.js');
+// var dbs     = require('./dbs');
 
 
 const readline = require('readline').createInterface({
@@ -34,10 +34,10 @@ module.exports.update_db_field = async function(dbname, field, callback){
         if(err) { glib.serverlog('Failed to initialize database', 1); process.exit(1); return; }    
         
         /// dbname check 
-        if(!(dbname in objects.databases)){ glib.serverlog('Database table ' + dbname + ' not found', 1); process.exit(1); return; }
+        if(!(dbname in db)){ glib.serverlog('Database table ' + dbname + ' not found', 1); process.exit(1); return; }
         
-        var db = objects.databases[dbname];
-        db.updatecolumn(field).then(() => {
+        var _db = db[dbname];
+        _db.updatecolumn(field).then(() => {
             glib.serverlog('Successfully updated ' + dbname + ' table : ' + field.fname, 0);
             if(callback) callback();
             else process.exit(0);
@@ -61,9 +61,9 @@ module.exports.add_db_field = async function(dbname, fname, type='str', len=160 
         
         var temp = {fname:fname, type:type, len:len, def:def}
     
-        if(!(dbname in objects.databases)) { glib.serverlog('Database table ' + dbname + ' not found ', 0); process.exit(1); return;}
-        var db = objects.databases[dbname];
-        db.addcolumn(temp).then( async () => {
+        if(!(dbname in db)) { glib.serverlog('Database table ' + dbname + ' not found ', 0); process.exit(1); return;}
+        var _db = db[dbname];
+        _db.addcolumn(temp).then( async () => {
             glib.serverlog('Successfully added ' + fname + ' to ' + dbname, 1);
             if(self.called_from_migration_file){
                 if(callback) callback()
@@ -91,10 +91,10 @@ module.exports.remove_db_field = async function(dbname, fname, callback){
         if(err) { glib.serverlog('Failed to initialize database', 0); process.exit(1); return;}
         
         var temp = {fname:fname};
-        if(!(dbname in objects.databases)) { glib.serverlog("Database table " + dbname + ' not found', 0); process.exit(1); return;}
+        if(!(dbname in db)) { glib.serverlog("Database table " + dbname + ' not found', 0); process.exit(1); return;}
 
-        var db = objects.databases[dbname];
-        db.removecolumn(temp).then( () => {
+        var _db = db[dbname];
+        _db.removecolumn(temp).then( () => {
             glib.serverlog('Sucessfully removed ' + fname + ' from ' + dbname, 1);
             if(self.called_from_migration_file){
                 if(callback) callback();
@@ -120,7 +120,7 @@ module.exports.removemodel = async function(dbname, callback){
     remove_once = true;
     app.initialize_only_database = true;
 
-    app.startup('', (err) => {
+    app.startup('').then(err => {
         if(err) { glib.serverlog('Failed to initialize database', 0); process.exit(1);}
 
         init().then( () => {
@@ -181,7 +181,7 @@ module.exports.addmodel = async function(dbname, callback, fromMigration){
     glib.serverlog('Adding a database ' + dbname, 3);
     once = true;
     app.initialize_only_database = true; /// do NOT initialize the HTTP server ///
-    app.startup('', (err) => {
+    app.startup('').then((err) => {
         if(err) { glib.serverlog('Failed to intialize database', 0); process.exit(1); return; }
         init().then( () => {
             if(callback){
@@ -197,7 +197,7 @@ module.exports.addmodel = async function(dbname, callback, fromMigration){
             }
             process.exit(1);
         })
-    })
+    });
 
     const init = async function(){
         await create_resource(dbname);
@@ -227,14 +227,12 @@ var create_resource = function(dbname){
 
     script = '\
     var glib    = require("../glib.js");\n\
-    var objects = require("../db.js");\n\
-    var dbs     = require("../dbs.js");\n\
     var master  = require("./master.js");\n\
     \n\
     exports.' + name + ' = class extends master.masterResource {\n\
         constructor(){\n\
             super();\n\
-            this.' + dbname + ' = objects.databases.' + dbname + ';\n\
+            this.' + dbname + ' = db.' + dbname + ';\n\
             super.initialize(this.' + dbname + ');\n\
         }\n\
         \n\
@@ -297,7 +295,7 @@ var create_resource = function(dbname){
 
 module.exports.update_database_schema = function(operation){
     return new Promise( async (resolve, reject) => {
-        let json_schema = await objects.databases.json_schema.query(['tablename'],[operation.dbname]);
+        let json_schema = await db.json_schema.query(['tablename'],[operation.dbname]);
         let schema = glib.parseModelSchema(json_schema[0].schema)[operation.dbname];
 
         switch(operation.type){
@@ -324,7 +322,7 @@ module.exports.update_database_schema = function(operation){
             let query = 'UPDATE json_schema SET schema=? WHERE tablename="' + operation.dbname + '"';
             out = {};
             out[operation.dbname] = schema;
-            await dbs.customQuery(dbs.dbdefs.json_schema,query,[JSON.stringify(out)]); 
+            await db.engine.customQuery(null,query,[JSON.stringify(out)]); 
             resolve();
         }
         catch(err){
@@ -354,19 +352,19 @@ module.exports.insert_database_schema = function(dbname){
             try{
                 // ## BEGIN TRANSACTION //
                 let begin = "BEGIN TRANSACTION;";
-                await dbs.customQuery(null,begin,[]);
+                await db.engine.customQuery(null,begin,[]);
 
                 // ## DELETE OLD json_schema RECORD //
                 let remove = 'DELETE FROM json_schema WHERE tablename=?';
-                await dbs.customQuery(dbs.dbdefs.json_schema,remove,[dbname]);
+                await db.engine.customQuery(null,remove,[dbname]);
 
                 // ## INERT NEW json_schema RECORD -- the .json model file that we got //
                 let insert = "INSERT INTO json_schema (tablename,schema) VALUES('" + dbname + "'," + data + ");";
-                await dbs.customQuery(dbs.dbdefs.json_schema,insert,[]);
+                await db.engine.customQuery(null,insert,[]);
 
                 // ## COMMIT SQL QUERIES //
                 let commit = 'COMMIT;';
-                await dbs.customQuery(dbs.dbdefs.json_schema,commit,[]);
+                await db.engine.customQuery(null, commit,[]);
 
                 resolve();
             }
@@ -391,7 +389,7 @@ var remove_database_table = function(dbname){
         try{
             let query = 'DROP TABLE ' + dbname;
             
-            dbs.customQuery(dbs.dbdefs[dbname], query, [])
+            db.engine.customQuery(null, query, [])
                 .then( () => {
                     glib.serverlog('Removed table ' + dbname + ' from database' , 1);
                     resolve();
@@ -418,7 +416,7 @@ var remove_from_json_schema = function(dbname){
     return new Promise((resolve, reject) => {
         try{
             let query = 'DELETE FROM json_schema WHERE tablename="' + dbname + '"';
-            dbs.customQuery(null,query,[])
+            db.engine.customQuery(null,query,[])
                 .then(() => {
                     glib.serverlog('Removed successfully from json_schema' , 1);
                     resolve();
@@ -597,7 +595,7 @@ var update_registered_json = function(dbname) {
 
 /////////////////////////////////////////////
 /// HELPER FUNCTION : Creating a table in the database
-////// Reading json model from file -- and append it to dbs.create 
+////// Reading json model from file -- and append it to db.engine.create 
 /////////////////////////////////////////////
 var create_database_table = function(dbname){
     return new Promise ( async (resolve, reject) => {
@@ -613,7 +611,7 @@ var create_database_table = function(dbname){
                 try{ database = JSON.parse(database)}
                 catch(err){}
                 var dbf = database[dbname];
-                dbs.create(dbf, function(err){
+                db.engine.create(dbf, function(err){
                     if(err) reject(err);
                     else resolve();
                 })

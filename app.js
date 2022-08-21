@@ -81,6 +81,7 @@ exports.startup = async function (args, callb) {
         app.serverInit(args);
         glib.serverlog(`Server started @port : ${port}`, 1);
       }
+      return;
     }
     catch (e) {
       glib.serverlog(e,0);
