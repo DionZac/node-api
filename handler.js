@@ -237,7 +237,6 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
                 // Modify the data //
                 data = handler.exclude_private_fields(resource, data);
                 data = await handler.deserializeData(data,dbname);
-                console.log(data);
                 self.res.send(data);
                 return;
             }

@@ -17,7 +17,8 @@ exports.types = {
     amt: { sqltype: 'DOUBLE', parse: _fltCheck },
     f: { sqltype: 'TINYINT', parse: _binCheck },
     date: { sqltype: 'BIGINT', parse: _intCheck },
-    id: { sqltype: 'INT', parse: _intCheck }
+    id: { sqltype: 'INT', parse: _intCheck },
+    lnk:{sqltype: 'INT', parse: _intCheck}
 };
 
 /**
@@ -38,7 +39,7 @@ exports.newRecord = function(dbf, template)
             rec[`${f.fname}_${j}`] = t_rec
           }
           else{
-            rec[`${f.fname}_${j}`] = f.def;
+            rec[`${f.fname}_${j}`] = f.def || null;
           }
         }
       }
@@ -49,11 +50,11 @@ exports.newRecord = function(dbf, template)
     else{
       if(f.size && f.size > 1){
         for(let j=0; j<f.size; j++){
-          rec[`${f.fname}_${j}`] = f.def;
+          rec[`${f.fname}_${j}`] = f.def || null;
         }
       }
       else{
-        rec[f.fname] = f.def;
+        rec[f.fname] = f.def || null;
       }
     }
   }
@@ -67,47 +68,66 @@ exports.newRecord = function(dbf, template)
 */
 exports.updateRecord = async function(dbf,template,rowid,callb)
 {
+  console.log(template)
   try{
     var database = db[dbf.name];
-    var EXISTING_RECORD = await database.filter({rowid:rowid})[0];
+    var EXISTING_RECORD = await database.filter({rowid:rowid});
+    EXISTING_RECORD = EXISTING_RECORD[0];
+    console.log(EXISTING_RECORD)
   }
   catch(err){
     glib.serverlog(err,1);
     throw new Error(err);
   }
   var v, f, rec = {};
+
+  // for(let t_field in template){
+  //   let template_value = template[t_field];
+  //   if(Array.isArray(template_value)){
+  //     for(let [idx, v] of template_value){
+  //       template[`${t_field}_${idx}`] = v;
+  //     }
+
+  //     delete template[t_field];
+  //   }
+  // }
+
+  // for(let f of dbf.)
+
+
+
   for(var i=0; i<dbf.fields.length; i++) {
     f = dbf.fields[i];
     if(template && (f.fname in template)){
       if(f.size && f.size > 1){
-        for(let j=0; j<f.size; j++){
+        for(let j=0; j<template[f.fname].length; j++){
           let t_rec = template[f.fname][j];
           if(t_rec){
-            rec[`${f.fname}_${j}`] = t_rec
+            rec[`${f.fname}_${j}`] = t_rec;
+            console.log(rec);
           }
           else{
-            rec[`${f.fname}_${j}`] = f.def;
+            rec[`${f.fname}_${j}`] = f.def || null;
           }
         }
       }
       else{
-        rec[f.fname] = EXISTING_RECORD[f.fname];
+        rec[f.fname] = template[f.fname] || null;
       }
     }
-    else {
-      if(f.size && f.size > 1){
-        for(let j=0; j<f.size; j++){
-          rec[`${f.fname}_${j}`] = EXISTING_RECORD[`${f.fname}_${j}`];
-        }
-      }
-      else{
-        rec[f.fname] = EXISTING_RECORD[f.fname];
-      }
-    }
-
-    rec[f.fname] = glib.cloneObj(v);
+    // else {
+    //   if(f.size && f.size > 1){
+    //     for(let j=0; j<f.size; j++){
+    //       rec[`${f.fname}_${j}`] = EXISTING_RECORD[`${f.fname}_${j}`] || null;
+    //     }
+    //   }
+    //   else{
+    //     rec[f.fname] = EXISTING_RECORD[f.fname] || null;
+    //   }
+    // }
   }
-  rec.rowid = EXISTING_RECORD.rowid;
+
+  rec.rowid = template.rowid;
   callb(rec);
 }
 
