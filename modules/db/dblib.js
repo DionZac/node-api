@@ -92,7 +92,7 @@ exports.updateRecord = async function(dbf,template,rowid,callb)
         }
       }
       else{
-        rec[f.fname] = EXISTING_RECORD[f.fname];
+        rec[f.fname] = template[f.fname];
       }
     }
     else {
