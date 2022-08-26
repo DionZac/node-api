@@ -197,7 +197,20 @@ class sqlite3Engine {
             query += ');';
 
             glib.dblog(query, 2);
-            this.sqlite3.run(query, callback);
+            this.sqlite3.run(query, async function(err , row) {
+                let api = db[dbf.name];
+                let filter = {};
+                for(let field of dbf.fields){
+                    filter[field.fname] = rec[field.fname];
+                }
+                let records = await api.filter(filter);
+                if(records.length > 0){
+                    callback(null, records[0].rowid);
+                }
+                else{
+                    callback();
+                }
+            });
         }
         catch (err) {
             glib.dblog("Database: Insert error -> " + JSON.stringify(err), 0);
@@ -638,7 +651,7 @@ class sqlite3Engine {
 
         if(model && rows){
             for(let row of rows){
-                let record = {};
+                let record = {rowid: row.rowid};
 
                 for(let field of model.fields){
                     if(field.type == "lnk"){
