@@ -42,6 +42,13 @@
                 "hlp": "Bet output"
             },
             {
+                "fname": "bets",
+                "type": "lnk",
+                "dblink": "bets",
+                "size": 10,
+                "hlp": "List of bet objects played"
+            },
+            {
                 "fname": "bet_value",
                 "type": "amt",
                 "len": 64,

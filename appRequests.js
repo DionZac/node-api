@@ -11,6 +11,22 @@ var appReq      = {};
 // API: Register handlers for requests
 ////////////////////////////////////////////////////////////
 
+exports.allBets = async(req,res) => {
+	let bets = await db.bets.get();
+	let singles = await db.singles.get();
+	let paroli = await db.paroli.get();
+	let live = await db.live.get();
+
+
+
+	res.send({
+		bets,
+		singles,
+		paroli,
+		live
+	});
+
+}
 
 exports.login = async (req,res) => {
 	let users = await db.users.get();

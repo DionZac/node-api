@@ -13,46 +13,12 @@
                 "def": "",
                 "hlp": "Month where the bet was played"
             },
+            
             {
-                "fname": "league",
-                "type": "str",
-                "len": 160,
-                "def": ""
-            },
-            {
-                "fname": "team_1",
-                "type": "str",
-                "len": 256,
-                "def": "",
-                "hlp": "Home team"
-            },
-            {
-                "fname": "team_2",
-                "type": "str",
-                "len": 256,
-                "def": "",
-                "hlp": "Away team"
-            },
-            {
-                "fname": "bet_played",
-                "type": "str",
-                "len": 256,
-                "def": "",
-                "hlp": "Bet that was played"
-            },
-            {
-                "fname": "match_score",
-                "type": "str",
-                "len": 160,
-                "def": "",
-                "hlp": "Math result score"
-            },
-            {
-                "fname": "output",
-                "type": "amt",
-                "len": 64,
-                "def": 0,
-                "hlp": "Bet output"
+                "fname": "bet",
+                "type": "lnk",
+                "dblink": "bets",
+                "hlp": "Link to the bet object played as Single "
             },
             {
                 "fname": "bet_value",
@@ -74,13 +40,6 @@
                 "len": 160,
                 "def": "NO",
                 "hlp": "Flag if bet is cashed out"
-            },
-            {
-                "fname": "bet_result",
-                "type": "str",
-                "len": 160,
-                "def": "NO",
-                "hlp": "Bet Result"
             }
         ]
     }

@@ -35,21 +35,44 @@ class sqlite3Engine {
         if (!callback) callback = function () { };
 
         try {
+            let foreign = '';
             let query = `CREATE TABLE ${dbf.name} (`;
             for (let [idx, field] of dbf.fields.entries()) {
                 if (idx) query += ',';
-                if(field.size && field.size > 1){
-                    for(let j=0; j<field.size; j++){
-                        if(j>0) query += ',';
-                        
+                if (field.size && field.size > 1) {
+                    for (let j = 0; j < field.size; j++) {
+                        if (j > 0) query += ',';
+
                         let temp_field = JSON.parse(JSON.stringify(field));
                         temp_field.fname = `${field.fname}_${j}`;
                         query += dblib.outputField(temp_field, -1);
+
+                        if (field.type == "lnk") {
+                            if (!field.dblink || !db[field.dblink]) {
+                                // Fail safe for bad dblink value //
+                                field.type = "i32";
+                                continue;
+                            }
+                            if (foreign !== '') foreign += ',';
+                            foreign += `FOREIGN KEY(${temp_field.fname}) REFERENCES ${field.dblink}(rowid)`;
+                        }
                     }
                 }
-                else query += dblib.outputField(field, -1);
+                else {
+                    query += dblib.outputField(field, -1);
+                    if (field.type == "lnk") {
+                        if (!field.dblink || !db[field.dblink]) {
+                            // Fail safe for bad dblink value //
+                            field.type = "i32";
+                            continue;
+                        }
+                        if (foreign !== '') foreign += ',';
+                        foreign += `FOREIGN KEY(${field.fname}) REFERENCES ${field.dblink}(rowid)`;
+                    }
+                }
             }
 
+            if (foreign !== '') query += ',' + foreign;
             query += ')';
 
             let drop_query = `DROP TABLE IF EXISTS ${dbf.name}`;
@@ -61,7 +84,7 @@ class sqlite3Engine {
                 this.sqlite3.run(query, callback);
             })
         }
-        catch (e) {
+        catch (err) {
             glib.dblog('Database: Create failed : ' + JSON.stringify(err), 0);
             callback(err);
         }
@@ -82,22 +105,30 @@ class sqlite3Engine {
         }
 
         try {
-            let query = `UPDATE ${dbf.name} `;
+            let query = `UPDATE ${dbf.name} SET `;
 
-            for (let [idx, field] of dbf.fields.entries()) {
-                if (idx) query += ',';
-                if(field.size && field.size > 1){
-                    for(let j=0; j < field.size; j++){
-                        if(j > 0) query += ',';
+            let idx = 0;
+            for(let f in rec){
+                if(f == "rowid") continue;
 
-                        let value = rec[`${field.fname}_${j}`];
-                        query += fieldOutput(field, value);
+                if(idx) query += ',';
+
+                let field;
+                for(let _f of dbf.fields){
+                    if(_f.fname == f) field = _f;
+                    if(_f.size && _f.size > 1){
+                        for(let i=0; i<_f.size; i++){
+                            if(`${_f.fname}_${i}` == f) field = _f;
+                        }
                     }
                 }
-                else{
-                    let value = rec[field.fname];
-                    query += fieldOutput(field, value);
-                }
+
+                let value = rec[f];
+                let temp = JSON.parse(JSON.stringify(field));
+                temp.fname = f;
+                query += fieldOutput(temp, value);
+
+                idx ++;
             }
 
             query += ` WHERE rowid=${rec.rowid};`;
@@ -132,14 +163,14 @@ class sqlite3Engine {
 
             for (let [idx, field] of dbf.fields.entries()) {
                 if (idx) query += ',';
-                if(field.size && field.size > 1){
-                    for(let j=0; j < field.size; j++){
-                        if(j > 0) query += ',';
+                if (field.size && field.size > 1) {
+                    for (let j = 0; j < field.size; j++) {
+                        if (j > 0) query += ',';
 
                         query += `${field.fname}_${j}`;
                     }
                 }
-                else{
+                else {
                     query += field.fname;
                 }
             }
@@ -149,15 +180,15 @@ class sqlite3Engine {
             for (let [idx, field] of dbf.fields.entries()) {
                 if (idx) query += ',';
 
-                if(field.size && field.size > 1){
-                    for(let j=0; j < field.size; j++){
-                        if(j > 0) query += ',';
+                if (field.size && field.size > 1) {
+                    for (let j = 0; j < field.size; j++) {
+                        if (j > 0) query += ',';
 
                         let value = rec[`${field.fname}_${j}`];
                         query += fieldOutput(field, value);
                     }
                 }
-                else{
+                else {
                     let value = rec[field.fname];
                     query += fieldOutput(field, value);
                 }
@@ -185,7 +216,9 @@ class sqlite3Engine {
             let query = `SELECT rowid, * FROM ${dbf.name} LIMIT ${limit};`;
 
             glib.dblog(query, 2);
-            this.sqlite3.all(query, callback);
+            this.sqlite3.all(query, (err, rows) => {
+                this.callbackInjection(dbf, err, rows, callback);
+            });
         }
         catch (err) {
             glib.dblog("Database: Limit read error -> " + JSON.stringify(err), 0);
@@ -205,7 +238,9 @@ class sqlite3Engine {
 
         try {
             glib.dblog(query, 2);
-            this.sqlite3.all(query, callback);
+            this.sqlite3.all(query, (err, rows) => {
+                this.callbackInjection(dbf, err, rows, callback);
+            });
         }
         catch (err) {
             glib.dblog("Database: Read error -> " + JSON.stringify(err), 0);
@@ -230,7 +265,9 @@ class sqlite3Engine {
             }
 
             glib.dblog(query, 2);
-            this.sqlite3.all(query, values, callback);
+            this.sqlite3.all(query, values, (err, rows) => {
+                this.callbackInjection(dbf, err, rows, callback);
+            });
         }
         catch (err) {
             glib.dblog("Database: Query Read error -> " + JSON.stringify(err), 0);
@@ -246,8 +283,10 @@ class sqlite3Engine {
             try {
                 glib.dblog(query, 2);
                 this.sqlite3.all(query, data, (err, rows) => {
-                    if (err) reject(err);
-                    else resolve(rows);
+                    this.callbackInjection(dbf, err, rows, function(_err, _rows){
+                        if (_err) reject(_err);
+                        else resolve(_rows);
+                    })
                 })
             }
             catch (e) {
@@ -311,13 +350,106 @@ class sqlite3Engine {
             switch (operation) {
                 case 0:
                     // Add column //
-                    var query = `ALTER TABLE ${dbf.name} ADD COLUMN `;
-                    query += dblib.outputField(column, -1);
 
-                    if ('def' in column) query += ` DEFAULT "${column.def}"`;
+                    const alterTableAddColumn = (f) => {
+                        let query = `ALTER TABLE ${dbf.name} ADD COLUMN `;
+                        query += dblib.outputField(f, -1);
 
-                    glib.dblog(query, 2);
-                    this.sqlite3.run(query, callback);
+                        if('def' in f) query += ` DEFAULT "${f.def}"`;
+
+                        return new Promise((resolve, reject) => {
+                            glib.dblog(query)
+                            this.sqlite3.run(query, (err) => {
+                                if(err){
+                                    glib.dblog(err, 2);
+                                    reject(err)
+                                }
+                                else resolve();
+                            })
+                        })
+                    }
+
+                    let hasNewForeignKeyFields = false;
+                    if(column.size && column.size > 1){
+                        for(let i=0; i<column.size; i++){
+                            let _fname = `${column.fname}_${i}`;
+                            if(column.type == "lnk"){
+                                if(!column.dblink || !db[column.dblink]){
+                                    column.type = "i32";
+                                }
+                                else{
+                                    hasNewForeignKeyFields = true;
+                                }
+                            }
+
+                            let temp = JSON.parse(JSON.stringify(column));
+                            temp.fname = _fname;
+                            await alterTableAddColumn(temp);
+                        }
+                    }
+                    else{
+                        if(column.type == "lnk"){
+                            if(!column.dblink || !db[column.dblink]){
+                                column.type = "i32";
+                            }
+                            else{
+                                hasNewForeignKeyFields = true;
+                            }
+                        }
+                        
+                        await alterTableAddColumn(column);
+                    }
+
+                    if(hasNewForeignKeyFields){
+                        try{
+                            await this.begin();
+
+                            // Clone database table //
+                            var temp = JSON.parse(JSON.stringify(dbf)); // hard-clone objcet 
+                            temp['name'] = `__${dbf.name}_backup__`;
+
+                            //// ## CREATE THE BACKUP TABLE ////
+                            this.create(temp, async (err) => {
+                                if (err) throw err;
+
+                                // ## INSERT RECORDS TO BACKUP TABLE ## //
+                                let q = 'INSERT INTO ' + temp['name'] + ' SELECT';
+                                for (let f of temp.fields) {
+                                    if(f.size && f.size > 0){
+                                        for(let i=0; i<f.size; i++){
+                                            q += ` ${f.fname}_${i},`;
+                                        }
+                                    }
+                                    else{
+                                        q += ` ${f.fname},`;
+                                    }
+                                }
+                                q = q.substr(0, q.length - 1); /// remove the ',' 
+                                q += ' FROM ' + dbf.name + ';';
+                                await this.customQuery(dbf, q, []);
+
+                                // ## DROP OLD DATABASE TABLE ///
+                                let drop = 'DROP TABLE ' + dbf.name + ';';
+                                await this.customQuery(dbf, drop, []);
+
+                                // ## RENAME THE BACKUP TABLE ///
+                                let rename = 'ALTER TABLE ' + temp['name'] + ' RENAME TO ' + dbf.name + ';';
+                                await this.customQuery(dbf, rename, []);
+
+                                // ## COMMIT THE SQL QUERIES ///
+                                await this.commit();
+
+                                callback();
+                            });
+                        }
+                        catch(err){
+                            this.rollback();
+                            glib.dblib(err, 2);
+                        }
+                    }
+                    else{
+                        callback();
+                    }
                     break;
                 case 1:
                     // Update column //
@@ -367,23 +499,25 @@ class sqlite3Engine {
                     var begin = 'BEGIN TRANSACTION';
                     await this.customQuery(dbf, begin, []);
 
+                    // let field_to_remove;
+                    // for(let field of dbf.fields){
+                    //     if(field.fname == column.fname){
+                    //         field_to_remove = field;
+                    //     }
+                    // }
+
+                    // if(!field_to_remove){
+                    //     callback('Could not find field to remove : ' + column.fname);
+                    //     return;
+                    // }
+
                     /// ## REMOVE THE COLUMN FROM database SCHEMA ////
                     var temp = JSON.parse(JSON.stringify(dbf));
                     temp['name'] = '__' + dbf.name + '__';
-                    for (let i = 0; i < temp.fields.length; i++){
+                    for (let i = 0; i < temp.fields.length; i++) {
                         let f = temp.fields[i];
-                        if (f.fname == fname) temp.fields.splice(i, 1);
-                        else {
-                            /// If array field - replace the normal field with "x" number of fields with _{j} suffix ///
-                            if(f.size && f.size > 1){
-                                for(let j=0; j<f.size; j++){
-                                    let t = JSON.parse(JSON.stringify(f));
-                                    delete t['size'];
-                                    t.fname = `${f.fname}_${j}`;
-                                    temp.fields.push(t);
-                                }
-                                temp.fields.splice(i,1);
-                            }
+                        if (f.fname == column.fname){
+                            temp.fields.splice(i, 1);
                         }
                     }
 
@@ -393,8 +527,15 @@ class sqlite3Engine {
 
                         // ## INSERT RECORDS TO BACKUP TABLE ## //
                         let q = 'INSERT INTO ' + temp['name'] + ' SELECT';
-                        for (let f of temp.fields){
-                            q += ' ' + f.fname + ',';
+                        for (let f of temp.fields) {
+                            if(f.size && f.size > 1){
+                                for(let j=0; j<f.size; j++){
+                                    q += ` ${f.fname}_${j} ,`;
+                                }
+                            }
+                            else{
+                                q += ' ' + f.fname + ',';
+                            }
                         }
                         q = q.substr(0, q.length - 1); /// remove the ',' 
                         q += ' FROM ' + dbf.name + ';';
@@ -402,26 +543,26 @@ class sqlite3Engine {
 
                         // ## DROP OLD DATABASE TABLE ///
                         let drop = 'DROP TABLE ' + dbf.name + ';';
-                        await this.customQuery(dbf,drop,[]);
+                        await this.customQuery(dbf, drop, []);
 
                         // ## RENAME THE BACKUP TABLE ///
-                        let rename = 'ALTER TABLE ' + temp['name'] + ' RENAME TO '+ dbf.name + ';';
-                        await this.customQuery(dbf,rename,[]);
+                        let rename = 'ALTER TABLE ' + temp['name'] + ' RENAME TO ' + dbf.name + ';';
+                        await this.customQuery(dbf, rename, []);
 
                         // ## COMMIT THE SQL QUERIES ///
                         let commit = 'COMMIT';
-                        await this.customQuery(dbf,commit,[]);
+                        await this.customQuery(dbf, commit, []);
 
                         callback();
                     });
-                    
+
                     break;
                 default:
                     callback('Invalid Operation');
                     return;
             }
         }
-        catch(e){
+        catch (e) {
             handle_transaction_error();
             callback(e);
             return;
@@ -431,19 +572,19 @@ class sqlite3Engine {
     /**
      * SQLITE3 Engine : "BEGIN TRANSACTION"
      */
-    begin(callback){
-        if(!callback){ callback = function(){};};
+    begin(callback) {
+        if (!callback) { callback = function () { }; };
 
         return new Promise((resolve, reject) => {
-            try{
+            try {
                 let query = 'BEGIN TRANSACTION;';
                 glib.dblog(query, 2);
-                this.sqlite3.all(query,function() {
+                this.sqlite3.all(query, function () {
                     callback();
                     resolve();
                 })
             }
-            catch(e){
+            catch (e) {
                 reject(e);
             }
         })
@@ -452,19 +593,19 @@ class sqlite3Engine {
     /**
      * SQLITE3 Engine : "ROLLBACK"
      */
-     rollback(callback){
-        if(!callback){ callback = function(){};};
+    rollback(callback) {
+        if (!callback) { callback = function () { }; };
 
         return new Promise((resolve, reject) => {
-            try{
+            try {
                 let query = 'ROLLBACK;';
                 glib.dblog(query, 2);
-                this.sqlite3.all(query,function() {
+                this.sqlite3.all(query, function () {
                     callback();
                     resolve();
                 })
             }
-            catch(e){
+            catch (e) {
                 reject(e);
             }
         })
@@ -473,24 +614,82 @@ class sqlite3Engine {
     /**
      * SQLITE3 Engine : "COMMIT"
      */
-     commit(callback){
-        if(!callback){ callback = function(){};};
+    commit(callback) {
+        if (!callback) { callback = function () { }; };
 
         return new Promise((resolve, reject) => {
-            try{
+            try {
                 let query = 'COMMIT;';
                 glib.dblog(query, 2);
-                this.sqlite3.all(query,function() {
+                this.sqlite3.all(query, function () {
                     callback();
                     resolve();
                 })
             }
-            catch(e){
+            catch (e) {
                 reject(e);
             }
         })
     }
-    
+
+
+    async callbackInjection(model, err, rows, callback){
+        let out = [];
+
+        if(model && rows){
+            for(let row of rows){
+                let record = {};
+
+                for(let field of model.fields){
+                    if(field.type == "lnk"){
+                        if(field.size && field.size > 1){
+                            for(let i=0; i<field.size; i++){
+                                let fname = `${field.fname}_${i}`;
+                                let dbname = field.dblink;
+                                if(row[fname]){
+                                    try{
+                                        let nested_record = await db[dbname].get(row[fname]);
+                                        record[fname] = nested_record[0];
+                                    }
+                                    catch(e){
+                                        record[fname] = null;
+                                    }
+                                }
+                            }
+                        }
+                        else{
+                            if(row[field.fname]){
+                                let dbname = field.dblink;
+                                try{
+                                    let nested_record = await db[dbname].get(row[field.fname]);
+                                    record[field.fname] = nested_record[0];
+                                }
+                                catch(e){
+                                    record[field.fname] = null;
+                                }
+                            }
+                            else{
+                                record[field.fname] = row[field.fname];
+                            }
+                        }
+                    }
+                    else{
+                        record[field.fname] = row[field.fname];
+                    }
+                }
+
+                out.push(record);
+            }
+        }
+        else{
+            out = rows;
+        }
+
+        if(callback){
+            callback(err, out);
+        }
+    }
+
 }
 
 module.exports = sqlite3Engine;

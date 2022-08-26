@@ -43,9 +43,9 @@
             },
             {
                 "fname": "bets",
-                "type": "str",
                 "len": 8192,
-                "def":"",
+                "type": "lnk",
+                "dblink": "bets",
                 "size": 10,
                 "hlp": "List of bets as Stringified objects"
             }

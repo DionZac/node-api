@@ -14,6 +14,26 @@
             "dbname": "feed",
             "endpoint": "feed",
             "resource": "feedResource"
+        },
+        {
+            "dbname": "bets",
+            "endpoint": "bets",
+            "resource": "betsResource"
+        },
+        {
+            "dbname": "live",
+            "endpoint": "live",
+            "resource": "liveResource"
+        },
+        {
+            "dbname": "paroli",
+            "endpoint": "paroli",
+            "resource": "paroliResource"
+        },
+        {
+            "dbname": "singles",
+            "endpoint": "singles",
+            "resource": "singlesResource"
         }
     ]
 }

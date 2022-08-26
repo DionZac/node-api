@@ -8,6 +8,7 @@ var viewModules = {};
 
 exports.registerRequestServices = function(server){
     server.all('/login', appRequests.login);
+    server.all('/allbets', appRequests.allBets);
 
     server.all('/api/v1/*', handler.call);
 }

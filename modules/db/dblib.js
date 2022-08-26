@@ -70,6 +70,8 @@ exports.updateRecord = async function(dbf,template,rowid,callb)
   try{
     var database = db[dbf.name];
     var EXISTING_RECORD = await database.filter({rowid:rowid})[0];
+    var EXISTING_RECORD = await database.filter({rowid:rowid});
+    EXISTING_RECORD = EXISTING_RECORD[0];
   }
   catch(err){
     glib.serverlog(err,1);
@@ -83,7 +85,7 @@ exports.updateRecord = async function(dbf,template,rowid,callb)
         for(let j=0; j<f.size; j++){
           let t_rec = template[f.fname][j];
           if(t_rec){
-            rec[`${f.fname}_${j}`] = t_rec
+            rec[`${f.fname}_${j}`] = t_rec;
           }
           else{
             rec[`${f.fname}_${j}`] = f.def;
