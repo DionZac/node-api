@@ -1,0 +1,80 @@
+{
+    "bets": {
+        "name": "bets",
+        "vname": "bets",
+        "endpoint": "bets",
+        "resourceName": "betsResource",
+        "inputGroups": [],
+        "fields": [
+            {
+                "fname": "month",
+                "type": "str",
+                "len": 160,
+                "def": "",
+                "hlp": "Month where the bet was played"
+            },
+            {
+                "fname": "bet_type",
+                "type": "i32",
+                "len": 60,
+                "def": 1,
+                "hlp": "Type of bet - e.g 1:Single , 2: Paroli ..."
+            },
+            {
+                "fname": "league",
+                "type": "str",
+                "len": 160,
+                "def": ""
+            },
+            {
+                "fname": "team_1",
+                "type": "str",
+                "len": 256,
+                "def": "",
+                "hlp": "Home team"
+            },
+            {
+                "fname": "team_2",
+                "type": "str",
+                "len": 256,
+                "def": "",
+                "hlp": "Away team"
+            },
+            {
+                "fname": "bet_category",
+                "type": "str",
+                "len": 256,
+                "def": "",
+                "hlp": "Bet category (e.g Apotelesma & O/U) "
+            },
+            {
+                "fname": "bet_played",
+                "type": "str",
+                "len": 256,
+                "def": "",
+                "hlp": "Bet that was played"
+            },
+            {
+                "fname": "match_score",
+                "type": "str",
+                "len": 160,
+                "def": "",
+                "hlp": "Math result score"
+            },
+            {
+                "fname": "output",
+                "type": "amt",
+                "len": 64,
+                "def": 0,
+                "hlp": "Bet output"
+            },
+            {
+                "fname": "bet_result",
+                "type": "str",
+                "len": 160,
+                "def": "",
+                "hlp": "Bet Result"
+            }
+        ]
+    }
+}

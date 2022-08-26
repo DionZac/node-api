@@ -1,0 +1,67 @@
+{
+    "live": {
+        "name": "live",
+        "vname": "live",
+        "endpoint": "live",
+        "resourceName": "liveResource",
+        "inputGroups": [],
+        "fields": [
+            {
+                "fname": "month",
+                "type": "str",
+                "len": 160,
+                "def": "",
+                "hlp": "Month where the bet was played"
+            },
+            {
+                "fname": "team_1",
+                "type": "str",
+                "len": 256,
+                "def": "",
+                "hlp": "Home team"
+            },
+            {
+                "fname": "team_2",
+                "type": "str",
+                "len": 256,
+                "def": "",
+                "hlp": "Away team"
+            },
+            {
+                "fname": "bet_played",
+                "type": "str",
+                "len": 256,
+                "def": "",
+                "hlp": "Bet that was played"
+            },
+            {
+                "fname": "output",
+                "type": "amt",
+                "len": 64,
+                "def": 0,
+                "hlp": "Bet output"
+            },
+            {
+                "fname": "bet_value",
+                "type": "amt",
+                "len": 64,
+                "def": 0,
+                "hlp": "Bet Value"
+            },
+            {
+                "fname": "profit",
+                "type": "amt",
+                "len": 64,
+                "def": 0,
+                "hlp": "Profits from the bet"
+            },
+            {
+                "fname": "cash_out",
+                "type": "str",
+                "len": 160,
+                "def": "NO",
+                "hlp": "Flag if bet is cashed out"
+            }
+        ]
+    }
+}
