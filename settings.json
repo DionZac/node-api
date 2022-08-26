@@ -6,5 +6,5 @@
     "api_endpoint": "/api/v1/",
     "profiles_name":"users",
     "AUTHORIZATION_CLASS":"TokenAuthorization",
-    "PROJECT_INCLUDE_FOLDER": "UI"
+    "PROJECT_INCLUDE_FOLDER": "assets"
 }

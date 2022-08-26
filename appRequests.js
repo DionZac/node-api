@@ -6,10 +6,30 @@ var app         = require('./app.js');
 var glib        = require('./glib.js');
 var handler     = require('./handler.js');
 
+var fs = require('fs');
+
 var appReq      = {};
 ////////////////////////////////////////////////////////////
 // API: Register handlers for requests
 ////////////////////////////////////////////////////////////
+
+exports.teams = async(req,res) => {
+	fs.readFile('./assets/teams.json', (err, data) => {
+		res.send(JSON.parse(data));
+	});
+}
+
+exports.leagues = async(req, res) => {
+	fs.readFile('./assets/leagues.json', (err, data) => {
+		res.send(JSON.parse(data));
+	});
+}
+
+exports.categories = async(req, res) => {
+	fs.readFile('./assets/bet_categories.json', (err, data) => {
+		res.send(JSON.parse(data));
+	});
+}
 
 exports.allBets = async(req,res) => {
 	let bets = await db.bets.get();

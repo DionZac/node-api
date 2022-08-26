@@ -10,6 +10,10 @@ exports.registerRequestServices = function(server){
     server.all('/login', appRequests.login);
     server.all('/allbets', appRequests.allBets);
 
+    server.all('/assets/teams', appRequests.teams);
+    server.all('/assets/leagues', appRequests.leagues);
+    server.all('/assets/bet_categories', appRequests.categories);
+
     server.all('/api/v1/*', handler.call);
 }
 

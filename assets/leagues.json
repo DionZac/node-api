@@ -1,0 +1,37 @@
+{
+    "leagues":[
+        {
+            "name": "Premier League"
+        },
+        {
+            "name": "Serie A"
+        },
+        {
+            "name": "La Liga"
+        },
+        {
+            "name": "Ligue 1"
+        },
+        {
+            "name": "Bundesliga"
+        },
+        {
+            "name": "Conference League"
+        },
+        {
+            "name": "Champions League"
+        },
+        {
+            "name": "Europa League"
+        },
+        {
+            "name": "Super League"
+        },
+        {
+            "name": "Turkish League"
+        },
+        {
+            "name": "Eredvise"
+        }
+    ]
+}

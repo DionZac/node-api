@@ -176,6 +176,8 @@ exports.serverInit = async function (args) {
       //   glib.serverlog(`Failed to include project directory : ${__dirname}/${this.settings.PROJECT_INCLUDE_FOLDER}`, 0);
       // }
     }
+    console.log(__dirname)
+    server.use('/assets', express.static(__dirname + '/' + 'assets'));
 
     let views = await glib.readJSONfile("./views.json");
     try { views = JSON.parse(views) }

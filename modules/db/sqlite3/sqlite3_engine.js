@@ -638,7 +638,7 @@ class sqlite3Engine {
 
         if(model && rows){
             for(let row of rows){
-                let record = {};
+                let record = {rowid: row.rowid};
 
                 for(let field of model.fields){
                     if(field.type == "lnk"){
@@ -678,6 +678,7 @@ class sqlite3Engine {
                     }
                 }
 
+                console.log('Record ----> ' + JSON.stringify(record));
                 out.push(record);
             }
         }

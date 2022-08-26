@@ -38,7 +38,7 @@ exports.newRecord = function(dbf, template)
             rec[`${f.fname}_${j}`] = t_rec
           }
           else{
-            rec[`${f.fname}_${j}`] = f.def;
+            rec[`${f.fname}_${j}`] = f.def || null;
           }
         }
       }
@@ -49,11 +49,11 @@ exports.newRecord = function(dbf, template)
     else{
       if(f.size && f.size > 1){
         for(let j=0; j<f.size; j++){
-          rec[`${f.fname}_${j}`] = f.def;
+          rec[`${f.fname}_${j}`] = f.def || null;
         }
       }
       else{
-        rec[f.fname] = f.def;
+        rec[f.fname] = f.def || null;
       }
     }
   }
@@ -69,7 +69,6 @@ exports.updateRecord = async function(dbf,template,rowid,callb)
 {
   try{
     var database = db[dbf.name];
-    var EXISTING_RECORD = await database.filter({rowid:rowid})[0];
     var EXISTING_RECORD = await database.filter({rowid:rowid});
     EXISTING_RECORD = EXISTING_RECORD[0];
   }
@@ -88,7 +87,7 @@ exports.updateRecord = async function(dbf,template,rowid,callb)
             rec[`${f.fname}_${j}`] = t_rec;
           }
           else{
-            rec[`${f.fname}_${j}`] = f.def;
+            rec[`${f.fname}_${j}`] = f.def || null;
           }
         }
       }
@@ -106,8 +105,6 @@ exports.updateRecord = async function(dbf,template,rowid,callb)
         rec[f.fname] = EXISTING_RECORD[f.fname];
       }
     }
-
-    rec[f.fname] = glib.cloneObj(v);
   }
   rec.rowid = EXISTING_RECORD.rowid;
   callb(rec);
