@@ -201,6 +201,7 @@ class sqlite3Engine {
                 let api = db[dbf.name];
                 let filter = {};
                 for(let field of dbf.fields){
+                    if(!rec[field.fname]) continue;
                     filter[field.fname] = rec[field.fname];
                 }
                 let records = await api.filter(filter);
