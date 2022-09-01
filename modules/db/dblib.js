@@ -17,7 +17,8 @@ exports.types = {
     amt: { sqltype: 'DOUBLE', parse: _fltCheck },
     f: { sqltype: 'TINYINT', parse: _binCheck },
     date: { sqltype: 'BIGINT', parse: _intCheck },
-    id: { sqltype: 'INT', parse: _intCheck }
+    id: { sqltype: 'INT', parse: _intCheck },
+    lnk: {sqltype: 'INT', parse: _intCheck },
 };
 
 /**

@@ -14,5 +14,59 @@
             // "req" (request object) and "res"(response object)
             return true
         }
+
+        async __insert__(self, params){
+            let bet = params.bet;
+
+            bet.month = params.month;
+            bet.bet_type = 0;
+
+            try{
+                let id = await db.bets.insert(bet);
+
+                params.bet = id;
+                await this.db.insert(params);
+
+                self.res.send('OK');
+            }
+            catch(err){
+                self.res.send('Failed to insert record ----> ' + JSON.stringify(err));
+            }
+        }
+
+        async __update__(self,params,kwargs){
+            let res = self.res;
+            try{
+                params.rowid = kwargs.rowid;
+
+                let bet = params.bet;
+                if(bet){
+                    bet.month = params.month;
+                    bet.bet_type = 0;
+                    if(!bet.rowid){
+                        // This is a new BET record //
+                        let id = await db.bets.insert(bet);
+                        params.bet = id;
+
+                        await this.db.update(params);
+                        res.send('OK');
+                        return;
+                    }
+                    else{
+                        // Already existing bet //
+                        await db.bets.update(bet);
+                        params.bet = bet.rowid;
+                    }
+                }
+
+                console.log("PARAMS --------> " , params);
+                await this.db.update(params);
+
+                self.res.send('OK');
+            }
+            catch(err){
+                self.res.send('Failed to update record ----> ' + JSON.stringify(err));
+            }
+        }
     }
     

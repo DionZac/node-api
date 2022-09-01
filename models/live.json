@@ -14,38 +14,9 @@
                 "hlp": "Month where the bet was played"
             },
             {
-                "fname": "team_1",
-                "type": "str",
-                "len": 256,
-                "def": "",
-                "hlp": "Home team"
-            },
-            {
-                "fname": "team_2",
-                "type": "str",
-                "len": 256,
-                "def": "",
-                "hlp": "Away team"
-            },
-            {
-                "fname": "bet_played",
-                "type": "str",
-                "len": 256,
-                "def": "",
-                "hlp": "Bet that was played"
-            },
-            {
-                "fname": "output",
-                "type": "amt",
-                "len": 64,
-                "def": 0,
-                "hlp": "Bet output"
-            },
-            {
-                "fname": "bets",
+                "fname": "bet",
                 "type": "lnk",
                 "dblink": "bets",
-                "size": 10,
                 "hlp": "List of bet objects played"
             },
             {
