@@ -22,6 +22,7 @@
     "require-all": "^3.0.0",
     "run-func": "^1.1.5",
     "socket.io": "^4.5.1",
+    "sqlite3": "^5.0.11",
     "stack-trace": "0.0.9"
   },
   "scripts": {
@@ -41,7 +42,6 @@
   "devDependencies": {
     "moment": "^2.29.3",
     "monitor": "^0.6.10",
-    "request": "^2.88.2",
-    "sqlite3": "^4.2.0"
+    "request": "^2.88.2"
   }
 }
