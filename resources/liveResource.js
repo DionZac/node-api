@@ -19,7 +19,7 @@
             let bet = params.bet;
 
             bet.month = params.month;
-            bet.bet_type = 0;
+            bet.bet_type = 2;
 
             try{
                 let id = await db.bets.insert(bet);
@@ -42,7 +42,7 @@
                 let bet = params.bet;
                 if(bet){
                     bet.month = params.month;
-                    bet.bet_type = 0;
+                    bet.bet_type = 2;
                     if(!bet.rowid){
                         // This is a new BET record //
                         let id = await db.bets.insert(bet);
