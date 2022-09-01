@@ -1,19 +1,10 @@
 {
     "teams":[
         {
-            "name": "Panathinaikos"
-        },
-        {
-            "name": "Aek"
+            "name": "Fulham"
         },
         {
             "name": "Aston Villa"
-        },
-        {
-            "name": "Valladolid"
-        },
-        {
-            "name":"Gladbach"
         },
         {
             "name": "Wolves"
@@ -22,25 +13,10 @@
             "name": "Everton"
         },
         {
-            "name": "Lamia"
-        },
-        {
             "name": "Brighton"
         },
         {
             "name": "Newcastle"
-        },
-        {
-            "name": "Dortmund"
-        },
-        {
-            "name": "Osasuna"
-        },
-        {
-            "name": "Sevilla"
-        },
-        {
-            "name": "Slavia Praha"
         },
         {
             "name": "Totthenam"
@@ -49,160 +25,49 @@
             "name":"Chelsea"
         },
         {
-            "name": "Freiburg"
-        },
-        {
-            "name":"Herta"
-        },
-        {
-            "name":"Ionikos"
-        },
-        {
-            "name": "Roma"
-        },
-        {
-            "name":"Cremonese"
-        },
-        {
-            "name":"Benfica"
-        },
-        {
-            "name": "Dinamo Kiev"
-        },
-        {
-            "name":"Slovan Bratislava"
-        },
-        {
-            "name":"Olympiakos"
-        },
-        {
-            "name":"Macabbi Tel-Aviv"
-        },
-        {
-            "name":"Aris"
-        },
-        {
-            "name":"Bayern Leverkusen"
-        },
-        {
-            "name":"Stuttgart"
-        },
-        {
-            "name":"Leipzig"
-        },
-        {
-            "name":"Angers"
-        },
-        {
-            "name":"Nantes"
-        },
-        {
-            "name":"Lille"
-        },
-        {
-            "name":"Auxerre"
-        },
-        {
             "name":"Manchester United"
-        },
-        {
-            "name":"Marseille"
-        },
-        {
-            "name":"Reims"
-        },
-        {
-            "name":"Koln"
-        },
-        {
-            "name":"Schalke"
         },
         {
             "name":"Manchester City"
         },
         {
-            "name":"Salernitana"
+            "name":"West Ham"
         },
         {
-            "name":"Parma"
+            "name":"Nottingham Forest"
         },
         {
-            "name":"Antalyaspor"
+            "name":"Liverpool"
         },
         {
-            "name":"Galatasaray"
+            "name":"Southampton"
         },
         {
-            "name":"Braga"
+            "name": "Leeds"
         },
         {
-            "name":"Sporting"
+            "name": "Arsenal"
         },
         {
-            "name":"Rangers"
+            "name": "Valladolid"
         },
         {
-            "name":"Union Saint Gilloise"
+            "name": "Osasuna"
         },
         {
-            "name":"Dinamo Zagreb"
-        },
-        {
-            "name":"PSV Einthoven"
-        },
-        {
-            "name":"Monaco"
+            "name": "Sevilla"
         },
         {
             "name":"Real Madrid"
         },
         {
-            "name":"Eintracht Frankfurt"
-        },
-        {
-            "name":"West Ham"
-        },
-        {
-            "name":"Go Ahead Eagles"
-        },
-        {
             "name":"Villareal"
-        },
-        {
-            "name":"Monza"
-        },
-        {
-            "name":"Torino"
-        },
-        {
-            "name":"Rennais"
         },
         {
             "name":"Barcelona"
         },
         {
             "name":"Rayo Vallecano"
-        },
-        {
-            "name":"Lecce"
-        },
-        {
-            "name":"Inter"
-        },
-        {
-            "name":"Reims"
-        },
-        {
-            "name":"Clermont"
-        },
-        {
-            "name":"Nottingham Forest"
-        },
-        {
-            "name":"Lazio"
-        },
-        {
-           "name":"Bologna"
         },
         {
             "name":"Cadiz"
@@ -217,76 +82,61 @@
             "name":"Girona"
         },
         {
-            "name":"Rakov"
-        },
-        {
-            "name":"Apollon Limassol"
-        },
-        {
-            "name":"Young Boys"
-        },
-        {
-            "name":"Anderlecht"
-        },
-        {
-            "name":"Nice"
-        },
-        {
-            "name":"Hajduk Split"
-        },
-        {
-            "name":"Alkmaar"
-        },
-        {
-            "name":"Gil Vicente"
-        },
-        {
-            "name":"Viborg"
-        },
-        {
-            "name":"Lyonnais"
-        },
-        {
-            "name":"Troyes"
-        },
-        {
             "name":"Mallorca"
         },
         {
             "name":"Real Betis"
         },
         {
-            "name":"Lens"
-        },
-        {
-            "name":"Werder Bremen"
-        },
-        {
-            "name":"Udinese"
-        },
-        {
-            "name":"Paok"
-        },
-        {
-            "name":"Panetolikos"
-        },
-        {
             "name":"Athletic Bilbao"
         },
         {
-            "name":"Liverpool"
+            "name": "Celta"
+        },
+        {
+            "name": "Atletico Madrid"
+        },
+        {
+            "name": "Getafe"
+        },
+        {
+            "name": "Roma"
+        },
+        {
+            "name":"Cremonese"
+        },
+        {
+            "name":"Salernitana"
+        },
+        {
+            "name":"Parma"
+        },
+        {
+            "name":"Monza"
+        },
+        {
+            "name":"Torino"
+        },
+        {
+            "name":"Lecce"
+        },
+        {
+            "name":"Inter"
+        },
+        {
+            "name":"Lazio"
+        },
+        {
+           "name":"Bologna"
+        },
+        {
+            "name":"Udinese"
         },
         {
             "name":"Sampdoria"
         },
         {
             "name":"Juventus"
-        },
-        {
-            "name":"Erythros Asteras"
-        },
-        {
-            "name":"Maccabi Haifa"
         },
         {
             "name": "Napoli"
@@ -301,7 +151,205 @@
             "name": "Fiorentina"
         },
         {
+            "name": "Verona"
+        },
+        {
+            "name":"Angers"
+        },
+        {
+            "name":"Nantes"
+        },
+        {
+            "name":"Lille"
+        },
+        {
+            "name":"Auxerre"
+        },
+        {
+            "name":"Marseille"
+        },
+        {
+            "name":"Reims"
+        },
+        {
+            "name":"Monaco"
+        },
+        {
+            "name":"Rennais"
+        },
+        {
+            "name":"Reims"
+        },
+        {
+            "name":"Clermont"
+        },
+        {
+            "name":"Nice"
+        },
+        {
+            "name":"Lyonnais"
+        },
+        {
+            "name":"Troyes"
+        },
+        {
+            "name":"Lens"
+        },
+        {
+            "name":"Gladbach"
+        },
+        {
+            "name": "Dortmund"
+        },
+        {
+            "name": "Freiburg"
+        },
+        {
+            "name":"Herta"
+        },
+        {
+            "name":"Bayern Leverkusen"
+        },
+        {
+            "name":"Stuttgart"
+        },
+        {
+            "name":"Leipzig"
+        },
+        {
+            "name":"Koln"
+        },
+        {
+            "name":"Schalke"
+        },
+        {
+            "name":"Eintracht Frankfurt"
+        },
+        {
+            "name":"Werder Bremen"
+        },
+        {
+            "name": "Bochum"
+        },
+        {
+            "name": "Panathinaikos"
+        },
+        {
+            "name": "Aek"
+        },
+        {
+            "name": "Lamia"
+        },
+        {
+            "name":"Ionikos"
+        },
+        {
+            "name":"Olympiakos"
+        },
+        {
+            "name":"Aris"
+        },
+        {
+            "name":"Paok"
+        },
+        {
+            "name":"Panetolikos"
+        },
+        {
+            "name": "Levadiakos"
+        },
+        {
+            "name": "Asteras Tripolis"
+        },
+        {
+            "name": "Ofi"
+        },
+        {
+            "name": "Atromitos"
+        },
+        {
+            "name": "Volos"
+        },
+        {
+            "name": "Pas Giannena"
+        },
+        {
+            "name":"Antalyaspor"
+        },
+        {
+            "name":"Galatasaray"
+        },
+        {
+            "name":"PSV Einthoven"
+        },
+        {
+            "name":"Go Ahead Eagles"
+        },
+        {
             "name": "Twente"
+        },
+        {
+            "name":"Alkmaar"
+        },
+        {
+            "name":"Union Saint Gilloise"
+        },
+        {
+            "name":"Anderlecht"
+        },
+        {
+            "name":"Gil Vicente"
+        },
+        {
+            "name": "Gent"
+        },
+        {
+            "name":"Benfica"
+        },
+        {
+            "name":"Braga"
+        },
+        {
+            "name":"Sporting"
+        },
+        {
+            "name": "Slavia Praha"
+        },
+        {
+            "name": "Dinamo Kiev"
+        },
+        {
+            "name":"Slovan Bratislava"
+        },
+        {
+            "name":"Macabbi Tel-Aviv"
+        },
+        {
+            "name":"Rangers"
+        },
+        {
+            "name":"Dinamo Zagreb"
+        },
+        {
+            "name":"Rakov"
+        },
+        {
+            "name":"Apollon Limassol"
+        },
+        {
+            "name":"Young Boys"
+        },
+        {
+            "name":"Hajduk Split"
+        },
+        {
+            "name":"Viborg"
+        },
+        {
+            "name":"Erythros Asteras"
+        },
+        {
+            "name":"Maccabi Haifa"
         },
         {
             "name": "Hapoel Beer Seva"
@@ -316,40 +364,8 @@
             "name": "Omonia"
         },
         {
-            "name": "Gent"
-        },
-        {
-            "name": "Bochum"
-        },
-        {
-            "name": "Levadiakos"
-        },
-        {
-            "name": "Celta"
-        },
-        {
-            "name":"Southampton"
-        },
-        {
-            "name": "Asteras Tripolis"
-        },
-        {
-            "name": "Atletico Madrid"
-        },
-        {
-            "name": "Ofi"
-        },
-        {
-            "name": "Verona"
-        },
-        {
-            "name": "Getafe"
-        },
-        {
-            "name": "Leeds"
-        },
-        {
-            "name": "Arsenal"
+            "name": "Ludogorets"
         }
+        
     ]
 }
