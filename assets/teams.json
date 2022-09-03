@@ -286,6 +286,12 @@
             "name":"Galatasaray"
         },
         {
+            "name": "Umraniyespor"
+        },
+        {
+            "name": "Trabzonspor"
+        },
+        {
             "name":"PSV Einthoven"
         },
         {
@@ -320,6 +326,9 @@
         },
         {
             "name":"Sporting"
+        },
+        {
+            "name": "Estoril"
         },
         {
             "name": "Slavia Praha"
