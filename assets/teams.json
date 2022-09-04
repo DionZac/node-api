@@ -82,10 +82,16 @@
             "name":"Valencia"
         },
         {
+            "name": "Elche"
+        },
+        {
             "name":"Girona"
         },
         {
             "name":"Mallorca"
+        },
+        {
+            "name": "Espanyol"
         },
         {
             "name":"Real Betis"
@@ -112,6 +118,9 @@
             "name":"Salernitana"
         },
         {
+            "name": "Sassuolo"
+        },
+        {
             "name":"Parma"
         },
         {
@@ -131,6 +140,9 @@
         },
         {
            "name":"Bologna"
+        },
+        {
+            "name": "Spezia"
         },
         {
             "name":"Udinese"
@@ -217,6 +229,9 @@
             "name": "Freiburg"
         },
         {
+            "name": "Mainz"
+        },
+        {
             "name":"Herta"
         },
         {
@@ -224,6 +239,9 @@
         },
         {
             "name":"Stuttgart"
+        },
+        {
+            "name": "Augsburg"
         },
         {
             "name":"Leipzig"
