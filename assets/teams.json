@@ -313,6 +313,9 @@
             "name":"Galatasaray"
         },
         {
+            "name": "Fenerbahce"
+        },
+        {
             "name": "Umraniyespor"
         },
         {
@@ -320,6 +323,9 @@
         },
         {
             "name":"PSV Einthoven"
+        },
+        {
+            "name": "Feyenord"
         },
         {
             "name": "Ajax"
@@ -425,6 +431,15 @@
         },
         {
             "name": "Viktoria Plzen"
+        },
+        {
+            "name": "Lech Poznan"
+        },
+        {
+            "name": "FCSB"
+        },
+        {
+            "name": "Bodo Glimt"
         }
     ]
 }
