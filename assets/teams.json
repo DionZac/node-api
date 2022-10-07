@@ -205,6 +205,9 @@
             "name":"Marseille"
         },
         {
+            "name": "Ajaccio"
+        },
+        {
             "name":"Reims"
         },
         {
@@ -479,6 +482,9 @@
         },
         {
             "name": "Cluj"
+        },
+        {
+            "name": "Qarabag"
         }
     ]
 }
