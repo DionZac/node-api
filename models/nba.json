@@ -1,0 +1,54 @@
+{
+    "nba": {
+        "name": "nba",
+        "vname": "nba",
+        "endpoint": "nba",
+        "resourceName": "nbaResource",
+        "inputGroups": [],
+        "fields": [
+            {
+                "fname": "month",
+                "type": "str",
+                "len": 160,
+                "def": "",
+                "hlp": "Month where the bet was played"
+            },
+            {
+                "fname": "output",
+                "type": "amt",
+                "len": 64,
+                "def": 0,
+                "hlp": "Bet output"
+            },
+            {
+                "fname": "bet_value",
+                "type": "amt",
+                "len": 64,
+                "def": 0,
+                "hlp": "Bet Value"
+            },
+            {
+                "fname": "profit",
+                "type": "amt",
+                "len": 64,
+                "def": 0,
+                "hlp": "Profits from the bet"
+            },
+            {
+                "fname": "cash_out",
+                "type": "str",
+                "len": 160,
+                "def": "NO",
+                "hlp": "Flag if bet is cashed out"
+            },
+            {
+                "fname": "bets",
+                "len": 8192,
+                "type": "lnk",
+                "dblink": "bets",
+                "size": 10,
+                "hlp": "List of bets as Stringified objects"
+            }
+        ]
+    }
+}

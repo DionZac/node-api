@@ -13,6 +13,18 @@ var appReq      = {};
 // API: Register handlers for requests
 ////////////////////////////////////////////////////////////
 
+exports.nbaTeams = async(req,res) => {
+	fs.readFile('./assets/nba_teams.json', (err, data) => {
+		res.send(JSON.parse(data));
+	})
+}
+
+exports.nbaBetCategories = async(req, res) => {
+	fs.readFile('./assets/nba_bet_categories.json', (err, data) => {
+		res.send(JSON.parse(data));
+	})
+}
+
 exports.teams = async(req,res) => {
 	fs.readFile('./assets/teams.json', (err, data) => {
 		res.send(JSON.parse(data));
@@ -36,6 +48,8 @@ exports.allBets = async(req,res) => {
 	let singles = await db.singles.get();
 	let paroli = await db.paroli.get();
 	let live = await db.live.get();
+	let nba = await db.nba.get();
+	let nba_bets = await db.bets.filter({league:'nba'});
 
 
 
@@ -43,7 +57,9 @@ exports.allBets = async(req,res) => {
 		bets,
 		singles,
 		paroli,
-		live
+		live,
+		nba,
+		nba_bets
 	});
 
 }

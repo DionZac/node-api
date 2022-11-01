@@ -1,0 +1,91 @@
+{
+    "teams":[
+        {
+            "name": "Golden State Warriors"
+        },
+        {
+            "name": "Los Angeles Lakers"
+        },
+        {
+            "name": "Boston Celtics"
+        },
+        {
+            "name": "Brooklyn Nets"
+        },
+        {
+            "name": "Milwaukee Bucks"
+        },
+        {
+            "name": "New York Knicks"
+        },
+        {
+            "name": "Cleveland Cavaliers"
+        },
+        {
+            "name": "Washington Wizards"
+        },
+        {
+            "name": "Chicago Bulls"
+        },
+        {
+            "name": "Philadelphia 76ers"
+        },
+        {
+            "name": "Toronto Raptors"
+        },
+        {
+            "name": "Atlanta Hawks"
+        },
+        {
+            "name": "Detroit Pistons"
+        },
+        {
+            "name": "Miami Heat"
+        },
+        {
+            "name": "Dallas Mavericks"
+        },
+        {
+            "name": "Memphis Grizzlies"
+        },
+        {
+            "name": "Los Angeles Clippers"
+        },
+        {
+            "name": "Oklahoma City Thunder"
+        },
+        {
+            "name": "Houston Rockets"
+        },
+        {
+            "name": "Charlotte Hornets"
+        },
+        {
+            "name": "Indiana Pacers"
+        },
+        {
+            "name": "Phoenix Suns"
+        },
+        {
+            "name": "Minnesota Timberwolves"
+        },
+        {
+            "name": "Orlando Magic"
+        },
+        {
+            "name": "Portland Trail Blazers"
+        },
+        {
+            "name": "New Orleans Pelicans"
+        },
+        {
+            "name": "Denver Nuggets"
+        },
+        {
+            "name": "San Antonio Spurs"
+        },
+        {
+            "name": "Utah Jazz"
+        }
+    ]
+}
