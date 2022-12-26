@@ -39,6 +39,11 @@
             "dbname": "nba",
             "endpoint": "nba",
             "resource": "nbaResource"
+        },
+        {
+            "dbname": "funbets",
+            "endpoint": "funbets",
+            "resource": "funbetsResource"
         }
     ]
 }

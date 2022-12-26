@@ -50,7 +50,7 @@ exports.allBets = async(req,res) => {
 	let live = await db.live.get();
 	let nba = await db.nba.get();
 	let nba_bets = await db.bets.filter({league:'nba'});
-
+	let funbets = await db.funbets.get();
 
 
 	res.send({
@@ -59,7 +59,8 @@ exports.allBets = async(req,res) => {
 		paroli,
 		live,
 		nba,
-		nba_bets
+		nba_bets,
+		funbets
 	});
 
 }
