@@ -25,9 +25,10 @@
                 let id = await db.bets.insert(bet);
 
                 params.bet = id;
-                await db.singles.insert(params);
+                let singleId = await db.singles.insert(params);
+                console.log(singleId);
 
-                self.res.send('OK');
+                self.res.send(singleId.toString());
             }
             catch(err){
                 self.res.send('Failed to insert record ----> ' + JSON.stringify(err));

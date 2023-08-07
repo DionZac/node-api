@@ -13,7 +13,12 @@
                 "def": "",
                 "hlp": "Month where the bet was played"
             },
-            
+            {
+                "fname": "date",
+                "type": "str",
+                "len": 160,
+                "def" : ""
+            },
             {
                 "fname": "bet",
                 "type": "lnk",

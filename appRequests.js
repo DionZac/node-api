@@ -60,7 +60,19 @@ exports.monthly = async(req,res) => {
 		}
 		else{
 			months[bet.month] = {
-				"singles": [bet]
+				"singles": [bet],
+				"live": []
+			}
+		}
+	}
+
+	for(let bet of live){
+		if(months[bet.month]){
+			months[bet.month].live.push(bet);
+		}
+		else{
+			months[bet.month] = {
+				"live": [bet]
 			}
 		}
 	}
