@@ -1,343 +1,454 @@
 {
-    "teams":[
+    "teams": [
         {
-            "name": "Fulham"
+            "name": "Fulham",
+            "league": "Premier League"
         },
         {
-            "name": "Aston Villa"
+            "name": "Aston Villa",
+            "league": "Premier League"
         },
         {
-            "name": "Wolves"
+            "name": "Wolves",
+            "league": "Premier League"
         },
         {
-            "name": "Everton"
+            "name": "Everton",
+            "league": "Premier League"
         },
         {
-            "name": "Brighton"
+            "name": "Brighton",
+            "league": "Premier League"
         },
         {
-            "name": "Newcastle"
+            "name": "Newcastle",
+            "league": "Premier League"
         },
         {
-            "name": "Totthenam"
+            "name": "Totthenam",
+            "league": "Premier League"
         },
         {
-            "name":"Chelsea"
+            "name": "Chelsea",
+            "league": "Premier League"
         },
         {
-            "name":"Manchester United"
+            "name": "Manchester United",
+            "league": "Premier League"
         },
         {
-            "name":"Manchester City"
+            "name": "Manchester City",
+            "league": "Premier League"
         },
         {
-            "name":"West Ham"
+            "name": "West Ham",
+            "league": "Premier League"
         },
         {
-            "name": "Brentford"
+            "name": "Brentford",
+            "league": "Premier League"
         },
         {
-            "name": "Crystal Palace"
+            "name": "Crystal Palace",
+            "league": "Premier League"
         },
         {
-            "name":"Nottingham Forest"
+            "name": "Nottingham Forest",
+            "league": "Premier League"
         },
         {
-            "name":"Liverpool"
+            "name": "Liverpool",
+            "league": "Premier League"
         },
         {
-            "name":"Southampton"
+            "name": "Southampton",
+            "league": "Premier League"
         },
         {
-            "name": "Leeds"
+            "name": "Leeds",
+            "league": "Premier League"
         },
         {
-            "name": "Arsenal"
+            "name": "Arsenal",
+            "league": "Premier League"
         },
         {
-            "name": "Leicester"
+            "name": "Leicester",
+            "league": "Premier League"
         },
         {
-            "name": "Valladolid"
+            "name": "Valladolid",
+            "league": "La Liga"
         },
         {
-            "name": "Osasuna"
+            "name": "Osasuna",
+            "league": "La Liga"
         },
         {
-            "name": "Sevilla"
+            "name": "Sevilla",
+            "league": "La Liga"
         },
         {
-            "name":"Real Madrid"
+            "name": "Real Madrid",
+            "league": "La Liga"
         },
         {
-            "name":"Villareal"
+            "name": "Villareal",
+            "league": "La Liga"
         },
         {
-            "name":"Barcelona"
+            "name": "Barcelona",
+            "league": "La Liga"
         },
         {
-            "name":"Rayo Vallecano"
+            "name": "Rayo Vallecano",
+            "league": "La Liga"
         },
         {
-            "name":"Cadiz"
+            "name": "Cadiz",
+            "league": "La Liga"
         },
         {
-            "name":"Real Sociedad"
+            "name": "Real Sociedad",
+            "league": "La Liga"
         },
         {
-            "name":"Valencia"
+            "name": "Valencia",
+            "league": "La Liga"
         },
         {
-            "name": "Elche"
+            "name": "Elche",
+            "league": "La Liga"
         },
         {
-            "name":"Girona"
+            "name": "Girona",
+            "league": "La Liga"
         },
         {
-            "name":"Mallorca"
+            "name": "Mallorca",
+            "league": "La Liga"
         },
         {
-            "name": "Espanyol"
+            "name": "Espanyol",
+            "league": "La Liga"
         },
         {
-            "name":"Real Betis"
+            "name": "Real Betis",
+            "league": "La Liga"
         },
         {
-            "name":"Athletic Bilbao"
+            "name": "Athletic Bilbao",
+            "league": "La Liga"
         },
         {
-            "name": "Celta"
+            "name": "Celta",
+            "league": "La Liga"
         },
         {
-            "name":"Almeria"
+            "name": "Almeria",
+            "league": "La Liga"
         },
         {
-            "name": "Atletico Madrid"
+            "name": "Atletico Madrid",
+            "league": "La Liga"
         },
         {
-            "name": "Getafe"
+            "name": "Getafe",
+            "league": "La Liga"
         },
         {
-            "name": "Roma"
+            "name": "Roma",
+            "league": "Serie A"
         },
         {
-            "name":"Cremonese"
+            "name": "Cremonese",
+            "league": "Serie A"
         },
         {
-            "name":"Salernitana"
+            "name": "Salernitana",
+            "league": "Serie A"
         },
         {
-            "name": "Sassuolo"
+            "name": "Sassuolo",
+            "league": "Serie A"
         },
         {
-            "name":"Parma"
+            "name": "Parma",
+            "league": "Serie A"
         },
         {
-            "name":"Monza"
+            "name": "Monza",
+            "league": "Serie A"
         },
         {
-            "name":"Torino"
+            "name": "Torino",
+            "league": "Serie A"
         },
         {
-            "name":"Lecce"
+            "name": "Lecce",
+            "league": "Serie A"
         },
         {
-            "name":"Inter"
+            "name": "Inter",
+            "league": "Serie A"
         },
         {
-            "name":"Lazio"
+            "name": "Lazio",
+            "league": "Serie A"
         },
         {
-           "name":"Bologna"
+            "name": "Bologna",
+            "league": "Serie A"
         },
         {
-            "name": "Spezia"
+            "name": "Spezia",
+            "league": "Serie A"
         },
         {
-            "name":"Udinese"
+            "name": "Udinese",
+            "league": "Serie A"
         },
         {
-            "name":"Sampdoria"
+            "name": "Sampdoria",
+            "league": "Serie A"
         },
         {
-            "name":"Juventus"
+            "name": "Juventus",
+            "league": "Serie A"
         },
         {
-            "name": "Napoli"
+            "name": "Napoli",
+            "league": "Serie A"
         },
         {
-            "name": "Atalanta"
+            "name": "Atalanta",
+            "league": "Serie A"
         },
         {
-            "name": "Milan"
+            "name": "Milan",
+            "league": "Serie A"
         },
         {
-            "name": "Fiorentina"
+            "name": "Fiorentina",
+            "league": "Serie A"
         },
         {
-            "name": "Verona"
+            "name": "Verona",
+            "league": "Serie A"
         },
         {
-            "name":"Empoli"
+            "name": "Empoli",
+            "league": "Serie A"
         },
         {
-            "name": "PSG"
+            "name": "PSG",
+            "league": "Ligue 1"
         },
         {
-            "name": "Brestois"
+            "name": "Brestois",
+            "league": "Ligue 1"
         },
         {
-            "name": "Strasbourg"
+            "name": "Strasbourg",
+            "league": "Ligue 1"
         },
         {
-            "name":"Angers"
+            "name": "Angers",
+            "league": "Ligue 1"
         },
         {
-            "name": "Monpellier"
+            "name": "Monpellier",
+            "league": "Ligue 1"
         },
         {
-            "name":"Nantes"
+            "name": "Nantes",
+            "league": "Ligue 1"
         },
         {
-            "name":"Lille"
+            "name": "Lille",
+            "league": "Ligue 1"
         },
         {
-            "name":"Auxerre"
+            "name": "Auxerre",
+            "league": "Ligue 1"
         },
         {
-            "name":"Lorient"
+            "name": "Lorient",
+            "league": "Ligue 1"
         },
         {
-            "name":"Marseille"
+            "name": "Marseille",
+            "league": "Ligue 1"
         },
         {
-            "name": "Ajaccio"
+            "name": "Ajaccio",
+            "league": "Ligue 1"
         },
         {
-            "name":"Reims"
+            "name": "Reims",
+            "league": "Ligue 1"
         },
         {
-            "name":"Monaco"
+            "name": "Monaco",
+            "league": "Ligue 1"
         },
         {
-            "name":"Rennais"
+            "name": "Rennais",
+            "league": "Ligue 1"
         },
         {
-            "name":"Reims"
+            "name": "Reims",
+            "league": "Ligue 1"
         },
         {
-            "name":"Clermont"
+            "name": "Clermont",
+            "league": "Ligue 1"
         },
         {
-            "name":"Nice"
+            "name": "Nice",
+            "league": "Ligue 1"
         },
         {
-            "name":"Lyonnais"
+            "name": "Lyonnais",
+            "league": "Ligue 1"
         },
         {
-            "name":"Troyes"
+            "name": "Troyes",
+            "league": "Ligue 1"
         },
         {
-            "name":"Lens"
+            "name": "Lens",
+            "league": "Ligue 1"
         },
         {
-            "name": "Bayern Munich"
+            "name": "Bayern Munich",
+            "league": "Bundesliga"
         },
         {
-            "name":"Union Berlin"
+            "name": "Union Berlin",
+            "league": "Bundesliga"
         },
         {
-            "name":"Gladbach"
+            "name": "Gladbach",
+            "league": "Bundesliga"
         },
         {
-            "name": "Dortmund"
+            "name": "Dortmund",
+            "league": "Bundesliga"
         },
         {
-            "name": "Freiburg"
+            "name": "Freiburg",
+            "league": "Bundesliga"
         },
         {
-            "name": "Mainz"
+            "name": "Mainz",
+            "league": "Bundesliga"
         },
         {
-            "name":"Herta"
+            "name": "Herta",
+            "league": "Bundesliga"
         },
         {
-            "name":"Bayern Leverkusen"
+            "name": "Bayern Leverkusen",
+            "league": "Bundesliga"
         },
         {
-            "name":"Stuttgart"
+            "name": "Stuttgart",
+            "league": "Bundesliga"
         },
         {
-            "name": "Augsburg"
+            "name": "Augsburg",
+            "league": "Bundesliga"
         },
         {
-            "name":"Leipzig"
+            "name": "Leipzig",
+            "league": "Bundesliga"
         },
         {
-            "name":"Koln"
+            "name": "Koln",
+            "league": "Bundesliga"
         },
         {
-            "name":"Schalke"
+            "name": "Schalke",
+            "league": "Bundesliga"
         },
         {
-            "name":"Eintracht Frankfurt"
+            "name": "Eintracht Frankfurt",
+            "league": "Bundesliga"
         },
         {
-            "name":"Werder Bremen"
+            "name": "Werder Bremen",
+            "league": "Bundesliga"
         },
         {
-            "name": "Bochum"
+            "name": "Bochum",
+            "league": "Bundesliga"
         },
         {
-            "name": "Hoffenheim"
+            "name": "Hoffenheim",
+            "league": "Bundesliga"
         },
         {
-            "name": "Panathinaikos"
+            "name": "Panathinaikos",
+            "league": "Super League"
         },
         {
-            "name": "Aek"
+            "name": "Aek",
+            "league": "Super League"
         },
         {
-            "name": "Lamia"
+            "name": "Lamia",
+            "league": "Super League"
         },
         {
-            "name":"Ionikos"
+            "name": "Ionikos",
+            "league": "Super League"
         },
         {
-            "name":"Olympiakos"
+            "name": "Olympiakos",
+            "league": "Super League"
         },
         {
-            "name":"Aris"
+            "name": "Aris",
+            "league": "Super League"
         },
         {
-            "name":"Paok"
+            "name": "Paok",
+            "league": "Super League"
         },
         {
-            "name":"Panetolikos"
+            "name": "Panetolikos",
+            "league": "Super League"
         },
         {
-            "name": "Levadiakos"
+            "name": "Levadiakos",
+            "league": "Super League"
         },
         {
-            "name": "Asteras Tripolis"
+            "name": "Asteras Tripolis",
+            "league": "Super League"
         },
         {
-            "name": "Ofi"
+            "name": "Ofi",
+            "league": "Super League"
         },
         {
-            "name": "Atromitos"
+            "name": "Atromitos",
+            "league": "Super League"
         },
         {
-            "name": "Volos"
+            "name": "Volos",
+            "league": "Super League"
         },
         {
-            "name": "Pas Giannena"
+            "name": "Pas Giannena",
+            "league": "Super League"
         },
         {
-            "name":"Antalyaspor"
+            "name": "Antalyaspor"
         },
         {
-            "name":"Galatasaray"
+            "name": "Galatasaray"
         },
         {
             "name": "Fenerbahce"
@@ -352,7 +463,7 @@
             "name": "Kasimpasa"
         },
         {
-            "name":"PSV Einthoven"
+            "name": "PSV Einthoven"
         },
         {
             "name": "Feyenord"
@@ -361,37 +472,37 @@
             "name": "Ajax"
         },
         {
-            "name":"Go Ahead Eagles"
+            "name": "Go Ahead Eagles"
         },
         {
             "name": "Twente"
         },
         {
-            "name":"Alkmaar"
+            "name": "Alkmaar"
         },
         {
             "name": "Nijmegen"
         },
         {
-            "name":"Union Saint Gilloise"
+            "name": "Union Saint Gilloise"
         },
         {
-            "name":"Anderlecht"
+            "name": "Anderlecht"
         },
         {
-            "name":"Gil Vicente"
+            "name": "Gil Vicente"
         },
         {
             "name": "Gent"
         },
         {
-            "name":"Benfica"
+            "name": "Benfica"
         },
         {
-            "name":"Braga"
+            "name": "Braga"
         },
         {
-            "name":"Sporting"
+            "name": "Sporting"
         },
         {
             "name": "Porto"
@@ -406,40 +517,40 @@
             "name": "Dinamo Kiev"
         },
         {
-            "name":"Slovan Bratislava"
+            "name": "Slovan Bratislava"
         },
         {
-            "name":"Macabbi Tel-Aviv"
+            "name": "Macabbi Tel-Aviv"
         },
         {
-            "name":"Rangers"
+            "name": "Rangers"
         },
         {
-            "name":"Dinamo Zagreb"
+            "name": "Dinamo Zagreb"
         },
         {
-            "name":"Rakov"
+            "name": "Rakov"
         },
         {
-            "name":"Apollon Limassol"
+            "name": "Apollon Limassol"
         },
         {
             "name": "Aek Larnaca"
         },
         {
-            "name":"Young Boys"
+            "name": "Young Boys"
         },
         {
-            "name":"Hajduk Split"
+            "name": "Hajduk Split"
         },
         {
-            "name":"Viborg"
+            "name": "Viborg"
         },
         {
-            "name":"Erythros Asteras"
+            "name": "Erythros Asteras"
         },
         {
-            "name":"Maccabi Haifa"
+            "name": "Maccabi Haifa"
         },
         {
             "name": "Hapoel Beer Seva"
@@ -510,6 +621,5 @@
         {
             "name": "Other team"
         }
-        
     ]
 }
