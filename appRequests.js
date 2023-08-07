@@ -43,6 +43,31 @@ exports.categories = async(req, res) => {
 	});
 }
 
+exports.monthly = async(req,res) => {
+	let singles = await db.singles.get();
+	let live = await db.live.get();
+
+	let months = {
+		"all": {
+			"singles": singles,
+			"live": live
+		}
+	};
+
+	for(let bet of singles){
+		if(months[bet.month]){
+			months[bet.month].singles.push(bet);
+		}
+		else{
+			months[bet.month] = {
+				"singles": [bet]
+			}
+		}
+	}
+
+	res.send(months);
+}
+
 exports.allBets = async(req,res) => {
 	let bets = await db.bets.get();
 	let singles = await db.singles.get();

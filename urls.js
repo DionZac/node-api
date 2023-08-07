@@ -9,6 +9,7 @@ var viewModules = {};
 exports.registerRequestServices = function(server){
     server.all('/login', appRequests.login);
     server.all('/allbets', appRequests.allBets);
+    server.all('/monthly', appRequests.monthly);
 
     server.all('/assets/teams', appRequests.teams);
     server.all('/assets/leagues', appRequests.leagues);
