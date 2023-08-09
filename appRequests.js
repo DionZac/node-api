@@ -55,6 +55,11 @@ exports.monthly = async(req,res) => {
 	};
 
 	for(let bet of singles){
+		if(bet.month == "August") bet.month = "08";
+		if(bet.month == "September") bet.month = "09";
+		if(bet.month == "October") bet.month = "10";
+		if(bet.month == "November") bet.month = "11";
+
 		if(months[bet.month]){
 			months[bet.month].singles.push(bet);
 		}
@@ -67,6 +72,11 @@ exports.monthly = async(req,res) => {
 	}
 
 	for(let bet of live){
+		if(bet.month == "August") bet.month = "08";
+		if(bet.month == "September") bet.month = "09";
+		if(bet.month == "October") bet.month = "10";
+		if(bet.month == "November") bet.month = "11";
+		
 		if(months[bet.month]){
 			months[bet.month].live.push(bet);
 		}
