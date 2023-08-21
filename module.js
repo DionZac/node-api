@@ -98,6 +98,14 @@ module.exports.add_db_field = async function(dbname, field, callback){
         else {
             _db.addcolumn(field).then( async () => {
                 glib.serverlog('Successfully added ' + field.fname + ' to ' + dbname, 1);
+                
+                // Update all existing records with the default value of the new field //
+                var records = await _db.get();
+                for(let record of records){
+                    record.account_uid = field.def;
+                    await _db.update(record);
+                }
+                
                 if(self.called_from_migration_file){
                     if(callback) callback()
                 }

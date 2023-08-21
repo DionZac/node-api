@@ -7,6 +7,13 @@
         "inputGroups": [],
         "fields": [
             {
+                "fname": "account_uid",
+                "type" : "str",
+                "len": 160,
+                "def": "",
+                "hlp" : "Account UUID"
+            },
+            {
                 "fname": "month",
                 "type": "str",
                 "len": 160,

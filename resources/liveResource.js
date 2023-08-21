@@ -2,6 +2,8 @@
     var master  = require("./master.js");
     
     exports.liveResource = class extends master.masterResource {
+        account_authorization = true;
+        
         constructor(){
             super();
             this.live = db.live;
@@ -18,6 +20,7 @@
         async __insert__(self, params){
             let bet = params.bet;
 
+            bet.account_uid = self.req.user_uid;
             bet.month = params.month;
             bet.bet_type = 2;
 
@@ -25,6 +28,7 @@
                 let id = await db.bets.insert(bet);
 
                 params.bet = id;
+                params.account_uid = self.req.user_uid;
                 await this.db.insert(params);
 
                 self.res.send('OK');
@@ -43,6 +47,7 @@
                 if(bet){
                     bet.month = params.month;
                     bet.bet_type = 2;
+                    bet.account_uid = self.req.user_uid;
                     if(!bet.rowid){
                         // This is a new BET record //
                         let id = await db.bets.insert(bet);

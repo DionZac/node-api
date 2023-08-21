@@ -137,12 +137,25 @@ exports.serverInit = async function (args) {
        });
   */
   server.enable('etag', 'weak');
+
+
   server.all('/*', function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "*")
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "*");
+    res.header("Access-Control-Allow-Headers", "*")
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, user");
+    
+    if(req.method == 'OPTIONS'){
+      res.send();
+      return;
+    }
+    
     next();
   });
+
+  
+
+  
 
 
 

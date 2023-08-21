@@ -2,8 +2,11 @@
     var master  = require("./master.js");
     
     exports.betsResource = class extends master.masterResource {
+        account_authorization = true;
+        
         constructor(){
             super();
+            
             this.bets = db.bets;
             super.initialize(this.bets);
         }

@@ -73,6 +73,15 @@ exports.initializeAuthorizationClasses = async (req,res) => {
 exports.call = async (req,res) => {
     var params = glib.getRequestParams(req);
 
+    if(!req.headers.user){
+        res.status(403);
+        res.send("User Authentication Failed");
+        return;
+    }
+
+    req.user_uid = req.headers.user;
+    
+
     var self = {req:req, res:res};
 
     if(req.method == 'OPTIONS') { res.send('OK'); return; }

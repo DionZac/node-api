@@ -2,6 +2,8 @@
     var master  = require("./master.js");
     
     exports.singlesResource = class extends master.masterResource {
+        account_authorization = true;
+        
         constructor(){
             super();
             this.singles = db.singles;
@@ -18,6 +20,7 @@
         async __insert__(self,params){
             let bet = params.bet;
 
+            bet.account_uid = self.req.user_uid;
             bet.month = params.month;
             bet.bet_type = 0;
 
@@ -25,6 +28,7 @@
                 let id = await db.bets.insert(bet);
 
                 params.bet = id;
+                params.account_uid = self.req.user_uid;
                 let singleId = await db.singles.insert(params);
                 console.log(singleId);
 
@@ -44,6 +48,7 @@
                 if(bet){
                     bet.month = params.month;
                     bet.bet_type = 0;
+                    bet.account_uid = self.req.user_uid;
                     if(!bet.rowid){
                         // This is a new BET record //
                         let id = await db.bets.insert(bet);

@@ -114,7 +114,20 @@ exports.masterResource = class {
         else id = -1;
 
         try{
-            var t = await this.db.get(id);
+            var t;
+
+            if(this.account_authorization){
+                console.log("ACCOUNT AUTHORIZATION NEEDED")
+                if(id == -1){
+                    t = await this.db.filter({account_uid: self.req.user_uid});
+                }
+                else {
+                    t = await this.db.filter({rowid:id, account_uid: self.req.user_uid});
+                }
+            }
+            else{
+                t = await this.db.get(id);
+            }
 
             if(!t || t.length == 0){
                 this.__results_not_found__(self);
@@ -148,7 +161,20 @@ exports.masterResource = class {
         else rowid = -1;
 
         try{
-            var t = await this.db.get(rowid);
+            var t;
+
+            if(this.account_authorization){
+                console.log("ACCOUNT AUTHORIZATION NEEDED")
+                if(rowid == -1){
+                    t = await this.db.filter({account_uid: self.req.user_uid});
+                }
+                else {
+                    t = await this.db.filter({rowid:rowid, account_uid: self.req.user_uid});
+                }
+            }
+            else{
+                t = await this.db.get(rowid);
+            }
 
             if(!t || t.length == 0){
                 this.__results_not_found__(self);
@@ -167,6 +193,10 @@ exports.masterResource = class {
     async __insert__(self,params){
         let res = self.res;
         try{
+            if(this.account_authorization){
+                params.account_uid = self.req.user_uid;
+            }
+
             await this.db.insert(params);
             res.send({err:0});
         }
