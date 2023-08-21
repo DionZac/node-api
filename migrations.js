@@ -22,6 +22,44 @@ function undo_migration(migration){
      
 }
 
+///////////////////////////////////////////////////////
+// CMD API : Sync json_schema table with models
+///////////////////////////////////////////////////////
+module.exports.sync = function() {
+    var settings = app.settings;
+    var self = this;
+
+    app.initialize_only_database = true;
+    app.startup('').then(err => {
+        glib.loadModelFiles().then(async (dbfiles) => {
+            let query = "DELETE FROM json_schema;";
+            await db.engine.customQuery(null, query,[]);
+
+            for(let dbfile in dbfiles){
+                let database = dbfiles[dbfile];
+                try{database = JSON.parse(database)}
+                catch(e){};
+
+                for(let dbname in database){
+                    if(dbname == 'json_schema' || dbname == 'migrations') continue;
+
+                    let data  = database;
+                    data = JSON.stringify(data,null,4);
+                    console.log(data);
+                    // data = data.replaceAt(0, "'");
+                    // data = data.replaceAt(data.length-1, "'");
+
+                    let insert = `INSERT INTO json_schema (tablename, schema) VALUES("${dbname}", '${data}');`;
+                    await db.engine.customQuery(null,insert,[]);
+                    
+                }
+            }
+
+            process.exit(0);
+        })
+    })
+}
+
 
 ///////////////////////////////////////////////////////
 // CMD API : Checking database(model.json) and databases schema(from schema_json table) and creates migration files if needed

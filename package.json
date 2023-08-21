@@ -35,6 +35,7 @@
     "remove_db_field": "run-func module.js remove_db_field",
     "createmigrations": "run-func migrations.js createmigrations",
     "runmigrations": "run-func migrations.js runmigrations",
+    "migration-sync": "run-func migrations.js sync",
     "update_images": "run-func module.js update_images",
     "load_movies": "run-func module.js load",
     "get_genres": "run-func module.js getAllGenres"
