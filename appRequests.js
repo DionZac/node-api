@@ -44,8 +44,10 @@ exports.categories = async(req, res) => {
 }
 
 exports.monthly = async(req,res) => {
-	let singles = await db.singles.get();
-	let live = await db.live.get();
+	let uid = req.headers.user;
+
+	let singles = await db.singles.filter({account_uid: uid});
+	let live = await db.live.filter({account_uid: uid});
 
 	let months = {
 		"all": {
