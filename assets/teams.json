@@ -85,6 +85,10 @@
             "league": "Premier League"
         },
         {
+            "name": "Burnley",
+            "league": "Premier League"
+        },
+        {
             "name": "Valladolid",
             "league": "La Liga"
         },
@@ -334,6 +338,14 @@
         },
         {
             "name": "Lens",
+            "league": "Ligue 1"
+        },
+        {
+            "name": "Havre",
+            "league": "Ligue 1"
+        },
+        {
+            "name": "Toulouse",
             "league": "Ligue 1"
         },
         {
