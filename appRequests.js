@@ -27,13 +27,23 @@ exports.nbaBetCategories = async(req, res) => {
 
 exports.teams = async(req,res) => {
 	fs.readFile('./assets/teams.json', (err, data) => {
-		res.send(JSON.parse(data));
+		data = JSON.parse(data);
+		fs.readFile('./assets/nations.json', (err, nations) => {
+			nations = JSON.parse(nations);
+			for(let nation of nations.teams){
+				nation["league"] = "EURO Qualification";
+				data["teams"].push(nation);
+			}
+
+			res.send(data);
+		});
 	});
 }
 
 exports.leagues = async(req, res) => {
 	fs.readFile('./assets/leagues.json', (err, data) => {
-		res.send(JSON.parse(data));
+		data = JSON.parse(data);
+		res.send(data);
 	});
 }
 

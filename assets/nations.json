@@ -1,4 +1,6 @@
 {
+    "teams": [
+{
     "name": "Greece"
 },
 {
@@ -153,4 +155,7 @@
 },
 {
     "name": "Bosnia Herzegovina"
+}
+
+    ]
 }
