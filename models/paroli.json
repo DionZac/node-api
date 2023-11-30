@@ -7,11 +7,24 @@
         "inputGroups": [],
         "fields": [
             {
+                "fname": "account_uid",
+                "type" : "str",
+                "len": 160,
+                "def": "",
+                "hlp" : "Account UUID"
+            },
+            {
                 "fname": "month",
                 "type": "str",
                 "len": 160,
                 "def": "",
                 "hlp": "Month where the bet was played"
+            },
+            {
+                "fname": "date",
+                "type": "str",
+                "len": 160,
+                "def" : ""
             },
             {
                 "fname": "output",
@@ -26,6 +39,13 @@
                 "len": 64,
                 "def": 0,
                 "hlp": "Bet Value"
+            },
+            {
+                "fname": "system",
+                "type": "str",
+                "len": 64,
+                "def": "",
+                "hlp" :"Bet paroli system"
             },
             {
                 "fname": "profit",

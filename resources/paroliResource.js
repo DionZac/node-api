@@ -17,11 +17,13 @@
 
         async __insert__(self,params){
             let bets = params.bets;
+            params.account_uid = self.req.user_uid;
 
             try{
                 let output = 1;
                 let idx = 0;
                 for(let bet of bets){
+                    bet.account_uid = self.req.user_uid;
                     bet.month = params.month;
                     bet.bet_type = 1;
                     output *= bet.output;
@@ -33,8 +35,8 @@
                 }
 
                 params.output = output;
-                await db.paroli.insert(params);
-                self.res.send('OK');
+                let paroliId = await db.paroli.insert(params);
+                self.res.send(paroliId.toString());
             }
             catch(err){
                 self.res.send('Failed to insert record ----> ' + JSON.stringify(err));
@@ -45,12 +47,14 @@
             try{
                 params.rowid = kwargs.rowid;
                 params.output = 1;
+                params.account_uid = self.req.user_uid;
                 let bets = params.bets;
                 if(bets){
                     let idx = 0;
                     for(let bet of bets){
                        bet.month = params.month;
-                       bet.bet_type = 1; 
+                       bet.bet_type = 1;
+                       bet.account_uid = self.req.user_uid;
                        params.output *= bet.output;
 
                        if(!bet.rowid){

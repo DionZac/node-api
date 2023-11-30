@@ -58,11 +58,23 @@ exports.monthly = async(req,res) => {
 
 	let singles = await db.singles.filter({account_uid: uid});
 	let live = await db.live.filter({account_uid: uid});
+	let paroli = await db.paroli.filter({account_uid:uid});
+
+	for(let p of paroli){
+		p.bets = [];
+		for(key in p){
+			if(key.indexOf('bets_') > -1){
+				p.bets.push(p[key]);
+				delete p[key];
+			}
+		}
+	}
 
 	let months = {
 		"all": {
 			"singles": singles,
-			"live": live
+			"live": live,
+			"paroli": paroli
 		}
 	};
 
@@ -71,6 +83,14 @@ exports.monthly = async(req,res) => {
 		if(bet.month == "September") bet.month = "09";
 		if(bet.month == "October") bet.month = "10";
 		if(bet.month == "November") bet.month = "11";
+		if(bet.month == "December") bet.month = "12";
+		if(bet.month == "January") bet.month = "01";
+		if(bet.month == "February") bet.month = "02";
+		if(bet.month == "March") bet.month = "03";
+		if(bet.month == "April") bet.month = "04";
+		if(bet.month == "May") bet.month = "05";
+		if(bet.month == "June") bet.month = "06";
+		if(bet.month == "July") bet.month = "07";
 
 		if(months[bet.month]){
 			months[bet.month].singles.push(bet);
@@ -78,7 +98,8 @@ exports.monthly = async(req,res) => {
 		else{
 			months[bet.month] = {
 				"singles": [bet],
-				"live": []
+				"live": [],
+				"paroli": []
 			}
 		}
 	}
@@ -88,6 +109,14 @@ exports.monthly = async(req,res) => {
 		if(bet.month == "September") bet.month = "09";
 		if(bet.month == "October") bet.month = "10";
 		if(bet.month == "November") bet.month = "11";
+		if(bet.month == "December") bet.month = "12";
+		if(bet.month == "January") bet.month = "01";
+		if(bet.month == "February") bet.month = "02";
+		if(bet.month == "March") bet.month = "03";
+		if(bet.month == "April") bet.month = "04";
+		if(bet.month == "May") bet.month = "05";
+		if(bet.month == "June") bet.month = "06";
+		if(bet.month == "July") bet.month = "07";
 		
 		if(months[bet.month]){
 			months[bet.month].live.push(bet);
@@ -95,6 +124,30 @@ exports.monthly = async(req,res) => {
 		else{
 			months[bet.month] = {
 				"live": [bet]
+			}
+		}
+	}
+
+	for(let bet of paroli){
+		if(bet.month == "August") bet.month = "08";
+		if(bet.month == "September") bet.month = "09";
+		if(bet.month == "October") bet.month = "10";
+		if(bet.month == "November") bet.month = "11";
+		if(bet.month == "December") bet.month = "12";
+		if(bet.month == "January") bet.month = "01";
+		if(bet.month == "February") bet.month = "02";
+		if(bet.month == "March") bet.month = "03";
+		if(bet.month == "April") bet.month = "04";
+		if(bet.month == "May") bet.month = "05";
+		if(bet.month == "June") bet.month = "06";
+		if(bet.month == "July") bet.month = "07";
+		
+		if(months[bet.month]){
+			months[bet.month].paroli.push(bet);
+		}
+		else{
+			months[bet.month] = {
+				"paroli": [bet]
 			}
 		}
 	}
