@@ -1,0 +1,30 @@
+{
+    "test1": {
+        "name": "test1",
+        "vname": "test1",
+        "endpoint": "test1",
+        "resourceName": "test1Resource",
+        "inputGroups": [],
+        "fields": [
+            {
+                "fname": "testfield",
+                "type": "str",
+                "len" : 2048,
+                "def" : "0123456789",
+                "hlp" : "Help Text"
+            },
+            {
+                "fname": "testfield2",
+                "type": "str",
+                "len": 2048,
+                "def": "Test Field Value"
+            },
+            {
+                "fname": "userid",
+                "type": "lnk",
+                "dblink": "users",
+                "hlp": "User Token"
+            }
+        ]
+    }
+}
