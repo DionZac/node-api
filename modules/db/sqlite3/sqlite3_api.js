@@ -174,6 +174,14 @@ class sqlite3API {
         })
     }
 
+    /**
+     * SQLITE3 API Command : Filter Objects of database table
+     *  -- Generates the filter SQL Command to run
+     *  -- Example : db.users.filter({username__contains: "john"})
+     *  -- Will look into the users table and filter all the results that "username" field contains the string "john"
+     * @param {Object} fields -> Table fields to filter from 
+     * @returns Rows returned from filter query
+     */
     filter(fields) {
         if (glib.objectIsEmpty(fields)) throw new Error('Empty object given. Cannot filterBy nothing.');
         return new Promise((resolve, reject) => {
@@ -183,17 +191,17 @@ class sqlite3API {
                 // add exceptions (i.e. 'limit' will be handled after the loop ends)
                 if (!first_field && field !== 'limit') out += ' AND ';
 
-                if (field.indexOf('contains__') > -1) {
-                    field = field.split('contains__')[1];
-                    out += field + ' LIKE "%' + fields['contains__' + field] + '%"';
+                if (field.indexOf('__contains') > -1) {
+                    field = field.split('__contains')[1];
+                    out += field + ' LIKE "%' + fields['__contains' + field] + '%"';
                 }
-                else if (field.indexOf('startswith__') > -1) {
-                    field = field.split('startswith__')[1];
-                    out += field + ' LIKE "' + fields['startswith__' + field] + '%"';
+                else if (field.indexOf('__startswith') > -1) {
+                    field = field.split('__startswith')[1];
+                    out += field + ' LIKE "' + fields['__startswith' + field] + '%"';
                 }
-                else if (field.indexOf('endswith__') > -1) {
-                    field = field.split('endswidth__')[1];
-                    out += field + ' LIKE "%' + fields['endswith__' + field] + '"';
+                else if (field.indexOf('__endswith') > -1) {
+                    field = field.split('__endswith')[1];
+                    out += field + ' LIKE "%' + fields['__endswith' + field] + '"';
                 }
                 else if (field.indexOf('__gte') > -1) {
                     field = field.split('__gte')[0];
