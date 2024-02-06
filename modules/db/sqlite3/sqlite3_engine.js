@@ -470,7 +470,7 @@ class sqlite3Engine {
                         for (let field of temp.fields) query += ` ${field.fname},`;
                         query = query.substr(0, query.length - 1); // remove the last comma
 
-                        query += `FROM ${dbf.name};`;
+                        query += ` FROM ${dbf.name};`;
                         await this.customQuery(dbf, query, []);
 
                         // ## DROP THE ORIGINAL TABLE ## //
@@ -634,11 +634,14 @@ class sqlite3Engine {
 
 
     async callbackInjection(model, err, rows, callback){
+        // console.log(rows);
         let out = [];
 
         if(model && rows){
             for(let row of rows){
-                let record = {};
+                let record = {
+                    rowid: row.rowid
+                };
 
                 for(let field of model.fields){
                     if(field.type == "lnk"){
