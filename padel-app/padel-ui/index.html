@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- CSS STYLES -->
+        <link rel="stylesheet" href="./styles/fonts/fontawesome/css/fontawesome.css">
+        <link rel="stylesheet" href="./styles/core.css">
+        <link rel="stylesheet" href="./styles/styles.css">
+        <link rel="stylesheet" href="./styles/css/views/home.css">
+        <link rel="stylesheet" href="./styles/css/components/card.css">
+        <link rel="stylesheet" href="./styles/css/modals/modal.css">
+
+        <!-- LIBRARIES -->
+        <script type="text/javascript" src="./scripts/libraries/jquery.min.js"></script>
+    </head>
+    <body class="theme">
+        <div class="container">
+
+        
+        <div id="main">
+            <div class="header">
+                <img src="./assets/padelway-logo.png" />
+                <span class="header-text"> Padel - Way</span>
+            </div>
+            <div class="main-container">
+            <div id="home" class="view">
+                <!-- NEXT SCHEDULED MATCHES SECTION-->
+                <div class="label" style="padding-top: 0; padding-bottom: 1em">Your Next Matches </div>
+                <div class="scheduled-matches">
+                    <div class="no-scheduled-match">
+                        <img src="./assets/padel-icon.png" />
+                        <span>No scheduled Matches</span>
+                    </div>
+                </div>
+
+                <!-- BOOK MATCH SECTION -->
+                <div class="label">Book for a match</div>
+                <div class="book-match-section">
+                    <div class="book-match-section-item friendly-match-section">
+                        <img src="./assets/icons/white-friendly.png" />
+                        <div class="book-match-header">
+                            Friendly Match
+                        </div>
+                        <div class="book-match-description">
+                            Find a court and invite your friends to play
+                        </div>
+                    </div>
+                    <div class="book-match-section-item matchmaking-section">
+                        <img src="./assets/icons/white-matchmaking.png" />
+                        <div class="book-match-header">
+                            Find others to play
+                        </div>
+                        <div class="book-match-description">
+                            Add your availability and find other people to play in your area
+                        </div>
+                    </div>
+                    <div class="book-match-section-item tournament-section">
+                        <div class="book-match-tournament-header">Find a Tournament</div>
+                        <img src="./assets/icons/tournament-white.png" />
+                    </div>
+                </div>
+
+                <!-- FAVOURITE PLACES SECTION -->
+                <div class="favourites">
+                    <div class="label">Favourite Places</div>
+                    <div class="favourite-places-container">
+                        <div class="add-new-place">
+                            <img src="./assets/icons/plus-gray.png" />
+                            <div>Add a padel Place</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tournaments">
+
+            </div>
+            </div>
+            <div class="footer">
+            <div route="home" class="footer-child">
+                <img src="./assets/icons/home.png" />
+                <span>Home</span>
+            </div>
+            <div route="tournament" class="footer-child">
+                <img src="./assets/icons/tournament.png" />
+                <span>Tournaments</span>
+            </div>
+            <div route="matchmaking" class="footer-child">
+                <img src="./assets/icons/matchmaking.png" />
+                <span>Matchmaking</span>
+            </div>
+            <div route="profile" class="footer-child footer-child-profile">
+                <img src="./assets/icons/profile.png" />
+                <span>Profile</span>
+            </div>
+            </div>
+        </div>
+        <div id="modal"></div>
+
+        </div>
+
+        <!-- MAIN MODULE -->
+        <script type="module" src="./scripts/main.js"></script>
+    </body>
+</html>

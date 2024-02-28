@@ -1,0 +1,115 @@
+.scheduled-matches{
+    border-radius: 4em;
+    border: 1px solid #d9d9d9;
+    margin-left: 4em;
+    margin-right: 4em;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: scroll;
+}
+
+.no-scheduled-match{
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+
+.no-scheduled-match img{
+    width: 6em;
+    height: 6em;
+    padding: 1em;
+    padding-left: 6em;
+}
+
+.no-scheduled-match span{
+    font-size: 2em;
+    font-style: italic;
+    color: gray;
+    font-weight: 300;
+}
+
+.book-match-section{
+    padding: 2em;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    font-size: .98em;
+}
+
+.book-match-section-item{
+    flex-grow: 0;
+    flex-basis: 48%;
+    background: #0097B2;
+    color: white;
+    border-radius: 3em;
+    text-align: center;
+    padding: 3em 0 3em 0;
+}
+
+.tournament-section{
+    flex-basis: 100% !important;
+    border-radius: 1em !important;
+    background: #FFA445 !important;
+
+    margin-top: 2em;
+    padding:1em;
+    padding-bottom: 3em;
+    text-align: left;
+}
+
+.book-match-section-item img{
+    width: 4em;
+    height: 4em;
+}
+
+.book-match-header{
+    font-weight: bold;
+    font-size: 1.5em;
+    margin-top: 1em;
+}
+
+.book-match-description{
+    font-size: 1.2em;
+    width: 75%;
+    margin-left: 12.5%;
+    margin-top: 1em;
+}
+
+.book-match-tournament-header{
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.book-match-section .tournament-section img{
+    
+    padding-left: 2em;
+}
+
+.book-match-section .tournament-section .book-match-tournament-header{
+    padding:1em;
+}
+
+.favourites .favourite-places-container{
+    padding: 4em;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.favourites .add-new-place{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    align-items: center;
+    border: 14px dotted var(--secondary);
+    padding: 1em;
+}
+
+.favourites .add-new-place div{
+    color: #c3c0c0;
+    font-size: 1.3em;
+}
+
+.favourites .add-new-place img{
+    width: 6em;
+    height: 6em;
+}

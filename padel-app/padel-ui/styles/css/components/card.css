@@ -1,0 +1,31 @@
+.card{
+    display: flex;
+    flex-direction: column;
+    width: 24em;
+    padding-right: 1em;
+}
+
+.card-image-container{
+    flex-basis: 100%;
+}
+
+.card-image{
+    object-fit: cover;
+    width: 24em;
+    height: 15em;
+}
+
+.card-place-name-container{
+    padding: 2em;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.card-place-datetime{
+    display: flex;
+    padding: 2em;
+    font-size: 1.2em;
+    font-weight: bold;
+    justify-content: space-between;
+}
