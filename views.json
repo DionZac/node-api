@@ -1,11 +1,5 @@
 {
-    "default":{
-        "name": "default",
-        "endpoint": "/",
-        "folderpath": "",
-        "filename": "index.html",
-        "module": "defaultView"
-    },
+   
 
     "admin":{
         "name": "admin",

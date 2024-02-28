@@ -144,37 +144,42 @@ exports.serverInit = async function (args) {
     next();
   });
 
+  server.all('/', function(req,res,next) {
+    res.sendFile(`${appRoot}${Settings.DEFAULT_SERVER_ENDPOINT}`);
+    // next();
+  })
 
 
-  server.use(function (req, res, next) {
-    if (req.url.indexOf('.manifest') != -1) {
-      res.header('Content-Type', 'text/cache-manifest');
-      res.header('Cache-Control', 'max-age=0, no-cache, no-store, must-revalidate');
-      res.header('Pragma', 'no-cache');
-      res.header('Expires', 'Thu, 01 Jan 1970 00:00:01 GMT');
-      next();
-      return;
-    }
 
-    if (req.url.match(/(.png|.jpg|.jpeg|.svg|.woff|.woff2|.ttf|.otf|.eot)/)) {
-      res.header('Cache-Control', 'max-age=691200');
-    } else {
-      res.header('Cache-Control', 'max-age=0, no-cache, no-store, must-revalidate');
-      res.header('Pragma', 'no-cache');
-      res.header('Expires', 'Thu, 01 Jan 1970 00:00:01 GMT');
-    }
-    next();
-  });
+  // server.use(function (req, res, next) {
+  //   if (req.url.indexOf('.manifest') != -1) {
+  //     res.header('Content-Type', 'text/cache-manifest');
+  //     res.header('Cache-Control', 'max-age=0, no-cache, no-store, must-revalidate');
+  //     res.header('Pragma', 'no-cache');
+  //     res.header('Expires', 'Thu, 01 Jan 1970 00:00:01 GMT');
+  //     next();
+  //     return;
+  //   }
+
+  //   if (req.url.match(/(.png|.jpg|.jpeg|.svg|.woff|.woff2|.ttf|.otf|.eot)/)) {
+  //     res.header('Cache-Control', 'max-age=691200');
+  //   } else {
+  //     res.header('Cache-Control', 'max-age=0, no-cache, no-store, must-revalidate');
+  //     res.header('Pragma', 'no-cache');
+  //     res.header('Expires', 'Thu, 01 Jan 1970 00:00:01 GMT');
+  //   }
+  //   next();
+  // });
 
   try {
     /// set which folders are being included in 'settings.json' -- if null do not include anything ///
     if (this.settings.PROJECT_INCLUDE_FOLDER) {
-      // try{
-      //   server.use(express.static(`${__dirname}/${this.settings.PROJECT_INCLUDE_FOLDER}`));
-      // }
-      // catch(e){
-      //   glib.serverlog(`Failed to include project directory : ${__dirname}/${this.settings.PROJECT_INCLUDE_FOLDER}`, 0);
-      // }
+      try{
+        server.use(express.static(`${__dirname}/${this.settings.PROJECT_INCLUDE_FOLDER}`));
+      }
+      catch(e){
+        glib.serverlog(`Failed to include project directory : ${__dirname}/${this.settings.PROJECT_INCLUDE_FOLDER}`, 0);
+      }
     }
 
     let views = await glib.readJSONfile("./views.json");
