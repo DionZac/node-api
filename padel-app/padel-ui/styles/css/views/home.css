@@ -1,6 +1,6 @@
 .scheduled-matches{
     border-radius: 4em;
-    border: 1px solid #d9d9d9;
+    border: 1px solid var(--border-main);
     margin-left: 4em;
     margin-right: 4em;
     display: flex;
@@ -24,7 +24,7 @@
 .no-scheduled-match span{
     font-size: 2em;
     font-style: italic;
-    color: gray;
+    color: var(--text-label);
     font-weight: 300;
 }
 
@@ -100,12 +100,13 @@
     flex-direction: column;
     gap: 1em;
     align-items: center;
-    border: 14px dotted var(--secondary);
+    border: 5px dotted var(--border-main);
     padding: 1em;
+    background: var(--primary);
 }
 
 .favourites .add-new-place div{
-    color: #c3c0c0;
+    color: var(--text-label)
     font-size: 1.3em;
 }
 

@@ -3,6 +3,7 @@
     flex-direction: column;
     width: 24em;
     padding-right: 1em;
+    background: var(--primary);
 }
 
 .card-image-container{
@@ -28,4 +29,43 @@
     font-size: 1.2em;
     font-weight: bold;
     justify-content: space-between;
+}
+
+.place{
+    width: 100%;
+    border: 1px solid var(--border-main);
+    margin-bottom: 4em;
+    padding-bottom: 1em;
+}
+
+.place .card-image{
+    width: 100%;
+    height: 30em;
+}
+
+.place .card-place-name-container{
+    font-size: 1.8em;
+    font-style: italic;
+}
+
+.place .card-place-location-container{
+    width: 95%;
+    font-size: 1.5em;
+    text-align: right;
+    color:var(--text-secondary);
+}
+
+.place .card-place-available-hours {
+    font-size: 1.5em;
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+    color: var(--text-secondary);
+}
+
+.place .card-place-price{
+    font-size: 2.3em;
+    text-align: right;
+    width: 95%;
+    font-weight: bold;
 }

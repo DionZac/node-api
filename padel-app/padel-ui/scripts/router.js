@@ -1,5 +1,4 @@
 import Home from "./views/home.js";
-import Places from "./views/places.js";
 import Tournaments from "./views/tournaments.js";
 
 class Router {
@@ -12,7 +11,6 @@ class Router {
 
     constructor(){
         this.home = new Home();
-        this.places = new Places();
         this.tournaments = new Tournaments();
 
         this.navigate("home");
@@ -30,9 +28,6 @@ class Router {
         switch(page){
             case "home":
                 this.home.render();
-                break;
-            case "places":
-                this.places.render();
                 break;
             case "tournament":
                 this.tournaments.render();

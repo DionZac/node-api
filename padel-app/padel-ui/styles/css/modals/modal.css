@@ -1,6 +1,6 @@
 .modal-header img{
-    width: 4em;
-    height: 4em;
+    width: 2em;
+    height: 2em;
 }
 
 #modal {
@@ -8,7 +8,21 @@
     left: 100%;
     width: 40%;
     height: 5%;
-    
+    overflow: scroll;
+}
+
+.modal-header{
+    gap: 0;
+}
+
+.modal-header .header-text{
+    width: 100%;
+    text-align: center;
+    color: var(--text-main);
+}
+
+.modal-content {
+    margin-top: 14em;
 }
 
 #main{

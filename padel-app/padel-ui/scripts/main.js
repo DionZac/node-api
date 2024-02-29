@@ -9,5 +9,9 @@ import Router from "./router.js";
         let route = $(this).attr('route');
 
         window.router.navigate(route);
-    })
+    });
+
+    window.onhashchange = () => {
+        debugger;
+    }
 })();
