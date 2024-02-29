@@ -35,7 +35,7 @@
     width: 100%;
     border: 1px solid var(--border-main);
     margin-bottom: 4em;
-    padding-bottom: 1em;
+    padding-bottom: 2em;
 }
 
 .place .card-image{
@@ -68,4 +68,8 @@
     text-align: right;
     width: 95%;
     font-weight: bold;
+}
+
+.card-shadow{
+    box-shadow: 5px 5px 15px 0px #939393;
 }

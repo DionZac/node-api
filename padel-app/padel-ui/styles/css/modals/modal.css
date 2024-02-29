@@ -1,6 +1,7 @@
 .modal-header img{
     width: 2em;
     height: 2em;
+    margin-left: 2em;
 }
 
 #modal {
@@ -16,13 +17,13 @@
 }
 
 .modal-header .header-text{
-    width: 100%;
+    width: 20em;
     text-align: center;
     color: var(--text-main);
 }
 
 .modal-content {
-    margin-top: 14em;
+    margin-top: 11em;
 }
 
 #main{

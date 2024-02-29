@@ -35,29 +35,35 @@ class PlacesModal extends Modal {
                 <span class="header-text"> Find a place </span>
             </div>
             <div class="modal-content">
-                <div class="places-datepicker-container">
+                <div class="places-filters">
+                    <div class="places-datepicker-container">
                     <span class="form-label form-label-one datepicker-label">
                         Date
                     </span>
-                    <input class="form-value" placeholder="Select date..." type="datepicker" id="places-datepicker" />
-                </div>
-                <div class="places-timepicker-container form-container-two">
-                    <div class="form-value-container-two places-timepicker-start">
-                        <span class="form-label form-label-two timepicker-start">
-                            Start
-                        </span>
-                        <input class="form-value" placeholder="Select time" type="timepicker" id="places-start" />
+                    <input class="form-value form-shadow" placeholder="Select date..." type="datepicker" id="places-datepicker" />
                     </div>
-                    <div class="form-value-container-two places-timepicker-end">
-                        <span class="form-label form-label-two timepicker-end">
-                            End
-                        </span>
-                        <input class="form-value" placeholder="Select time" type="timepicker" id="places-end" />
+                    <div class="places-timepicker-container form-container-two">
+                        <div class="form-value-container-two places-timepicker-start">
+                            <span class="form-label form-label-two timepicker-start">
+                                Start
+                            </span>
+                            <input class="form-value form-shadow" placeholder="Select time" type="timepicker" id="places-start" />
+                        </div>
+                        <div class="form-value-container-two places-timepicker-end">
+                            <span class="form-label form-label-two timepicker-end">
+                                End
+                            </span>
+                            <input class="form-value form-shadow" placeholder="Select time" type="timepicker" id="places-end" />
+                        </div>
                     </div>
-                </div>
-                <div class="form-value-search-container places-search-container">
-                    <img src="./assets/icons/search.png" />
-                    <input class="form-value form-value-search" id="places-search" placeholder="Search for a padel place or area..." />
+                    <div class="places-filter-search">
+                        <div class="form-value-search-container form-shadow places-search-container">
+                            <img src="./assets/icons/search.png" />
+                            <input class="form-value form-value-search" id="places-search" placeholder="Search for a padel place or area..." />
+                        </div>
+                        <img class="filter-image" src="./assets/icons/filters.png" />
+                    </div>
+                    <div class="filter-result"> Wed | 24-02-2024    19:00 - 20:30 </div> 
                 </div>
                 <div class="places-container">
                     ${card}

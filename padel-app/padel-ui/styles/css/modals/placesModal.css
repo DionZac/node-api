@@ -1,79 +1,48 @@
 .places-datepicker-container {
     text-align: center;
-    font-size: 2em;
-}
-
-.form-label{
-    display: block;
-    color: var(--text-label);
-    font-weight: 600;
-}
-
-.form-container-two , .form-value-container-two{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    gap: 0.5em;
-}
-
-.form-label-one{
-    width: 100%;
-}
-
-.form-label-two{
-    width: 50%;
-}
-
-.form-value{
-    font-size: 1em;
-    border: 1px solid var(--border-main);
-    padding: 0.5em;
-    border-radius: 1em;
-    margin-top: 0.5em;
-    text-align: center;
-    font-weight: bold;
-    background: var(--primary);
-}
-
-.form-container-two .form-value{
-    width: 8em;
-    margin-top: 0;
 }
 
 .places-timepicker-container {
     margin-top: 2em;
-    font-size: 2em;
     padding-left: 1em;
     padding-right: 1em;
 }
 
-.form-value-search-container {
-    padding: 0.5em;
+.places-timepicker-container, .places-datepicker-container{
     font-size: 2em;
-    background: var(--primary);
-    border: 1px solid var(--border-main);
+    display: none;
+}
+
+/* .places-container {
     margin-top: 4em;
-    border-radius: 1em;
+} */
+
+.places-filters{
+    padding-top: 4em;
+    background: #f3f3f3;
+    margin-bottom: 4em;
+    padding-bottom: 2em;
+}
+
+.places-timepicker-start, .places-timepicker-end{
+    display: block;
+}
+
+.places-filter-search{
     display: flex;
     align-items: center;
-    width: 60%;
-    margin-left: auto;
-    margin-right: auto;
+    justify-content: space-evenly;
+    padding-bottom: 3em;
 }
 
-.form-value-search-container img{
-    width: 1em;
-    height: 1em;
+.filter-image{
+    width: 4em;
+    height: 4em;
 }
 
-.form-value-search{
-    border: none;
-    margin: 0;
+.filter-result{
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
     width: 100%;
-    font-style: italic;
-    font-size: .7em;
-}
-
-.places-container {
-    margin-top: 6em;
 }
