@@ -1,0 +1,40 @@
+{
+    "courts": {
+        "name": "courts",
+        "vname": "courts",
+        "endpoint": "courts",
+        "resourceName": "courtsResource",
+        "inputGroups": [],
+        "fields": [
+            {
+                "fname" : "shop_id",
+                "type": "lnk",
+                "dblink": "shops",
+                "len": 160,
+                "def": -1,
+                "hlp": "Shop Id Link"
+            },
+            {
+                "fname": "name",
+                "type": "str",
+                "len": 160,
+                "def": "Court #1",
+                "hlp": "Court Name"
+            },
+            {
+                "fname": "price_per_hour",
+                "type": "amt",
+                "len": 160,
+                "def": 0.00,
+                "hlp": "Court Price Per Hour"
+            },
+            {
+                "fname": "outdoor",
+                "type": "f",
+                "len": 160,
+                "def": "false",
+                "hlp": "Boolean - Court Outdoor - Default false"
+            }
+        ]
+    }
+}

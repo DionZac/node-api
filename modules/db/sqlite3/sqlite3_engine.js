@@ -668,6 +668,7 @@ class sqlite3Engine {
                                     record[field.fname] = nested_record[0];
                                 }
                                 catch(e){
+                                    console.log(e);
                                     record[field.fname] = null;
                                 }
                             }

@@ -9,6 +9,16 @@
             "dbname": "users",
             "endpoint": "users",
             "resource": "usersResource"
+        },
+        {
+            "dbname": "shops",
+            "endpoint": "shops",
+            "resource": "shopsResource"
+        },
+        {
+            "dbname": "courts",
+            "endpoint": "courts",
+            "resource": "courtsResource"
         }
     ]
 }

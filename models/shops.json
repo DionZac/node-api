@@ -1,0 +1,81 @@
+{
+    "shops": {
+        "name": "shops",
+        "vname": "shops",
+        "endpoint": "shops",
+        "resourceName": "shopsResource",
+        "inputGroups": [],
+        "fields": [
+            {
+                "fname": "name",
+                "type": "str",
+                "len": 3200,
+                "def": "",
+                "hlp": "Shop Name"
+            },
+            {
+                "fname": "location",
+                "type": "str",
+                "len": 320,
+                "def": "",
+                "hlp": "Location coordinates"
+            },
+            {
+                "fname": "location_name",
+                "type": "str",
+                "len": 160,
+                "def": "",
+                "hlp": "Location Name"
+            },
+            {
+                "fname": "available_hours",
+                "type": "str",
+                "len": 3200,
+                "def": "{'mon': '08:00 - 00:00','tue': '08:00 - 00:00', 'wed': '08:00 - 00:00', 'thu': '08:00 - 00:00', 'fri': '08:00 - 00:00', 'sat': '08:00 - 00:00', 'sun': '08:00 - 00:00'}",
+                "hlp": "Object with available hours of shop"
+            },
+            {
+                "fname": "min_price",
+                "type": "amt",
+                "len": 160,
+                "def": 0,
+                "hlp": "Minimum Price Per/Hour"
+            },
+            {
+                "fname": "image_url",
+                "type": "str",
+                "len": 160,
+                "def": "",
+                "hlp": "Main Image URL"
+            },
+            {
+                "fname": "racket_price",
+                "type": "amt",
+                "len": 160,
+                "def": 0,
+                "hlp": "Racket Price"
+            },
+            {
+                "fname" : "balls_price",
+                "type": "amt",
+                "len": 160,
+                "def": 0,
+                "hlp": "Balls rack price"
+            },
+            {
+                "fname" : "commission_rate",
+                "type": "amt",
+                "len": 160,
+                "def": 0,
+                "hlp": "Commission rate percentage"
+            },
+            {
+                "fname" : "cover_commisions",
+                "type": "f",
+                "len": 160,
+                "def": "",
+                "hlp": "Boolean attribute - Cover Commissions"
+            }
+        ]
+    }
+}
