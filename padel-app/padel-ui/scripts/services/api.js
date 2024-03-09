@@ -55,6 +55,30 @@ class API {
 
         return this.request(options);
     }
+
+    put(model, object){
+        let url = `${this.mainUrl}/${model}/${object.rowid}`;
+        let options = {
+            method : 'PUT',
+            headers: {},
+            url:url,
+            body: JSON.stringify(object)
+        }
+
+        return this.request(options);
+    }
+
+    delete(model, object){
+        let url = `${this.mainUrl}/${model}/${object.rowid}`;
+        let options = {
+            method : 'DELETE',
+            headers: {},
+            url:url,
+            body: JSON.stringify(object)
+        }
+
+        return this.request(options);
+    }
 }
 
 export default API;
