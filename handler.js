@@ -248,7 +248,7 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
 
         /// serialize data for database ///
         if(fn == '__update__' || fn == '__insert__'){
-            parameters = handler.serializeData(parameters,dbname);
+            parameters = await handler.serializeData(parameters,dbname);
         }
 
 
@@ -260,7 +260,7 @@ var resource_call = async function(fn,dbname,parameters, self, method, kwargs){
     }
 }
 
-exports.serializeData = function(data,dbname){
+exports.serializeData = async function(data,dbname){
     let resource = handler[dbname];
     let fields = db[dbname].model.fields
 
@@ -273,6 +273,13 @@ exports.serializeData = function(data,dbname){
             }
             catch(err){}
         }
+    }
+
+    if('serialize' in resource){
+        try{
+            data = await resource.serialize(data);
+        }
+        catch(e){};
     }
 
     return data;
