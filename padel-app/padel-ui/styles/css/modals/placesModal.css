@@ -45,3 +45,13 @@
     text-align: center;
     width: 100%;
 }
+
+.places-error{
+    display: none;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 3em;
+    font-style: italic;
+    padding-top: 3em;
+    font-weight: 700;
+}

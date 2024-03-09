@@ -21,13 +21,13 @@ class Home {
             window.router.openModal(modal);
         });
 
-        let card = new Card().createHTML();
+        // let card = new Card().createHTML();
 
-        $('.scheduled-matches').append(card);
-        $('.scheduled-matches').append(card);
-        $('.scheduled-matches').append(card);
+        // $('.scheduled-matches').append(card);
+        // $('.scheduled-matches').append(card);
+        // $('.scheduled-matches').append(card);
 
-        $('.no-scheduled-match').hide();
+        // $('.no-scheduled-match').hide();
     }
 
     render(){

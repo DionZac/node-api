@@ -31,7 +31,7 @@
                 "fname": "available_hours",
                 "type": "str",
                 "len": 3200,
-                "def": "{'mon': '08:00 - 00:00','tue': '08:00 - 00:00', 'wed': '08:00 - 00:00', 'thu': '08:00 - 00:00', 'fri': '08:00 - 00:00', 'sat': '08:00 - 00:00', 'sun': '08:00 - 00:00'}",
+                "def": "",
                 "hlp": "Object with available hours of shop"
             },
             {
@@ -70,7 +70,7 @@
                 "hlp": "Commission rate percentage"
             },
             {
-                "fname" : "cover_commisions",
+                "fname" : "cover_commissions",
                 "type": "f",
                 "len": 160,
                 "def": "",

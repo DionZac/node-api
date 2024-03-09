@@ -2,6 +2,7 @@ class Card {
     name;
     location;
     date;
+    day_name;
     time;
     image;
     availability;
@@ -10,39 +11,33 @@ class Card {
     type = "booked-match"
 
     constructor(options){
-        // DUMMY OBJECT
-        this.name = "Padel Place - Marousi";
-        this.location = "-15.6723441,38.1231238626";
-        this.date = "24-02-2024";
-        this.time = "18:00 - 19:30";
-        this.image = "./assets/padel-place-marousi.jpg";
-        this.id = 1;
-
         if(options){
             for(let attr in options){
                 this[attr] = options[attr];
             }
         }
+
+        this.day_name = new Date(this.date).toLocaleDateString('en-us', {weekday: 'long'}).substring(0,3);
     }
 
     createPlaceHtml(){
         return(`
             <div class="place card card-shadow">
                 <div class="card-image-container">
-                    <img class="card-image" src=${this.image} />
+                    <img class="card-image" src=${this.image_url} />
                 </div>
                 <div class="card-place-name-container">
                     <span class="card-place-name"> ${this.name} </span>
                 </div>
                 <div class="card-place-location-container">
-                    <span class="card-place-location"> ${this.location} </span>
+                    <span class="card-place-location"> ${this.location_name} </span>
                 </div>
                 <div class="card-place-available-hours">
-                    <span class="card-day"> Mon | Available Hours</span>
-                    <span class="card-hours"> ${this.availability[0]}</span> 
+                    <span class="card-day"> ${this.day_name} | Available Hours</span>
+                    <span class="card-hours"> ${this.available_hours[this.day_name.toLowerCase()]}</span> 
                 </div>
                 <div class="card-place-price">
-                    <span class="card-price"> ${this.price.toFixed(2)}$ </span>
+                    <span class="card-price"> ${this.min_price.toFixed(2)}$ </span>
                 </div>
             </div>
         `
@@ -57,7 +52,7 @@ class Card {
         return(`
             <div class="card card-shadow">
                 <div class="card-image-container">
-                    <img class="card-image" src=${this.image} />
+                    <img class="card-image" src=${this.image_url} />
                 </div>
                 <div class="card-place-name-container">
                     <span class="card-place-name"> ${this.name} </span>

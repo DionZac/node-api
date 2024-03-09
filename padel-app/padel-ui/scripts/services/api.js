@@ -50,7 +50,7 @@ class API {
             method : 'POST',
             headers: {},
             url:url,
-            body: JSON.stringify(object)
+            data: object
         }
 
         return this.request(options);
@@ -62,19 +62,22 @@ class API {
             method : 'PUT',
             headers: {},
             url:url,
-            body: JSON.stringify(object)
+            data: JSON.stringify(object)
         }
 
         return this.request(options);
     }
 
     delete(model, object){
-        let url = `${this.mainUrl}/${model}/${object.rowid}`;
+        let id;
+        if(typeof(object) == "object" ) id = object.rowid;
+        else id = object;
+        
+        let url = `${this.mainUrl}/${model}/${id}`;
         let options = {
             method : 'DELETE',
             headers: {},
-            url:url,
-            body: JSON.stringify(object)
+            url:url
         }
 
         return this.request(options);

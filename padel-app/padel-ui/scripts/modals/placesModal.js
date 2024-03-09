@@ -3,29 +3,61 @@ import Modal from "./modal.js";
 import Card from "../components/card.js";
 
 class PlacesModal extends Modal {
-    date = "Mon | 24-02-2024";
+    date = "03-10-2024";
     start = "19:00";
     end = "20:30";
     search;
     availability;
 
     places = [];
-    
+    placesRequest = new Promise((resolve, reject) => {
+        this.placesLoaded = resolve;
+        this.placesFailed = reject;
+    });
+
     constructor(){
         super();
 
-        this.places.push(new Place({
-            name: 'Padel Place - Marousi',
-            location: 'Makrigianni 24, Marousi',
-            image: './assets/padel-place-marousi.jpg',
-            availability:[
-                "10:00 - 00:00"
-            ],
-            price: 32,
-            type: 'place',
-            id: 1
-        }));
+        try{
+            api.get('shops').then(shops => {
+                for(let shop of shops){
+                    shop.type = "place";
+                    shop.date = this.date;
+                    this.places.push(shop);
+                }
+
+                this.placesLoaded();
+            }).catch(e => {
+                this.placesFailed(e);
+            })
+        }
+        catch(e){
+            this.placesFailed(e);
+        }
     }
+
+    open(){
+        super.open();
+
+        this.loadShops();
+    }
+
+    async loadShops(){
+        try{
+            $('.places-error').hide();
+            await this.placesRequest;
+
+            for(let shop of this.places){
+                let card = new Card(shop).createHTML();
+                $('.places-container').prepend(card);
+            }
+        }
+        catch(e){
+            /// Places request failed -- Display network error //
+            $('.places-error').show();
+        }
+    }
+
 
     createHTML(){
         let card = new Card(this.places[0]).createHTML();
@@ -66,8 +98,10 @@ class PlacesModal extends Modal {
                     <div class="filter-result"> Wed | 24-02-2024    19:00 - 20:30 </div> 
                 </div>
                 <div class="places-container">
-                    ${card}
-                    ${card}
+                    
+                </div>
+                <div class="places-error">
+                    Failed to load any places...
                 </div>
             </div>
         `);

@@ -151,6 +151,9 @@ class sqlite3Engine {
         // Checks if field type is string to add quotes in the value //
         const fieldOutput = function (field, value) {
             if (dblib.isString(field.type)) {
+                if(value.indexOf('"') > -1){
+                    return "'" + value + "'";
+                }
                 return `"${value}"`;
             }
             else {
