@@ -301,6 +301,14 @@ exports.deserializeData =  function(data, dbname){
                     }
                 }
             }
+
+            if('deserialize' in resource){
+                try{
+                    entry = await resource.deserialize(entry);
+                }
+                catch(e){};
+            }
+
             data[i] = entry
             i++;
         }
