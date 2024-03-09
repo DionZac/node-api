@@ -1,7 +1,10 @@
 import Router from "./router.js";
+import API from "./services/api.js";
+
 
 (() => {
     var router = new Router();
+    var api = new API();
 
     window.router = router;
 
@@ -14,4 +17,8 @@ import Router from "./router.js";
     window.onhashchange = () => {
         debugger;
     }
+
+    api.get('courts').then(shops => {
+        debugger
+    })
 })();
