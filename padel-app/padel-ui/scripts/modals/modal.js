@@ -6,7 +6,7 @@ class Modal {
     attach(){
         $('#modal').html(this.createHTML());
 
-        $('.modal-header img').off('click').on('click', () => {
+        $('.modal-header i').off('click').on('click', () => {
             // Close modal //
             this.close();
         })

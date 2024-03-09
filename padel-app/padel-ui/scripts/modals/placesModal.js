@@ -31,7 +31,7 @@ class PlacesModal extends Modal {
         let card = new Card(this.places[0]).createHTML();
         return(`
             <div class="header modal-header">
-                <img src="./assets/icons/arrow-left.png" />
+                <i class="fa fa-2x fa-angle-left"></i>
                 <span class="header-text"> Find a place </span>
             </div>
             <div class="modal-content">
@@ -58,10 +58,10 @@ class PlacesModal extends Modal {
                     </div>
                     <div class="places-filter-search">
                         <div class="form-value-search-container form-shadow places-search-container">
-                            <img src="./assets/icons/search.png" />
+                            <i class="fa fa-1x fa-search"></i>
                             <input class="form-value form-value-search" id="places-search" placeholder="Search for a padel place or area..." />
                         </div>
-                        <img class="filter-image" src="./assets/icons/filters.png" />
+                        <i id="places-filters" class="fa fa-4x fa-list-ul"></i>
                     </div>
                     <div class="filter-result"> Wed | 24-02-2024    19:00 - 20:30 </div> 
                 </div>

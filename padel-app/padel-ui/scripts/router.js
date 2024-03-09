@@ -48,18 +48,24 @@ class Router {
     }
 
     resetMenuIcons(){
-        $('div[route="home"]').find('img').attr('src', './assets/icons/home.png');
-        $('div[route="home"]').find('span').css('font-weight', '600');
-        $('div[route="tournament"]').find('img').attr('src', './assets/icons/tournament.png');
-        $('div[route="tournament"]').find('span').css('font-weight', '600');
-        $('div[route="profile"]').find('img').attr('src', './assets/icons/profile.png');
-        $('div[route="profile"]').find('span').css('font-weight', '600');
-        $('div[route="matchmaking"]').find('img').attr('src', './assets/icons/matchmaking.png');
-        $('div[route="matchmaking"]').find('span').css('font-weight', '600');
+        var menuItems = ['home', 'tournament', 'profile', 'matchmaking'];
+        for(let menuItem of menuItems){
+            $(`div[route=${menuItem}]`).find('i').removeClass('fa-3x');
+            $(`div[route=${menuItem}]`).find('span').css('font-weight', '600');
+        }
+
+        // $('div[route="home"]').find('i').removeClass('fa-3x')
+        // $('div[route="home"]').find('span').css('font-weight', '600');
+        // $('div[route="tournament"]').find('i').removeClass
+        // $('div[route="tournament"]').find('span').css('font-weight', '600');
+        // $('div[route="profile"]').find('img').attr('src', './assets/icons/profile.png');
+        // $('div[route="profile"]').find('span').css('font-weight', '600');
+        // $('div[route="matchmaking"]').find('img').attr('src', './assets/icons/matchmaking.png');
+        // $('div[route="matchmaking"]').find('span').css('font-weight', '600');
     }
 
     setFilledMenuIcon(page){
-        $(`div[route=${page}]`).find('img').attr('src', `./assets/icons/${page}-filled.png`);
+        $(`div[route=${page}]`).find('i').addClass('fa-3x');
         $(`div[route=${page}]`).find('span').css('font-weight', '800');
     }
 }   

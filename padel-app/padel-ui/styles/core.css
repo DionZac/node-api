@@ -53,6 +53,10 @@ body{
   padding: 1em;
 }
 
+.header i{
+  padding: 1em;
+}
+
 .footer{
   position: fixed;
   background: var(--primary);

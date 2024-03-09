@@ -45,9 +45,8 @@
     
 }
 
-.form-value-search-container img{
-    width: 1em;
-    height: 1em;
+.form-value-search-container i{
+    color: var(--text-secondary);
 }
 
 .form-value-search{

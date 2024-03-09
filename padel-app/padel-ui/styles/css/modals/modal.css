@@ -1,7 +1,5 @@
-.modal-header img{
-    width: 2em;
-    height: 2em;
-    margin-left: 2em;
+.modal-header i{
+    color: var(--text-secondary)
 }
 
 #modal {
