@@ -676,10 +676,10 @@ class sqlite3Engine {
                                     if(row[field.fname] == -1) throw '';
                                     let nested_record = await db[dbname].get(row[field.fname]);
                                     if(nested_record.length > 0){
-                                        record[fname] = nested_record[0];
+                                        record[field.fname] = nested_record[0];
                                     }
                                     else{
-                                        record[fname] = null;
+                                        record[field.fname] = null;
                                     }
                                 }
                                 catch(e){
