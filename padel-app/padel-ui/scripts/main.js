@@ -1,6 +1,6 @@
 import Router from "./router.js";
 import API from "./services/api.js";
-import Profile from "./views/profile.js";
+import Profile from "./objects/profile.js"
 
 (async () => {
     var router = new Router();
@@ -17,6 +17,12 @@ import Profile from "./views/profile.js";
         window.router.navigate(route);
     });
 
+    var profile = await api.get("profile");
+    let user_profile = new Profile(profile[0]);
+    await user_profile.loaded;
+
+    $('#profile').html(user_profile.createHTML());
+    window.user_profile = user_profile;
     window.onhashchange = () => {
         debugger;
     }
@@ -30,10 +36,7 @@ import Profile from "./views/profile.js";
     //     ranking_points: 165.50,
     //     image_url: "./assets/male-profile-picture.jpg"
     // })
-
-    // api.get("profile").then(profile => {
-    //     debugger;
-    // })
+    
 
     // await api.post('shops', {
     //     name: 'North Padel Club',

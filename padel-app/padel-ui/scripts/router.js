@@ -1,5 +1,6 @@
 import Home from "./views/home.js";
 import Tournaments from "./views/tournaments.js";
+import ProfileView from "./views/profileView.js";
 
 class Router {
     navigation = {
@@ -12,6 +13,7 @@ class Router {
     constructor(){
         this.home = new Home();
         this.tournaments = new Tournaments();
+        this.profileView = new ProfileView();
 
         this.navigate("home");
     }
@@ -37,7 +39,7 @@ class Router {
                 this.tournaments.render();
                 break;
             case "profile":
-                this.profile.render();
+                this.profileView.render();
                 break;
             case "modal":
                 break;

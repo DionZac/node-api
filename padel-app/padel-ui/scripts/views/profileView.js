@@ -1,11 +1,12 @@
-class Profile {
+class ProfileView {
 
     constructor(params) {
         
     }
 
     render(){
+        
     }
 }
 
-export default Profile;
+export default ProfileView;
