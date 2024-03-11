@@ -8,6 +8,13 @@ import Profile from "./objects/profile.js"
 
 
     window.api = api;
+    // await api.delete("connections", 2);
+    // await api.delete("connections", 3);
+    // await api.post("connections", {
+    //     "profile_1": 1,
+    //     "profile_2": 2,
+    //     "status": "pending_2"
+    // })
 
     window.router = router;
 
@@ -27,16 +34,19 @@ import Profile from "./objects/profile.js"
         debugger;
     }
 
+   
+
     // for(let i=0; i<12; i++){
     //     await api.delete('shops', i);
     // }
     // await api.delete('profile', 1);
+   
+    
     // await api.post("profile", {
     //     name: "Dion Zac",
     //     ranking_points: 165.50,
     //     image_url: "./assets/male-profile-picture.jpg"
     // })
-    
 
     // await api.post('shops', {
     //     name: 'North Padel Club',

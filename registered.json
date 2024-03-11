@@ -24,6 +24,11 @@
             "dbname": "profile",
             "endpoint": "profile",
             "resource": "profileResource"
+        },
+        {
+            "dbname": "connections",
+            "endpoint": "connections",
+            "resource": "connectionsResource"
         }
     ]
 }

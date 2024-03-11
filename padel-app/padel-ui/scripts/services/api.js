@@ -28,7 +28,7 @@ class API {
         });
     }
 
-    get(model, id){
+    get(model, id, data){
         let url = this.mainUrl; 
         url += `/${model}`;
         if(id && id > 0){
@@ -38,7 +38,8 @@ class API {
         let options = {
             method: 'GET',
             headers: {},
-            url: url
+            url: url,
+            data: data
         };
 
         return this.request(options);

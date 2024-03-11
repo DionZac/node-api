@@ -26,7 +26,15 @@ class Profile{
     }
 
     // Load Friends List
-    loadFriends(){
+    async loadFriends(){
+        var connections = await api.get("connections", -1, {
+            filter_by:{
+                "user": this.rowid
+            }
+        });
+
+        debugger;
+
         return new Promise((resolve,reject) => {
             setTimeout(() => {
                 resolve();
