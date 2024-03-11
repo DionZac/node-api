@@ -655,6 +655,8 @@ class sqlite3Engine {
                                 let dbname = field.dblink;
                                 if(row[fname]){
                                     try{
+                                        // If foreign key record has value -1 -> Send null to response //
+                                        if(row[fname] == -1) throw '';
                                         let nested_record = await db[dbname].get(row[fname]);
                                         record[fname] = nested_record[0];
                                     }
@@ -668,6 +670,8 @@ class sqlite3Engine {
                             if(row[field.fname]){
                                 let dbname = field.dblink;
                                 try{
+                                    // If foreign key record has value -1 -> Send null to response //
+                                    if(row[field.fname] == -1) throw '';
                                     let nested_record = await db[dbname].get(row[field.fname]);
                                     record[field.fname] = nested_record[0];
                                 }
