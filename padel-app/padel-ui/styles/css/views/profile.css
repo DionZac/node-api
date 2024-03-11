@@ -1,0 +1,133 @@
+.profile-container{
+    background: var(--main);
+    margin: 2em;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    font-size: 2em;
+}
+
+.profile-details{
+    display: flex;
+    align-items: center;
+}
+
+.profile-details img{
+    width: 6em;
+    height: 6em;
+    object-fit: cover;
+    border-radius: 100%;
+}
+
+#profile-name{
+    font-weight: bold;
+    padding-left: 2em;
+}
+
+.profile-actions{
+    padding:2em;
+    padding-bottom: 0;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.edit-profile,.find-friends{
+    padding: 0.5em;
+    padding-left: 1em;
+    padding-right: 1em;
+    text-align: center;
+    background: var(--main);
+    color: var(--text-main);
+    border: solid 1px var(--border-main);
+    font-weight: 600;
+    font-size: .85em;
+}
+
+.profile-stats{
+    display: flex;
+    flex-direction: column;
+    padding: 2em;
+    padding-top: 1em;
+}
+
+.profile-stats-row{
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1.5em;
+}
+
+.profile-stats-row span:first-child{
+    flex: 50%;
+    text-align: left;
+    font-weight: bold;
+}
+
+.profile-stats-row span:last-child{
+    flex: 50%;
+    text-align: center;
+}
+
+.profile-ranking-container{
+    background: var(--dark-main);
+    color: var(--primary);
+    margin: 2em;
+    padding: 2em;
+    font-size: 2em;
+}
+
+.profile-ranking{
+    font-weight: bold;
+    font-size: 1.25em;
+}
+
+.profile-ranking-details{
+    float: right;
+    font-size: 0.7em;
+    align-items: center;
+    display: flex;
+    gap: 0.6em;
+}
+
+.profile-ranking-score{
+    font-size: 0.5em;
+    padding-top: 1em;
+}
+
+#profile-score{
+    font-size: 2.1em;
+    font-weight: bold;
+}
+
+.profile-rivals-container{
+    padding-top: 2em;
+}
+
+.profile-rivals{
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: scroll;
+    padding: 1em;
+    padding-left: 4em;
+    gap: 1.5em;
+    font-size: 1.75em;
+}
+
+.profile-rival{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+    margin-right: 1em;
+}
+
+.profile-rival img{
+    width: 3em;
+    height: 3em;
+    border-radius: 100%;
+}
+
+.profile-rival span{
+    font-size: 0.85em;
+}
+

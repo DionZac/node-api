@@ -1,5 +1,5 @@
 class API {
-    mainUrl = "http://localhost:9000/api/v1";
+    mainUrl = "http://192.168.2.4:9000/api/v1";
     constructor(){
 
     }

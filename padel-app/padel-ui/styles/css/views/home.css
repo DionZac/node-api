@@ -6,6 +6,7 @@
     display: flex;
     flex-wrap: nowrap;
     overflow: scroll;
+    background: var(--main);
 }
 
 .no-scheduled-match{
@@ -41,7 +42,6 @@
     flex-basis: 48%;
     background: #0097B2;
     color: white;
-    border-radius: 3em;
     text-align: center;
     padding: 3em 0 3em 0;
 }
@@ -106,7 +106,7 @@
 }
 
 .favourites .add-new-place div{
-    color: var(--text-label)
+    color: var(--text-label);
     font-size: 1.3em;
 }
 

@@ -25,6 +25,10 @@ class Router {
         this.navigation.next = "";
         this.navigation.prev = this.navigation.current;
         this.navigation.current = page;
+
+        // If navigate to a view - Display the View //
+        this.changeView(page);
+
         switch(page){
             case "home":
                 this.home.render();
@@ -32,12 +36,22 @@ class Router {
             case "tournament":
                 this.tournaments.render();
                 break;
+            case "profile":
+                this.profile.render();
+                break;
             case "modal":
                 break;
             default:
                 return;
         }
         console.log(this.navigation);
+    }
+
+    changeView(view){
+        if($(`#${view}`).length > 0){
+            $('.view').hide();
+            $(`#${view}`).show();
+        }
     }
     
     openModal(modal){

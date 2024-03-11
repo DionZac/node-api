@@ -1,0 +1,21 @@
+Shop
+
+1. Name
+2. Location
+3. Location Name
+4. Available Hours [List with all days]
+5. min price per hour
+6. Image
+7. Courts [List with all courts] -- ΝΟ
+8. Racket Price
+9. Balls Price
+10. Commission Rate
+11. Cover Commission Rates
+
+
+Courts
+
+1. shop_id
+2. Court Name
+3. Price per hour
+4. Outdoor

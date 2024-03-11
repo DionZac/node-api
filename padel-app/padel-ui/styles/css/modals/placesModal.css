@@ -19,7 +19,7 @@
 
 .places-filters{
     padding-top: 4em;
-    background: #f3f3f3;
+    background: var(--main);
     margin-bottom: 4em;
     padding-bottom: 2em;
 }
