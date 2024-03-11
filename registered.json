@@ -19,6 +19,11 @@
             "dbname": "courts",
             "endpoint": "courts",
             "resource": "courtsResource"
+        },
+        {
+            "dbname": "profile",
+            "endpoint": "profile",
+            "resource": "profileResource"
         }
     ]
 }

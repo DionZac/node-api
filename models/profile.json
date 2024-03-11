@@ -1,0 +1,39 @@
+{
+    "profile": {
+        "name": "profile",
+        "vname": "profile",
+        "endpoint": "profile",
+        "resourceName": "profileResource",
+        "inputGroups": [],
+        "fields": [
+            {
+                "fname": "name",
+                "type" : "str",
+                "len": 3200,
+                "def": "",
+                "hlp": "Profile Name"
+            },
+            {
+                "fname": "date_created",
+                "type" : "str",
+                "len": 160,
+                "def": "11-03-2024",
+                "hlp": "Profile Date Created"
+            },
+            {
+                "fname": "ranking_points",
+                "type" : "amt",
+                "len": 160,
+                "def": 0.00,
+                "hlp": "Profile Ranking Points"
+            },
+            {
+                "fname": "image_url",
+                "type" : "str",
+                "len": 3200,
+                "def": "",
+                "hlp": "Profile Name"
+            }
+        ]
+    }
+}

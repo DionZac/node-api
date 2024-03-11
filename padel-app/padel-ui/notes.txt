@@ -19,3 +19,19 @@ Courts
 2. Court Name
 3. Price per hour
 4. Outdoor
+
+
+Profile
+
+1. Name
+2. member since
+3. Ranking
+4. image_url
+
+
+
+Connections
+
+1. user_1 - ID
+2. user_2 - ID
+3. status ("pending_1" , "pending_2" , "confirmed")

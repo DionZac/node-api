@@ -1,10 +1,12 @@
 import Router from "./router.js";
 import API from "./services/api.js";
-
+import Profile from "./views/profile.js";
 
 (async () => {
     var router = new Router();
     var api = new API();
+
+
     window.api = api;
 
     window.router = router;
@@ -22,6 +24,16 @@ import API from "./services/api.js";
     // for(let i=0; i<12; i++){
     //     await api.delete('shops', i);
     // }
+    // await api.delete('profile', 1);
+    // await api.post("profile", {
+    //     name: "Dion Zac",
+    //     ranking_points: 165.50,
+    //     image_url: "./assets/male-profile-picture.jpg"
+    // })
+
+    // api.get("profile").then(profile => {
+    //     debugger;
+    // })
 
     // await api.post('shops', {
     //     name: 'North Padel Club',
