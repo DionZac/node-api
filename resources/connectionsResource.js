@@ -17,23 +17,33 @@
 
         async filter_by(self, params, kwargs){
             var filters = params.filter_by;
+            var queryset= [];
             if('user' in filters){
-                return await this.db.filterBy({
-                    queryset: [
-                        {
-                            field:"profile_1",
-                            condition: 'eq',
-                            value: filters["user"]
-                        },
-                        {
-                            field:"profile_2",
-                            condition: 'eq',
-                            value:filters["user"],
-                            operation: "OR"
-                        }
-                    ]
-                })
+                queryset = [
+                    {
+                        field:"profile_1",
+                        condition: 'eq',
+                        value: filters["user"]
+                    },
+                    {
+                        field:"profile_2",
+                        condition: 'eq',
+                        value:filters["user"],
+                        operation: "OR"
+                    }
+                ];
             }
+
+            if('status' in filters){
+                queryset.push({
+                    field:'status',
+                    condition: 'eq',
+                    value: filters['status'],
+                    operation: 'AND'
+                });
+            }
+
+            return await this.db.filterBy({queryset: queryset});
             console.log(params);
         }
     }

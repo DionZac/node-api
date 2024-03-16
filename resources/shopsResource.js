@@ -15,6 +15,21 @@
             return true
         }
 
+        async __get__(self, params, kwargs){
+            var shops = await super.__get__(self,params,kwargs);
+            
+            for(let shop of shops){
+                try{
+                    shop.courts = await db.courts.filter({shop_id: shop.rowid});
+                }
+                catch(e){
+                    console.log('Failed to load shop courts ---- Reason : ' );
+                    console.log(e);
+                }
+            }
+            return shops;
+        }
+
 
         deserialize_available_hours(available_hours){
             try{

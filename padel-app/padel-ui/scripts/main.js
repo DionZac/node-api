@@ -8,13 +8,6 @@ import Profile from "./objects/profile.js"
 
 
     window.api = api;
-    // await api.delete("connections", 2);
-    // await api.delete("connections", 3);
-    // await api.post("connections", {
-    //     "profile_1": 1,
-    //     "profile_2": 2,
-    //     "status": "pending_2"
-    // })
 
     window.router = router;
 
@@ -27,14 +20,20 @@ import Profile from "./objects/profile.js"
     var profile = await api.get("profile");
     let user_profile = new Profile(profile[0]);
     await user_profile.loaded;
+    user_profile.render();
 
-    $('#profile').html(user_profile.createHTML());
     window.user_profile = user_profile;
     window.onhashchange = () => {
         debugger;
     }
 
-   
+   // await api.delete("connections", 1);
+    // await api.delete("connections", 2);
+    // await api.post("connections", {
+    //     "profile_1": 1,
+    //     "profile_2": 2,
+    //     "status": "pending_2"
+    // })
 
     // for(let i=0; i<12; i++){
     //     await api.delete('shops', i);
@@ -43,7 +42,7 @@ import Profile from "./objects/profile.js"
    
     
     // await api.post("profile", {
-    //     name: "Dion Zac",
+    //     name: "Petros Lympe",
     //     ranking_points: 165.50,
     //     image_url: "./assets/male-profile-picture.jpg"
     // })

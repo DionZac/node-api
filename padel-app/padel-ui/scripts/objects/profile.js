@@ -1,4 +1,5 @@
 class Profile{
+    rowid;
     name;
     image_url;
     ranking_points;
@@ -33,13 +34,7 @@ class Profile{
             }
         });
 
-        debugger;
-
-        return new Promise((resolve,reject) => {
-            setTimeout(() => {
-                resolve();
-            }, 2000);
-        })    
+        this.friends = connections;  
     }
 
     // Load Matches List 
@@ -49,6 +44,36 @@ class Profile{
                 resolve();
             }, 2000);
         })    
+    }
+
+    render(){
+        var main_html = this.createHTML();
+        $('#profile').html(main_html);
+
+        for(let friend of this.friends){
+            try{
+                let friend_profile;
+                if(friend.profile_1.rowid == this.rowid){
+                    friend_profile = friend.profile_2;
+                }
+                else{
+                    friend_profile = friend.profile_1;
+                }
+                let rival_html = this.createRivalHtml(friend_profile);
+                $('#profile .profile-rivals').prepend(rival_html);
+            }
+            catch(e){};
+        }
+    }
+
+    createRivalHtml(rival){
+        return `
+            <div class="profile-rival">
+                <img src="${rival.image_url}" />
+                <span id="rival-name">${rival.name}</span>
+                <span id="rival-ranking">${rival.ranking_points}</span>
+            </div>
+        `
     }
 
     createHTML(){
@@ -111,11 +136,7 @@ class Profile{
                 <div class="label"><span id="profile-rivals-label-name"> ${this.name}'s </span> Rivals</div>
 
                 <div class="profile-rivals">
-                    <div class="profile-rival">
-                        <img src="./assets/male-profile-picture.jpg" />
-                        <span id="rival-name">Petros</span>
-                        <span id="rival-ranking">250</span>
-                    </div>
+                    
                 </div>
             </div>
         `

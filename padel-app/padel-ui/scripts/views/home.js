@@ -1,5 +1,5 @@
 import Card from "../components/card.js";
-import PlacesModal from "../modals/placesModal.js";
+import BookModal from "../modals/bookModal/bookModal.js";
 
 
 class Home {
@@ -17,8 +17,10 @@ class Home {
         }
 
         $('.friendly-match-section, .favourites .add-new-place').off('click').on('click', () => {
-            var modal = new PlacesModal();
+            var modal = new BookModal();
             window.router.openModal(modal);
+
+            window.m = modal;
         });
 
         // let card = new Card().createHTML();

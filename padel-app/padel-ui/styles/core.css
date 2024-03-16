@@ -54,10 +54,11 @@ body{
 }
 
 .header img{
-  width: 10em;
-  height: 10em;
+  width: 5em;
+  height: 5em;
   border-radius: 12em;
   padding: 1em;
+  padding-left: 4em;
 }
 
 .header i{

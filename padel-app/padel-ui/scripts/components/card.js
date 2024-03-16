@@ -6,7 +6,7 @@ class Card {
     time;
     image;
     availability;
-    id;
+    rowid;
 
     type = "booked-match"
 
@@ -22,7 +22,7 @@ class Card {
 
     createPlaceHtml(){
         return(`
-            <div class="place card card-shadow">
+            <div id="place-${this.rowid}" class="place card card-shadow">
                 <div class="place-closed"></div>
                 <div class="card-image-container">
                     <img class="card-image" src=${this.image_url} />

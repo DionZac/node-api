@@ -8,7 +8,7 @@ class Modal {
 
         $('.modal-header i').off('click').on('click', () => {
             // Close modal //
-            this.close();
+            this.back();
         })
     }
 
