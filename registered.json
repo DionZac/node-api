@@ -29,6 +29,11 @@
             "dbname": "connections",
             "endpoint": "connections",
             "resource": "connectionsResource"
+        },
+        {
+            "dbname": "matches",
+            "endpoint": "matches",
+            "resource": "matchesResource"
         }
     ]
 }

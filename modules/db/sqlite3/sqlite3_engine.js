@@ -146,7 +146,6 @@ class sqlite3Engine {
      * API: Insert Database Record ( @rec )
      */
     insert(dbf, rec, callback) {
-        console.log(rec);
         if (!callback) callback = function () { };
 
         // Checks if field type is string to add quotes in the value //

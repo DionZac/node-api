@@ -24,7 +24,14 @@ class BookModal extends Modal{
     }
 
     async confirmBooking(match){
-        debugger;
+        try{
+            await api.post('matches', match);
+        }
+        catch(e){
+            // Error handling //
+        }
+        
+        this.close();
     }
     
     async openPlacesModal(){

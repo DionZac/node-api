@@ -1,0 +1,101 @@
+{
+    "matches": {
+        "name": "matches",
+        "vname": "matches",
+        "endpoint": "matches",
+        "resourceName": "matchesResource",
+        "inputGroups": [],
+        "fields": [
+            {
+                "fname": "court",
+                "type": "lnk",
+                "dblink": "courts",
+                "len": 160,
+                "def": -1,
+                "hlp": "Court Database link"
+            },
+            {
+                "fname": "shop",
+                "type": "lnk",
+                "dblink": "shops",
+                "len": 160,
+                "def": -1,
+                "hlp": "Match Shop link"
+            },
+            {
+                "fname": "player_1",
+                "type": "lnk",
+                "dblink": "profile",
+                "len": 160,
+                "def": -1,
+                "hlp": "Match Player #1"
+            },
+            {
+                "fname": "player_2",
+                "type": "lnk",
+                "dblink": "profile",
+                "len": 160,
+                "def": -1,
+                "hlp": "Match Player #2"
+            },
+            {
+                "fname": "player_3",
+                "type": "lnk",
+                "dblink": "profile",
+                "len": 160,
+                "def": -1,
+                "hlp": "Match Player #3"
+            },
+            {
+                "fname": "player_4",
+                "type": "lnk",
+                "dblink": "profile",
+                "len": 160,
+                "def": -1,
+                "hlp": "Match Player #4"
+            },
+            {
+                "fname": "date",
+                "type": "str",
+                "len": 160,
+                "def": "",
+                "hlp": "Match Date"
+            },
+            {
+                "fname": "start",
+                "type": "str",
+                "len": 160,
+                "def": "",
+                "hlp": "Match Time - Start"
+            },
+            {
+                "fname": "end",
+                "type": "str",
+                "len": 160,
+                "def": "",
+                "hlp": "Match Time - End"
+            },
+            {
+                "fname": "balls",
+                "type": "i32",
+                "len": 160,
+                "def": 0,
+                "hlp": "Match - Extra Balls Can"
+            },
+            {
+                "fname": "rackets",
+                "type": "i32",
+                "len": 160,
+                "def": 0,
+                "hlp": "Match - Extra Rackets"
+            },
+            {
+                "fname": "price",
+                "type": "amt",
+                "len": 160,
+                "def": 0,
+                "hlp": "Match - Extra Rackets"
+            }
+        ]
+    }
+}

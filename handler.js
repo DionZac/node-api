@@ -277,10 +277,15 @@ exports.serializeData = async function(data,dbname){
 
     if('serialize' in resource){
         try{
+            console.log('Serialize data...');
             data = await resource.serialize(data);
         }
-        catch(e){};
+        catch(e){
+            console.log(e);
+        };
     }
+
+    console.log(data);
 
     return data;
 }
