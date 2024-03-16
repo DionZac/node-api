@@ -1,0 +1,54 @@
+.confirmation-page{
+    display: flex;
+    flex-direction: column;
+    padding: 2em;
+    margin: 2em;
+    font-size: 1.6em;
+    margin-top: 10em;
+    background: var(--main);
+}
+
+.confirmation-header{
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.receipt-analysis, .receipt-total{
+    padding-left: 1em;
+    padding-top: 3em;
+    padding-bottom: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5em;
+    font-weight: 700;
+}
+
+.receipt-row{
+    display: flex;
+    justify-content: space-between;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.receipt-label{
+    flex: 1;
+}
+
+.receipt-total{
+    padding-top: 3em;
+}
+
+.receipt-place-info{
+    padding: 1em;
+    padding-top: 2em;
+    font-size: 1.15em;
+    font-weight: 700;
+}
+
+.receipt-place-location{
+    font-weight: normal;
+    font-size: 0.8em;
+    color: var(--text-secondary);
+    padding-top: 1em;
+}

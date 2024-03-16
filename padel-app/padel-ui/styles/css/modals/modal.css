@@ -10,12 +10,30 @@
     overflow: scroll;
 }
 
+.modal-back-container{
+    position: absolute;
+    top: 4em;
+    left: 4em;
+    z-index: 999999;
+}
+
+.modal-back-container-transparent{
+    background: white;
+    padding: 1em;
+    border-radius: 100%;
+    width: 2em;
+    height: 2em;
+    top: 3em;
+    left: 3em;
+    text-align: center;
+}
+
 .modal-header{
     gap: 0;
 }
 
 .modal-header .header-text{
-    width: 20em;
+    width: 25em;
     text-align: center;
     color: var(--text-main);
 }

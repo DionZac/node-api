@@ -1,0 +1,151 @@
+.shop-profile, .shop-details{
+    display: flex;
+    flex-direction: column;
+}
+
+.shop-image{
+    height: 30em;
+}
+
+.shop-image img{
+    width: 100%;
+    height: 100%;
+}
+
+.shop-options{
+    display: flex;
+    justify-content: space-around;
+    font-size: 1em;
+    padding-top: 2em;
+    font-weight: 700;
+}
+
+.shop-details{
+    font-size: 2em;
+    background: var(--box-background);
+    color: var(--main);
+    padding: 1em;
+    gap: 1em;
+}
+
+.shop-name{
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.shop-address{
+    font-size: 0.7em;
+}
+
+.shop-directions{
+    position: absolute;
+    right: 2em;
+}
+
+.shop-option-selected{
+    animation: selectOption .5s forwards;
+}
+
+@keyframes selectOption{
+    0%{
+        font-size: 1em;
+        font-weight: 700;
+    }
+    100%{
+        font-size: 1.25em;
+        font-weight: 800;
+    }
+}
+
+.shop-content{
+    padding-top: 4em;
+    padding-bottom: 12em;
+}
+
+.shop-content i{
+    float: right;
+    font-size: 1.5em;
+}
+
+#shop-courts{
+    padding: 2em;
+}
+
+.shop-content .court, .shop-extras{
+    background: var(--main);
+    color: var(--text-main);
+    margin-top: 1em;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin-left: 4em;
+    margin-right: 4em;
+    border-radius: 25px;
+    font-size: 1.2em;
+}
+
+.shop-content .selected-court{
+    background: var(--box-background);
+    color: var(--main);
+}
+
+.shop-content .court-name{
+    padding-left: 1em;
+    padding-top: 1em;
+    font-weight: 600;
+}
+
+.shop-content .court-outdoor{
+    padding-left: 1em;
+    font-weight: 400;
+}
+
+.shop-content .court-price{
+    text-align: right;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.shop-extras{
+    font-size: 1.6em;
+}
+
+.extra-rackets, .extra-balls {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 1em;
+}
+
+.shop-extras .extra-rackets i, .shop-extras .extra-balls i{
+    text-align: center;
+    color: #81b181;
+}
+
+.shop-extras .rackets-label , .shop-extras .balls-label{
+    padding-top: 1em;
+    font-weight: 600;
+    color: var(--text-label);
+}
+
+.confirm-booking{
+    text-align: center;
+    position: fixed;
+    bottom: 2em;
+    width: 75%;
+    margin: auto;
+    margin-left: 4.5em;
+    padding: 2em;
+    background: black;
+    color: white;
+    border-radius: 65px;
+}
+
+.confirm-booking span{
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.disabled-confirm{
+    background: #3b3535c2;
+}

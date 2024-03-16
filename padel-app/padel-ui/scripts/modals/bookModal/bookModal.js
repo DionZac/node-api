@@ -1,9 +1,12 @@
 import Modal from "../modal.js";
 import PlacesModal from "./placesModal.js";
 import ShopProfile from "./shopProfile.js";
+import ConfirmModal from "./confirmModal.js";
 import BookModalRouter from "./bookModalRouter.js";
 
 class BookModal extends Modal{
+    filters = {};
+
     constructor(){
         super();
 
@@ -19,6 +22,10 @@ class BookModal extends Modal{
 
         this.openPlacesModal();
     }
+
+    async confirmBooking(match){
+        debugger;
+    }
     
     async openPlacesModal(){
         if(!this.placesModal.rendered){
@@ -33,9 +40,26 @@ class BookModal extends Modal{
         })
     }
 
+    openConfirmation(match){
+        var confirm = new ConfirmModal({
+            match: match,
+            controller: this
+        });
+        confirm.render();
+
+        this.router.navigate({
+            method:'openConfirmation',
+            data: match,
+            id:'confirm_booking'
+        })
+    }
+
     openShop(shop){
-        var shopProfile = new ShopProfile(shop);
-        $('#modal-place-page').html(shopProfile.createHTML());
+        var shopProfile = new ShopProfile({
+            shop: shop,
+            controller: this
+        });
+        shopProfile.render();
 
         this.router.navigate({
             method:'openShop',
@@ -55,8 +79,10 @@ class BookModal extends Modal{
 
     createHTML(){
         return(`
+            <div class="modal-back-container">
+                <i id="modal-back" class="fa fa-2x fa-angle-left"></i>
+            </div>
             <div class="header modal-header">
-                <i class="fa fa-2x fa-angle-left"></i>
                 <span class="header-text"> Find a place </span>
             </div>
             <div class="modal-content">
@@ -64,6 +90,9 @@ class BookModal extends Modal{
                     
                 </div>
                 <div id="modal-place-page" class="modal-view">
+
+                </div>
+                <div id="modal-confirmation-page" class="modal-view">
 
                 </div>
             </div>

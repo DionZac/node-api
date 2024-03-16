@@ -19,10 +19,20 @@ class PlacesModal extends Modal {
     controller;
     rendered = false;
 
+    filters;
+
     constructor(options){
         super();
 
         this.controller = options.controller;
+
+        this.filters = {
+            "date": "03-17-2024",
+            "time": {
+                "start": "20:00",
+                "end": "21:30"
+            }
+        }
 
         try{
             api.get('shops').then(shops => {
@@ -75,6 +85,7 @@ class PlacesModal extends Modal {
     }
 
     openShop(shop){
+        this.controller.filters = this.filters;
         this.controller.openShop(shop);
     }
 

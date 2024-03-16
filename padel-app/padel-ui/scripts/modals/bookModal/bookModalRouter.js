@@ -14,10 +14,20 @@ class BookModalRouter extends ModalRouter{
             case "find_place":
                 $('.modal-view').hide();
                 $('#modal-find-place').show();
+                this.modal.showHeader();
+                $('.modal-header .header-text').text("Find a Place");
                 break;
             case "shop_profile":
                 $('.modal-view').hide();
                 $('#modal-place-page').show();
+
+                this.modal.hideHeader();
+                break;
+            case "confirm_booking":
+                $('.modal-view').hide();
+                $('#modal-confirmation-page').show();
+                this.modal.showHeader();
+                $('.modal-header .header-text').text("Booking Confirmation");
                 break;
         }
     }

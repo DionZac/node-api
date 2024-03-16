@@ -60,3 +60,62 @@
 .form-shadow{
     box-shadow: 5px 5px 15px 0px #ebebeb;
 }
+
+.form-seperator{
+    width: 88%;
+    border: 1px solid #dbd7d7;
+    margin-left: 6%;
+    margin-top: 2em;
+}
+
+
+.counter{
+    display: flex;
+    align-items: center;
+    background: #81b181;
+    width: 4em;
+}
+
+.counter .minus-container{
+    background: white;
+    border-radius: 100%;
+    width: 2em;
+    height: 2em;
+    padding-right: 0.2em;
+    margin-left: -1em;
+    border: 1px solid #81b181;
+}
+
+.counter .minus-container i {
+    margin-right: 4px;
+    margin-left: 8px;
+    text-align: center;
+    font-size: 1.5em;
+    color: #81b181;
+    padding-top: 0.17em;
+}
+
+.counter .counter-value-container{
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    font-size: 1.1em;
+    color: white;
+    font-weight: bold;
+}
+
+.counter .plus-container{
+    background: white;
+    border-radius: 100%;
+    width: 2em;
+    height: 2em;
+    border: 1px solid #81b181;
+}
+
+.counter .plus-container i{
+    margin-left: 10px;
+    margin-right: 10px;
+    text-align: center;
+    font-size: 1.5em;
+    color: #81b181;
+    padding-top: 0.17em;
+}
