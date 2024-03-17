@@ -32,8 +32,20 @@ class Home {
         // $('.no-scheduled-match').hide();
     }
 
-    render(){
-       
+    async render(){
+        this.matches = await api.get("matches");
+        if(this.matches.length > 0){
+            for(let match of this.matches){
+                match.card_type = "scheduled-match";
+                let card = new Card(match).createHTML();
+                $('.scheduled-matches').append(card);
+            }
+            
+
+            $('.no-scheduled-match').hide();
+        }
+        // debugger
+        $('.page-loader-container').hide();
     }
 }
 

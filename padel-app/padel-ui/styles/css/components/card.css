@@ -31,6 +31,14 @@
     font-size: 1.2em;
     font-weight: bold;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.card-court-name{
+    font-weight: 600;
+    color: var(--text-label);
 }
 
 .card-place-datetime{

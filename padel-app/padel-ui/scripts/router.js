@@ -14,8 +14,6 @@ class Router {
         this.home = new Home();
         this.tournaments = new Tournaments();
         this.profileView = new ProfileView();
-
-        this.navigate("home");
     }
 
     navigate(page){

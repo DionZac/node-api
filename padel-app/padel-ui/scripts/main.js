@@ -1,32 +1,43 @@
 import Router from "./router.js";
 import API from "./services/api.js";
-import Profile from "./objects/profile.js"
+import Profile from "./objects/profile.js";
 
 (async () => {
+
     var router = new Router();
     var api = new API();
 
     window.api = api;
-
     window.router = router;
 
+    // Initialize application - Load User Profile //
+    var profile = await api.get("profile");
+    let user_profile = new Profile(profile[0]);
+
+    // Render in HTML //
+    await user_profile.render();
+
+    // Globalize Profile instance of user //
+    window.user_profile = user_profile;
+
+    // Initialize application - go to home page //
+    router.navigate("home");
+
+    // Attatch footer click events for navigation //
     $('.footer-child').off('click').on('click', function(){
         let route = $(this).attr('route');
 
         window.router.navigate(route);
     });
+    
+})();
 
-    var profile = await api.get("profile");
-    let user_profile = new Profile(profile[0]);
-    await user_profile.loaded;
-    user_profile.render();
 
-    window.user_profile = user_profile;
-    window.onhashchange = () => {
-        debugger;
-    }
 
-   // await api.delete("connections", 1);
+
+/// API TESTS //
+
+// await api.delete("connections", 1);
     // await api.delete("connections", 2);
     // await api.post("connections", {
     //     "profile_1": 1,
@@ -72,6 +83,3 @@ import Profile from "./objects/profile.js"
     // api.get('shops').then(shops => {
     //     debugger;
     // })
-
-    
-})();

@@ -676,17 +676,21 @@ class sqlite3Engine {
                                 let dbname = field.dblink;
                                 try{
                                     // If foreign key record has value -1 -> Send null to response //
-                                    if(row[field.fname] == -1) throw '';
-                                    let nested_record = await db[dbname].get(row[field.fname]);
-                                    if(nested_record.length > 0){
-                                        record[field.fname] = nested_record[0];
+                                    if(row[field.fname] == -1){
+                                        record[field.fname] = null;
                                     }
                                     else{
-                                        record[field.fname] = null;
+                                        let nested_record = await db[dbname].get(row[field.fname]);
+                                        if(nested_record.length > 0){
+                                            record[field.fname] = nested_record[0];
+                                        }
+                                        else{
+                                            record[field.fname] = null;
+                                        }
                                     }
                                 }
                                 catch(e){
-                                    console.log(e);
+                                    glib.dblog('Callback injection error -> Sqlite3Engine' + JSON.stringify(err), 0);
                                     record[field.fname] = null;
                                 }
                             }

@@ -11,15 +11,23 @@ class Card {
     type = "booked-match"
 
     constructor(options){
+        
         if(options){
-            for(let attr in options){
-                this[attr] = options[attr];
+            if(options.card_type == "scheduled-match"){
+                this.match = options;
             }
+            else{
+                for(let attr in options){
+                    this[attr] = options[attr];
+                }
+            }
+            
         }
 
         this.day_name = new Date(this.date).toLocaleDateString('en-us', {weekday: 'long'}).substring(0,3);
     }
 
+    // Find a place Card HTML //
     createPlaceHtml(){
         return(`
             <div id="place-${this.rowid}" class="place card card-shadow">
@@ -45,22 +53,26 @@ class Card {
         )
     }
 
+    // Home page - Scheduled Matches Card HTML //
     createHTML(){
         if(this.type == "place"){
             return this.createPlaceHtml();
         }
 
+        let time = `${this.match.start} - ${this.match.end}`;
+
         return(`
-            <div class="card card-shadow">
+            <div id="scheduled-match-${this.match.rowid}" class="card card-shadow">
                 <div class="card-image-container">
-                    <img class="card-image" src=${this.image_url} />
+                    <img class="card-image" src=${this.match.shop.image_url} />
                 </div>
                 <div class="card-place-name-container">
-                    <span class="card-place-name"> ${this.name} </span>
+                    <span class="card-place-name"> ${this.match.shop.name} </span>
+                    <span class="card-court-name"> ${this.match.court.name} </span>
                 </div>
                 <div class="card-place-datetime">
-                    <span class="card-date"> ${this.date}</span>
-                    <span class="card-time"> ${this.time}</span> 
+                    <span class="card-date"> ${this.match.date}</span>
+                    <span class="card-time"> ${time}</span> 
                 </div>
             </div>
         `

@@ -33,8 +33,9 @@ exports.masterResource = class {
     //// Error:404 (no results found) /////
     __results_not_found__(self){
         glib.serverlog('No results found', 0);
-        self.res.status(404);
-        self.res.send('No results found')
+        // self.res.status(404);
+        // self.res.send('No results found')
+        self.res.send([]);
     }
 
 

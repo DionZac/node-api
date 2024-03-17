@@ -1,36 +1,37 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <!-- CSS STYLES -->
-        <link rel="stylesheet" href="./styles/fonts/fontawesome/css/fontawesome.css">
-        <link rel="stylesheet" href="./styles/core.css">
-        <link rel="stylesheet" href="./styles/styles.css">
-        <link rel="stylesheet" href="./styles/css/components/forms.css">
-        
-        <!-- Views CSS -->
-        <link rel="stylesheet" href="./styles/css/views/home.css">
-        <link rel="stylesheet" href="./styles/css/views/profile.css">
 
-        <!-- Components CSS -->
-        <link rel="stylesheet" href="./styles/css/components/card.css">
+<head>
+    <!-- CSS STYLES -->
+    <link rel="stylesheet" href="./styles/fonts/fontawesome/css/fontawesome.css">
+    <link rel="stylesheet" href="./styles/core.css">
+    <link rel="stylesheet" href="./styles/styles.css">
+    <link rel="stylesheet" href="./styles/css/components/forms.css">
 
-        <!-- Modal Pages CSS -->
-        <link rel="stylesheet" href="./styles/css/modals/modal.css">
-        <link rel="stylesheet" href="./styles/css/modals/placesModal.css">
-        <link rel="stylesheet" href="./styles/css/modals/shopProfile.css">
-        <link rel="stylesheet" href="./styles/css/modals/confrmModal.css">
+    <!-- Views CSS -->
+    <link rel="stylesheet" href="./styles/css/views/home.css">
+    <link rel="stylesheet" href="./styles/css/views/profile.css">
 
-        <!-- Loaders -->
-        <link rel="stylesheet" href="./styles/css/loaders/cart-loader.css">
+    <!-- Components CSS -->
+    <link rel="stylesheet" href="./styles/css/components/card.css">
 
-        <!-- LIBRARIES -->
-        <script type="text/javascript" src="./scripts/libraries/jquery.min.js"></script>
-        <script type="text/javascript" src="./scripts/libraries/moment.min.js"></script>
-    </head>
-    <body class="theme">
-        <div class="container">
+    <!-- Modal Pages CSS -->
+    <link rel="stylesheet" href="./styles/css/modals/modal.css">
+    <link rel="stylesheet" href="./styles/css/modals/placesModal.css">
+    <link rel="stylesheet" href="./styles/css/modals/shopProfile.css">
+    <link rel="stylesheet" href="./styles/css/modals/confrmModal.css">
 
-        
+    <!-- Loaders -->
+    <link rel="stylesheet" href="./styles/css/loaders/cart-loader.css">
+    <link rel="stylesheet" href="./styles/css/loaders/page-loader.css">
+
+    <!-- LIBRARIES -->
+    <script type="text/javascript" src="./scripts/libraries/jquery.min.js"></script>
+    <script type="text/javascript" src="./scripts/libraries/moment.min.js"></script>
+</head>
+
+<body class="theme">
+    <div class="container">
         <div id="main">
             <div class="header">
                 <img src="./assets/padelway-logo.png" />
@@ -38,52 +39,52 @@
             </div>
             <div class="main-container">
                 <div id="home" class="view">
-                <!-- NEXT SCHEDULED MATCHES SECTION-->
-                <div class="label" style="padding-top: 0; padding-bottom: 1em">Your Next Matches </div>
-                <div class="scheduled-matches">
-                    <div class="no-scheduled-match">
-                        <img src="./assets/padel-icon.png" />
-                        <span>No scheduled Matches</span>
+                    <!-- NEXT SCHEDULED MATCHES SECTION-->
+                    <div class="label" style="padding-top: 0; padding-bottom: 1em">Your Next Matches </div>
+                    <div class="scheduled-matches">
+                        <div class="no-scheduled-match">
+                            <img src="./assets/padel-icon.png" />
+                            <span>No scheduled Matches</span>
+                        </div>
                     </div>
-                </div>
 
-                <!-- BOOK MATCH SECTION -->
-                <div class="label">Book for a match</div>
-                <div class="book-match-section">
-                    <div class="book-match-section-item friendly-match-section radius-container">
-                        <i class="fa fa-4x fa-handshake"></i>
-                        <div class="book-match-header">
-                            Friendly Match
+                    <!-- BOOK MATCH SECTION -->
+                    <div class="label">Book for a match</div>
+                    <div class="book-match-section">
+                        <div class="book-match-section-item friendly-match-section radius-container">
+                            <i class="fa fa-4x fa-handshake"></i>
+                            <div class="book-match-header">
+                                Friendly Match
+                            </div>
+                            <div class="book-match-description">
+                                Find a court and invite your friends to play
+                            </div>
                         </div>
-                        <div class="book-match-description">
-                            Find a court and invite your friends to play
+                        <div class="book-match-section-item matchmaking-section radius-container">
+                            <i class="fa fa-4x fa-people-arrows"></i>
+                            <div class="book-match-header">
+                                Find others to play
+                            </div>
+                            <div class="book-match-description">
+                                Add your availability and find other people to play in your area
+                            </div>
+                        </div>
+                        <div class="book-match-section-item tournament-section radius-container">
+                            <div class="book-match-tournament-header">Find a Tournament</div>
+                            <i class="fa fa-4x fa-trophy"></i>
                         </div>
                     </div>
-                    <div class="book-match-section-item matchmaking-section radius-container">
-                        <i class="fa fa-4x fa-people-arrows"></i>
-                        <div class="book-match-header">
-                            Find others to play
-                        </div>
-                        <div class="book-match-description">
-                            Add your availability and find other people to play in your area
-                        </div>
-                    </div>
-                    <div class="book-match-section-item tournament-section radius-container">
-                        <div class="book-match-tournament-header">Find a Tournament</div>
-                        <i class="fa fa-4x fa-trophy"></i>
-                    </div>
-                </div>
 
-                <!-- FAVOURITE PLACES SECTION -->
-                <div class="favourites">
-                    <div class="label">Favourite Places</div>
-                    <div class="favourite-places-container">
-                        <div class="add-new-place">
-                            <img src="./assets/icons/plus-gray.png" />
-                            <div>Add a padel Place</div>
+                    <!-- FAVOURITE PLACES SECTION -->
+                    <div class="favourites">
+                        <div class="label">Favourite Places</div>
+                        <div class="favourite-places-container">
+                            <div class="add-new-place">
+                                <img src="./assets/icons/plus-gray.png" />
+                                <div>Add a padel Place</div>
+                            </div>
                         </div>
                     </div>
-                </div>
                 </div>
                 <div id="tournaments">
 
@@ -115,9 +116,26 @@
         </div>
         <div id="modal"></div>
 
-        </div>
+    </div>
 
-        <!-- MAIN MODULE -->
-        <script type="module" src="./scripts/main.js"></script>
-    </body>
+
+
+    <div class="page-loader-container loader-container">
+        <div class="loader">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+
+    <!-- MAIN MODULE -->
+    <script type="module" src="./scripts/main.js"></script>
+</body>
+
 </html>

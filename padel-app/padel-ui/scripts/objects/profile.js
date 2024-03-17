@@ -34,7 +34,14 @@ class Profile{
             }
         });
 
-        this.friends = connections;  
+        for(let connection of connections){
+            if(connection.profile_1.rowid == this.rowid){
+                this.friends.push(connection.profile_2);
+            }
+            else{
+                this.friends.push(connection.profile_1);
+            }
+        }
     }
 
     // Load Matches List 
@@ -46,20 +53,15 @@ class Profile{
         })    
     }
 
-    render(){
+    async render(){
+        await this.loaded;
+        
         var main_html = this.createHTML();
         $('#profile').html(main_html);
 
         for(let friend of this.friends){
             try{
-                let friend_profile;
-                if(friend.profile_1.rowid == this.rowid){
-                    friend_profile = friend.profile_2;
-                }
-                else{
-                    friend_profile = friend.profile_1;
-                }
-                let rival_html = this.createRivalHtml(friend_profile);
+                let rival_html = this.createRivalHtml(friend);
                 $('#profile .profile-rivals').prepend(rival_html);
             }
             catch(e){};
@@ -70,7 +72,7 @@ class Profile{
         return `
             <div class="profile-rival">
                 <img src="${rival.image_url}" />
-                <span id="rival-name">${rival.name}</span>
+                <span id="rival-name">${rival.name.split(' ')[0]}</span>
                 <span id="rival-ranking">${rival.ranking_points}</span>
             </div>
         `
