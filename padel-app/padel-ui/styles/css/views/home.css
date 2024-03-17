@@ -16,10 +16,9 @@
 }
 
 .no-scheduled-match img{
-    width: 6em;
     height: 6em;
     padding: 1em;
-    padding-left: 6em;
+    padding-left: 8em;
 }
 
 .no-scheduled-match span{

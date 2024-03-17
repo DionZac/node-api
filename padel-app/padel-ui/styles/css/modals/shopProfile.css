@@ -93,6 +93,13 @@
     font-size: 1.2em;
 }
 
+.court .front, .court .back{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    font-size: 1.2em;
+}
+
 .court{
     transition: transform 0.6s;
     transform-style: preserve-3d;
@@ -113,13 +120,7 @@
 }
 
 .flipped-court .back{
-    display: block;
-}
-
-
-.shop-content{
-    background: var(--box-background);
-    color: var(--main);
+    display: flex;
 }
 
 .shop-content .court-name{

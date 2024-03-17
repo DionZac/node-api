@@ -4,6 +4,8 @@ import ShopProfile from "./shopProfile.js";
 import ConfirmModal from "./confirmModal.js";
 import BookModalRouter from "./bookModalRouter.js";
 
+import CartLoader from "../../components/cartLoader.js";
+
 class BookModal extends Modal{
     filters = {};
 
@@ -24,6 +26,8 @@ class BookModal extends Modal{
     }
 
     async confirmBooking(match){
+        var loader = new CartLoader();
+        loader.display();
         try{
             await api.post('matches', match);
         }
@@ -31,7 +35,10 @@ class BookModal extends Modal{
             // Error handling //
         }
         
-        this.close();
+        setTimeout(() => {
+            this.close();
+            loader.remove();
+        }, 3000)
     }
     
     async openPlacesModal(){
@@ -87,7 +94,7 @@ class BookModal extends Modal{
     createHTML(){
         return(`
             <div class="modal-back-container">
-                <i id="modal-back" class="fa fa-2x fa-angle-left"></i>
+                <i id="modal-back" class="fa fa-3x fa-angle-left"></i>
             </div>
             <div class="header modal-header">
                 <span class="header-text"> Find a place </span>

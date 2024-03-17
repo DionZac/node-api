@@ -6,7 +6,6 @@ import Profile from "./objects/profile.js"
     var router = new Router();
     var api = new API();
 
-
     window.api = api;
 
     window.router = router;
