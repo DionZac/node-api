@@ -46,8 +46,10 @@ class ShopProfile {
 
         var self = this;
         $('.court').on('click', function() {
-            $('.court').removeClass('selected-court');
-            $(this).addClass('selected-court');
+            
+            $('.flipped-court').removeClass('flipped-court');
+            $(this).addClass('flipped-court');
+
             self.selectedCourt = $(this).attr('id').split('-')[1];
 
             self.updatePrice();
@@ -211,9 +213,16 @@ class ShopProfile {
         let outdoor = JSON.parse(court.outdoor) ? "Outdoor" : "Indoor";
         return `
             <div class="court" id="court-${court.rowid}">
-                <div class="court-name"> ${court.name} </div>
-                <div class="court-outdoor"> ${outdoor} - Double </div>
-                <div class="court-price"> ${court.price_per_hour.toFixed(2)}$ </div>
+                <div class="front">
+                    <div class="court-name"> ${court.name} </div>
+                    <div class="court-outdoor"> ${outdoor} - Double </div>
+                    <div class="court-price"> ${court.price_per_hour.toFixed(2)}$ </div>
+                </div>
+                <div class="back">
+                    <div class="court-name"> ${court.name} </div>
+                    <div class="court-outdoor"> ${outdoor} - Double </div>
+                    <div class="court-price"> ${court.price_per_hour.toFixed(2)}$ </div>
+                </div>
             </div>
         `
     }

@@ -93,7 +93,31 @@
     font-size: 1.2em;
 }
 
-.shop-content .selected-court{
+.court{
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.flipped-court{
+    transform: rotateY(180deg);
+    background: var(--box-background) !important;
+    color: var(--main) !important;
+}
+
+.court .back{
+    display: none;
+}
+
+.flipped-court .front{
+    display: none;
+}
+
+.flipped-court .back{
+    display: block;
+}
+
+
+.shop-content{
     background: var(--box-background);
     color: var(--main);
 }

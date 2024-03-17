@@ -10,6 +10,15 @@
     border-radius: 3em;
 }
 
+.front{
+    backface-visibility: hidden;
+}
+
+.back{
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
+}
+
 /* Slide animation to show/hide ui sections */
 /*  ---- MUST CHANGE the variable section height CSS variable  */
 /*  ---- For better slide animation */
