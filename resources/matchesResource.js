@@ -15,6 +15,14 @@
             return true
         }
 
+        deserialize_court(court){
+            if(court.shop_id){
+                court.shop_id = court.shop_id.rowid;
+            }
+
+            return court;
+        }
+
         async serialize(match){
             try{
                 match.player_1 = match.players.team_1.player_1;

@@ -21,6 +21,11 @@
             for(let shop of shops){
                 try{
                     shop.courts = await db.courts.filter({shop_id: shop.rowid});
+                    for(let court of shop.courts){
+                        if(court.shop_id){
+                            court.shop_id = court.shop_id.rowid;
+                        }
+                    }
                 }
                 catch(e){
                     console.log('Failed to load shop courts ---- Reason : ' );
@@ -29,7 +34,6 @@
             }
             return shops;
         }
-
 
         deserialize_available_hours(available_hours){
             try{
