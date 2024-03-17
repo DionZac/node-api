@@ -30,6 +30,7 @@ class BookModal extends Modal{
         loader.display();
         try{
             await api.post('matches', match);
+            window.router.home.appendMatch(match);
         }
         catch(e){
             // Error handling //

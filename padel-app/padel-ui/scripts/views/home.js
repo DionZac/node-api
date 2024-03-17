@@ -4,35 +4,20 @@ import BookModal from "../modals/bookModal/bookModal.js";
 
 class Home {
     scheduled = [];
-
-    elements = {};
-
     matches = [];
 
+    rendered = false;
+
     constructor(){
-        this.elements.matches = $('.scheduled-matches');
-
-        if(this.matches.length > 0){
-            this.elements.matches.find('.no-scheduled-match').hide();
-        }
-
         $('.friendly-match-section, .favourites .add-new-place').off('click').on('click', () => {
             var modal = new BookModal();
             window.router.openModal(modal);
-
-            window.m = modal;
         });
-
-        // let card = new Card().createHTML();
-
-        // $('.scheduled-matches').append(card);
-        // $('.scheduled-matches').append(card);
-        // $('.scheduled-matches').append(card);
-
-        // $('.no-scheduled-match').hide();
     }
 
     async render(){
+        if(this.rendered) return;
+
         this.matches = await api.get("matches");
         if(this.matches.length > 0){
             for(let match of this.matches){
@@ -44,8 +29,17 @@ class Home {
 
             $('.no-scheduled-match').hide();
         }
-        // debugger
+        
+        // Hide Page-Loading when rendering is finished //
+        this.rendered = true;
         $('.page-loader-container').hide();
+    }
+
+    appendMatch(match){
+        match.card_type = "scheduled-match";
+        this.matches.unshift(match);
+        let card = new Card(match).createHTML();
+        $('.scheduled-matches').prepend(card);
     }
 }
 
