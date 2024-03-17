@@ -19,9 +19,9 @@ class ConfirmModal {
         let balls_price = this.match.extras.balls * this.match.shop.balls_price;
         let commission = this.match.price * this.match.shop.commission_rate;
         let total = this.match.price + commission;
-        let day_name = new Date(this.filters.date).toLocaleDateString("eu", { weekday: 'long' }); 
-        let day_number = new Date(this.filters.date).getDate();
-        let month_name = new Date(this.filters.date).toLocaleDateString("eu", { month: 'long' }); 
+        let day_name = moment(this.filters.date, "DD-MM-YYYY").format('dddd');
+        let day_number = moment(this.filters.date, "DD-MM-YYYY").format('DD');
+        let month_name = moment(this.filters.date, "DD-MM-YYYY").format('MMMM');
 
         return `
             <div class="confirmation-page">

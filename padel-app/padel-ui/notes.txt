@@ -1,37 +1,51 @@
-Shop
+Booking a match -> Code flow
 
-1. Name
-2. Location
-3. Location Name
-4. Available Hours [List with all days]
-5. min price per hour
-6. Image
-7. Courts [List with all courts] -- ΝΟ
-8. Racket Price
-9. Balls Price
-10. Commission Rate
-11. Cover Commission Rates
+1. home.js -> register click event for new match
+
+2. home.js -> create new BookModal object
+
+3. use router.openModal (router.js) to attatch and open the modal
+
+4. bookModal.open() will be called from step.3 (router)
+
+    - BookModalRouter will handle the modal internal navigation - 
+
+5. bookModal.openPlacesModal() will be called as the first view of the modal to search for padel placesModal
+
+6. bookModal.openPlacesModal() -> PlacesModal objcect will be created
+    - PlacesModal -> API request to load shop objects from database -
+
+7. bookModal.openPlacesModal() -> generate placesModal base html Code
+
+8. bookModal.openPlacesModal() -> use loadShops() of placesModal to render shops in view
+
+9. placesModal.loadShops() -> Register click events in places
+
+10. User selects a shop
+
+    1) placesModal.openShop() -> Will use the modal controller for navigation
+
+    2) BookModal.openShop() -> Creates new ShopProfile object to handle the shop view 
+
+    3) shopProfile.render() -> Generate HTML view
+
+    4) shopProfile.render() -> Attatch all needed events in the view HTML
+
+    5) shopProfile.render() -> Attatch events to handle price changes accordingly
+
+    6) shopProfile.render() -> Attatch click event in confirm button
+
+    7) shopProfile.render() -> Will use the modal controller for navigation
+
+    8) BookModal.openConfirmation() -> Create new ConfirmModal object to handle confirmation view
+
+    9) ConfirmModal.render() -> Generate HTML view
+
+    10) ConfirmModal.render() -> Attatch click event for confirmation
+
+    11) ConfirmModal.render() -> Will use the modal Controller for navigation
+
+    12) BookModal.confirmBooking() -> Use API post method to create the match
 
 
-Courts
 
-1. shop_id
-2. Court Name
-3. Price per hour
-4. Outdoor
-
-
-Profile
-
-1. Name
-2. member since
-3. Ranking
-4. image_url
-
-
-
-Connections
-
-1. user_1 - ID
-2. user_2 - ID
-3. status ("pending_1" , "pending_2" , "confirmed")

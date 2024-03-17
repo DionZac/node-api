@@ -27,7 +27,7 @@ class PlacesModal extends Modal {
         this.controller = options.controller;
 
         this.filters = {
-            "date": "03-17-2024",
+            "date": "17-03-2024",
             "time": {
                 "start": "20:00",
                 "end": "21:30"

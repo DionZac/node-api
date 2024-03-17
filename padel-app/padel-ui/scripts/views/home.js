@@ -33,8 +33,7 @@ class Home {
     }
 
     render(){
-        $('.view').hide();
-        $('#home').show();
+       
     }
 }
 
