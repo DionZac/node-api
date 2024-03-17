@@ -4,7 +4,7 @@ class ShopProfile {
     shop;
     book = {
         courts: true,
-        extras: false,
+        extras: true,
         friends: false,
     }
     selectedCourt;
@@ -53,33 +53,76 @@ class ShopProfile {
             self.updatePrice();
         })
 
-        $('#toggle-courts').on('click', () => {
+        window.courtsHeight = window.extrasHeight = 0;
+        $('#courts-label').on('click', () => {
             if(this.book.courts){
                 // Close courts
                 this.book.courts = false;
-                $('#shop-courts').hide();
+                
+                // Setup animation property
+                if(window.courtsHeight == 0) window.courtsHeight = $('#shop-courts').height();
+                $(':root').css('--animation-section-height', $('#shop-courts').height() + 'px');
+                
+                // Trigger CSS animation
+                $('#shop-courts').addClass('close-section').removeClass('open-section');
+                
+                // Toggle arrow up/down icon
                 $('#toggle-courts').addClass('fa-angle-down').removeClass('fa-angle-up');
             }
             else{
                 // Open Courts
                 this.book.courts = true;
-                $('#shop-courts').show();
+
+                // Setup animation property
+                $(':root').css('--animation-section-height', window.courtsHeight + 'px');
+
+                // Trigger CSS animation
+                $('#shop-courts').addClass('open-section').removeClass('close-section')
+
+                // Toggle arrow up/down icon
                 $('#toggle-courts').removeClass('fa-angle-down').addClass('fa-angle-up');
+
+                // Make sure to fix some css properties
+                $('#shop-courts').css({
+                    height: '100%',
+                    overflow: 'auto'
+                })
             }
         });
 
-        $('#toggle-extras').on('click', () => {
+        $('#extras-label').on('click', () => {
             if(this.book.extras){
                 // Close extras
                 this.book.extras = false;
-                $('.shop-extras').hide();
+
+                // Setup animation property
+                if(window.extrasHeight == 0) window.extrasHeight = $('.shop-extras').height();
+                $(':root').css('--animation-section-height', $('.shop-extras').height() + 'px');
+
+                // Trigger CSS animation
+                $('.shop-extras').addClass('close-section').removeClass('open-section');
+
+                // Toggle arrow up/down icon
                 $('#toggle-extras').addClass('fa-angle-down').removeClass('fa-angle-up');
             }
             else{
                 // Open extras
                 this.book.extras = true;
-                $('.shop-extras').show();
+
+                // Setup animation property
+                $(':root').css('--animation-section-height', window.extrasHeight + 'px');
+
+                // Trigger CSS animation
+                $('.shop-extras').show().addClass('open-section').removeClass('close-section');
+                
+                // Toggle arrow up/down icon
                 $('#toggle-extras').removeClass('fa-angle-down').addClass('fa-angle-up');
+
+                // Make sure to fix some css properties
+                $('.shop-extras').css({
+                    height: '100%',
+                    overflow: 'auto'
+                })
             }
         })
 
@@ -201,13 +244,13 @@ class ShopProfile {
 
                     </div>
                     <div id="shop-book" class="shop-content-option">
-                        <div class="label"> Select a Court <i id="toggle-courts" class="fa fa-1x fa-angle-up"></i> </div>
-                        <div id="shop-courts">
+                        <div class="label" id="courts-label"> Select a Court <i id="toggle-courts" class="fa fa-1x fa-angle-up"></i> </div>
+                        <div id="shop-courts" class="booking-section">
 
                         </div>
                         <div class="form-seperator"></div>
-                        <div class="label"> Add Extras <i id="toggle-extras" class="fa fa-1x fa-angle-down"></i></div>
-                        <div class="shop-extras" style="display: none">
+                        <div class="label" id="extras-label"> Add Extras <i id="toggle-extras" class="fa fa-1x fa-angle-down"></i></div>
+                        <div class="shop-extras booking-section">
                             <div class="rackets-label"> Include Rackets (+${this.shop.racket_price}$ per racket) </div>
                             <div class="extra-rackets">
                                 <i class="fa fa-2x fa-table-tennis-paddle-ball"></i>

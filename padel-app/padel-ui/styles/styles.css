@@ -9,3 +9,33 @@
 .radius-container{
     border-radius: 3em;
 }
+
+/* Slide animation to show/hide ui sections */
+/*  ---- MUST CHANGE the variable section height CSS variable  */
+/*  ---- For better slide animation */
+@keyframes openSection{
+    0% {
+        display: block;
+        z-index: 1;
+        height: 0em;
+        overflow: scroll;
+    }
+    100%{
+        height: var(--animation-section-height);
+        overflow: auto;
+    }
+}
+
+@keyframes closeSection{
+    0%{
+        height:var(--animation-section-height);
+        z-index: -1;
+        overflow: scroll;
+    }
+    100%{
+        height: 0;
+        z-index: 1;
+        display:none;
+        overflow: auto;
+    }
+}

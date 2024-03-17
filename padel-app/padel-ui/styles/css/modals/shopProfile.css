@@ -67,6 +67,14 @@
     font-size: 1.5em;
 }
 
+.open-section{
+    animation: openSection .4s;
+}
+
+.close-section{
+    animation: closeSection .4s forwards;
+}
+
 #shop-courts{
     padding: 2em;
 }
