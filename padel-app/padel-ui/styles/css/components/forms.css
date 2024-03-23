@@ -36,25 +36,26 @@
 .form-value-search-container {
     padding: 0.5em;
     font-size: 2em;
-    background: white;
-    border: 1px solid var(--border-main);
-    border-radius: 1em;
+    background: var(--main);
+    border-radius: 13px;
     display: flex;
     align-items: center;
-    width: 78%;
-    
+    width: 82%;
+    box-shadow: 1px 7px 18px 4px #e5e5e5;
 }
 
 .form-value-search-container i{
     color: var(--text-secondary);
+    margin-left: 1em;
+    margin-right: 1em;
 }
 
 .form-value-search{
     border: none;
     margin: 0;
     width: 100%;
-    font-style: italic;
-    font-size: .7em;
+    background: var(--main);
+    text-align: left;
 }
 
 .form-shadow{

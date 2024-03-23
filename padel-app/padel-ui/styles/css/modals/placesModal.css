@@ -1,49 +1,38 @@
-.places-datepicker-container {
-    text-align: center;
+.filters-container{
+    background: var(--main);
 }
-
-.places-timepicker-container {
-    margin-top: 2em;
-    padding-left: 1em;
-    padding-right: 1em;
-}
-
-.places-timepicker-container, .places-datepicker-container{
-    font-size: 2em;
-    display: none;
-}
-
-/* .places-container {
-    margin-top: 4em;
-} */
 
 .places-filters{
-    padding-top: 4em;
+    padding-top: 2em;
     background: var(--main);
     margin-bottom: 4em;
-    padding-bottom: 2em;
+    margin-top: 15em;
+    display: flex;
+    
 }
 
-.places-timepicker-start, .places-timepicker-end{
-    display: block;
+.datepicker-container, .time-start-container, .time-end-container{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    color: var(--theme-coloured-icons);
+    font-weight: 600;
+    font-size: 1.4em;
+    flex: 1 1 0;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+.vertical-seperator{
+    margin-bottom: 2em;
+    border-color: var(--theme-coloured-icons);
 }
 
 .places-filter-search{
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    padding-bottom: 3em;
-}
-
-#places-filters{
-    color: var(--text-secondary);
-}
-
-.filter-result{
-    font-size: 2em;
-    font-weight: bold;
-    text-align: center;
-    width: 100%;
+    padding-bottom: 4em;
 }
 
 .places-error{
@@ -54,4 +43,19 @@
     font-style: italic;
     padding-top: 3em;
     font-weight: 700;
+}
+
+.places-container{
+    margin: 4em;
+    margin-top: 2em;
+}
+
+.sort-by-container{
+    margin-left: 2em;
+    font-size: 1.6em;
+    display: flex;
+    align-items: end;
+    gap: 0.4em;
+    font-weight: 600;
+    margin-top: 2.5em;
 }

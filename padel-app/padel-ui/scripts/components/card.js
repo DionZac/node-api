@@ -30,7 +30,7 @@ class Card {
     // Find a place Card HTML //
     createPlaceHtml(){
         return(`
-            <div id="place-${this.rowid}" class="place card card-shadow">
+            <div id="place-${this.rowid}" class="place card">
                 <div class="place-closed"></div>
                 <div class="card-image-container">
                     <img class="card-image" src=${this.image_url} />
@@ -40,16 +40,14 @@ class Card {
                 </div>
                 <div class="card-place-name-container">
                     <span class="card-place-name"> ${this.name} </span>
+                    <div class="card-place-location-container">
+                        <span class="card-place-location"> ${this.location_name} </span>
+                    </div>
                 </div>
-                <div class="card-place-location-container">
-                    <span class="card-place-location"> ${this.location_name} </span>
-                </div>
+                
                 <div class="card-place-available-hours">
                     <span class="card-day"> ${this.day_name} | Available Hours</span>
                     <span class="card-hours"> ${this.available_hours[this.day_name.toLowerCase()]}</span> 
-                </div>
-                <div class="card-place-price">
-                    <span class="card-price"> ${this.min_price.toFixed(2)}$ </span>
                 </div>
             </div>
         `
