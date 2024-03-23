@@ -68,7 +68,7 @@
 }
 
 .profile-ranking-container{
-    background: var(--dark-main);
+    background: var(--theme-main);
     color: var(--primary);
     margin: 2em;
     padding: 2em;

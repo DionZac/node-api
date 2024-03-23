@@ -18,7 +18,7 @@
 .no-scheduled-match img{
     height: 6em;
     padding: 1em;
-    padding-left: 8em;
+    padding-left: 6em;
 }
 
 .no-scheduled-match span{
@@ -39,7 +39,7 @@
 .book-match-section-item{
     flex-grow: 0;
     flex-basis: 48%;
-    background: #0097B2;
+    background: var(--theme-main);
     color: white;
     text-align: center;
     padding: 3em 0 3em 0;

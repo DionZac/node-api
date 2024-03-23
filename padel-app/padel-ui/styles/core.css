@@ -4,6 +4,8 @@
 }
 
 :root{
+  --theme-main: #0097B2;
+
   --main: #fefeff;
   --primary: #f3f3f3;
   --secondary: #7d7d7d;
@@ -13,8 +15,6 @@
   --text-main: #000000;
   --text-label:  #8f8888;
   --text-secondary : #7d7d7d;
-
-  --box-background: #0097B2;
 
   --border-main: #cdcdcd;
 

@@ -21,15 +21,11 @@
     background: white;
     padding: 1em;
     border-radius: 100%;
-    width: 4em;
-    height: 4em;
+    width: 2em;
+    height: 2em;
     top: 3em;
     left: 3em;
     text-align: center;
-}
-
-#modal-back{
-    margin-top: -10px;
 }
 
 .modal-header{

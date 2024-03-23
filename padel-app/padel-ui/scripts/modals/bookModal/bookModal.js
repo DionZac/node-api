@@ -95,7 +95,7 @@ class BookModal extends Modal{
     createHTML(){
         return(`
             <div class="modal-back-container">
-                <i id="modal-back" class="fa fa-3x fa-angle-left"></i>
+                <i id="modal-back" class="fa fa-2x fa-angle-left"></i>
             </div>
             <div class="header modal-header">
                 <span class="header-text"> Find a place </span>

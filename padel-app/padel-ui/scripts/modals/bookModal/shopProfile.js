@@ -112,6 +112,7 @@ class ShopProfile {
                 this.book.extras = true;
 
                 // Setup animation property
+                console.log(window.extrasHeight);
                 $(':root').css('--animation-section-height', window.extrasHeight + 'px');
 
                 // Trigger CSS animation
@@ -123,6 +124,7 @@ class ShopProfile {
                 // Make sure to fix some css properties
                 $('.shop-extras').css({
                     height: '100%',
+                    display: 'flex',
                     overflow: 'auto'
                 })
             }

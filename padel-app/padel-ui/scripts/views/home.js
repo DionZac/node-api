@@ -36,6 +36,10 @@ class Home {
     }
 
     appendMatch(match){
+        if(this.matches.length == 0){
+            $('.no-scheduled-match').hide();
+        }
+        
         match.card_type = "scheduled-match";
         this.matches.unshift(match);
         let card = new Card(match).createHTML();

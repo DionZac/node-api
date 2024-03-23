@@ -6,6 +6,7 @@
     font-size: 1.6em;
     margin-top: 10em;
     background: var(--main);
+    border-radius: 50px;
 }
 
 .confirmation-header{

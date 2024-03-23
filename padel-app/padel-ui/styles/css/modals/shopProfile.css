@@ -22,7 +22,7 @@
 
 .shop-details{
     font-size: 2em;
-    background: var(--box-background);
+    background: var(--theme-main);
     color: var(--main);
     padding: 1em;
     gap: 1em;
@@ -75,10 +75,6 @@
     animation: closeSection .4s forwards;
 }
 
-#shop-courts{
-    padding: 2em;
-}
-
 .shop-content .court, .shop-extras{
     background: var(--main);
     color: var(--text-main);
@@ -93,26 +89,33 @@
     font-size: 1.2em;
 }
 
+.shop-extras, #shop-courts {
+    padding: 2em;
+}
+
 .court .front, .court .back{
     display: flex;
     flex-direction: column;
     gap: 0.5em;
     font-size: 1.2em;
-}
-
-.court{
-    transition: transform 0.6s;
-    transform-style: preserve-3d;
-}
-
-.flipped-court{
-    transform: rotateY(180deg);
-    background: var(--box-background) !important;
-    color: var(--main) !important;
+    padding: 1em;
+    border-radius: 25px;
 }
 
 .court .back{
     display: none;
+    background: var(--theme-main) !important;
+    color: var(--main) !important;
+}
+
+.court{
+    padding: 0 !important;
+}
+
+.flipped-court{
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    transform: rotateY(180deg);
 }
 
 .flipped-court .front{

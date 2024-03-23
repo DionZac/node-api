@@ -34,6 +34,9 @@ class Card {
                 <div class="place-closed"></div>
                 <div class="card-image-container">
                     <img class="card-image" src=${this.image_url} />
+                    <div class="card-place-price">
+                        <span class="card-price"> ${this.min_price.toFixed(2)}$ </span>
+                    </div>
                 </div>
                 <div class="card-place-name-container">
                     <span class="card-place-name"> ${this.name} </span>

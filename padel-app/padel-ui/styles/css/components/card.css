@@ -64,7 +64,7 @@
 .place .card-place-name-container{
     font-size: 1.8em;
     font-style: italic;
-    background: #468D8F;
+    background: var(--theme-main);
     color: white;
     margin: 0;
     margin-top: -0.2em;
