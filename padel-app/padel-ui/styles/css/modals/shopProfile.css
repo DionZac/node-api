@@ -155,7 +155,7 @@
 
 .shop-extras .extra-rackets i, .shop-extras .extra-balls i{
     text-align: center;
-    color: #81b181;
+    color: var(--theme-coloured-icons);
 }
 
 .shop-extras .rackets-label , .shop-extras .balls-label{

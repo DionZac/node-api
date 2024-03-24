@@ -90,22 +90,24 @@ class PlacesModal extends Modal {
     }
 
     createHTML(){
+        let monthName = moment(this.filters.date, "DD-MM-YYYY").format('MMMM').toUpperCase().substr(0,3);
+        let date = `${moment(this.filters.date, "DD-MM-YYYY").format("DD")} ${monthName}`
         return(`
             <div class="filters-container">
                 <div class="places-filters">
                     <div class="datepicker-container">
                          <i class="fa fa-3x fa-calendar-days"></i>
-                         <span id="datepicker-value"> 25 DEC </span>
+                         <span id="datepicker-value"> ${date} </span>
                     </div>
                     <div class="vertical-seperator"></div>
                     <div class="time-start-container">
                          <i class="fa fa-3x fa-clock"></i>
-                         <span id="timestart-value"> 19:00 </span>
+                         <span id="timestart-value"> ${this.filters.time.start} </span>
                     </div>
                     <div class="vertical-seperator"></div>
                     <div class="time-end-container">
                          <i class="fa fa-3x fa-stopwatch"></i>
-                         <span id="timeend-value"> 20:30 </span>
+                         <span id="timeend-value"> ${this.filters.time.end} </span>
                     </div>
                 </div>
                 <div class="places-filter-search">

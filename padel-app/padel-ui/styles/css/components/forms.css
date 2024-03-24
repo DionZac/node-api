@@ -73,7 +73,7 @@
 .counter{
     display: flex;
     align-items: center;
-    background: #81b181;
+    background: var(--theme-coloured-icons);
     width: 4em;
 }
 
@@ -84,7 +84,7 @@
     height: 2em;
     padding-right: 0.2em;
     margin-left: -1em;
-    border: 1px solid #81b181;
+    border: 1px solid var(--theme-coloured-icons);
 }
 
 .counter .minus-container i {
@@ -92,7 +92,7 @@
     margin-left: 8px;
     text-align: center;
     font-size: 1.5em;
-    color: #81b181;
+    color: var(--theme-coloured-icons);
     padding-top: 0.17em;
 }
 
@@ -109,7 +109,7 @@
     border-radius: 100%;
     width: 2em;
     height: 2em;
-    border: 1px solid #81b181;
+    border: 1px solid var(--theme-coloured-icons);
 }
 
 .counter .plus-container i{
@@ -117,6 +117,6 @@
     margin-right: 10px;
     text-align: center;
     font-size: 1.5em;
-    color: #81b181;
+    color: var(--theme-coloured-icons);
     padding-top: 0.17em;
 }
