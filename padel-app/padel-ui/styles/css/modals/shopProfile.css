@@ -164,7 +164,7 @@
     color: var(--text-label);
 }
 
-.confirm-booking{
+.confirm-booking, .confirm-receipt-booking{
     text-align: center;
     position: fixed;
     bottom: 2em;
@@ -177,7 +177,7 @@
     border-radius: 65px;
 }
 
-.confirm-booking span{
+.confirm-booking span, .confirm-receipt-booking span{
     font-size: 2em;
     font-weight: bold;
 }

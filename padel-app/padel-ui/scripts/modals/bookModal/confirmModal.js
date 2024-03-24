@@ -9,7 +9,7 @@ class ConfirmModal {
     render(){
         $('#modal-confirmation-page').html(this.createHTML());
 
-        $('.confirm-receipt-booking').on('click', () => {
+        $('.confirm-receipt-booking').off('click').on('click', () => {
             this.controller.confirmBooking(this.match);
         })
     }
@@ -65,7 +65,7 @@ class ConfirmModal {
                     <div class="receipt-place-location"> ${this.match.shop.location_name} </div>
                 </div>
             </div>
-            <div class="confirm-booking confirm-receipt-booking">
+            <div class="confirm-receipt-booking">
                 <span class="confirm-booking-price">Complete Reservation - ${total.toFixed(2)}$</span>
             </div>
         `

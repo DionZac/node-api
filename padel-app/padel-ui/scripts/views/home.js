@@ -12,6 +12,7 @@ class Home {
         $('.friendly-match-section, .favourites .add-new-place').off('click').on('click', () => {
             var modal = new BookModal();
             window.router.openModal(modal);
+            window.m = modal;
         });
     }
 

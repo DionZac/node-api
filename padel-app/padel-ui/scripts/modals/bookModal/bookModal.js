@@ -66,7 +66,7 @@ class BookModal extends Modal{
             method:'openConfirmation',
             data: match,
             id:'confirm_booking'
-        })
+        });
     }
 
     openShop(shop){
@@ -88,7 +88,16 @@ class BookModal extends Modal{
             this.close();
         }
         else{
-            this.router.prev();
+            if(this.router.current == "confirm_booking"){
+                $('#modal-confirmation-page').removeClass('open-modal-under').addClass('close-modal-under');
+                $('#modal-place-page').removeClass('modal-inactive');
+                $('.confirm-receipt-booking').hide();
+                $('.confirm-booking').show();
+                this.router.prev(true); // prevent execution
+            }
+            else{
+                this.router.prev();
+            }
         }
     }
 
@@ -107,7 +116,7 @@ class BookModal extends Modal{
                 <div id="modal-place-page" class="modal-view">
 
                 </div>
-                <div id="modal-confirmation-page" class="modal-view">
+                <div id="modal-confirmation-page" class="modal-view-under">
 
                 </div>
             </div>

@@ -3,6 +3,7 @@ import API from "./services/api.js";
 import Profile from "./objects/profile.js";
 
 (async () => {
+    $(':root').css('--device-height', $('body').css('height'));
 
     var router = new Router();
     var api = new API();

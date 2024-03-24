@@ -159,7 +159,7 @@ class ShopProfile {
             this.updatePrice();
         })
 
-        $('.confirm-booking').on('click', () => {
+        $('.confirm-booking').off('click').on('click', () => {
             if(!this.selectedCourt) return;
 
             this.controller.openConfirmation(this.match);
