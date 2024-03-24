@@ -12,6 +12,7 @@
 
 /* Modal in the background */
 .modal-inactive{
+    opacity: .4;
     overflow: hidden;
     height: var(--device-height);
 }

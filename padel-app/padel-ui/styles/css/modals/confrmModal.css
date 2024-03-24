@@ -1,5 +1,37 @@
 #modal-confirmation-page{
+    border-radius: 4em;
     background: var(--primary);
+}
+
+.receipt-header{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    text-align: center;
+    margin-bottom: 3em;
+}
+
+.receipt-image-container{
+    margin-bottom: 6em;
+}
+
+.receipt-image-container img{
+    width: 8em;
+    height: 8em;
+    border-radius: 100%;
+    position: absolute;
+    top: -4em;
+    left: calc(50% - 4em);
+    border: 0.6em solid var(--main);
+}
+
+.receipt-place-name{
+    font-size: 2em;
+    font-weight: 600;
+}
+
+.receipt-place-court{
+    font-size: 1.7em;
 }
 
 .confirmation-page{
@@ -8,7 +40,6 @@
     padding: 2em;
     margin: 2em;
     font-size: 1.6em;
-    margin-top: 10em;
     background: var(--main);
     border-radius: 50px;
 }
@@ -38,22 +69,4 @@
 
 .receipt-label{
     flex: 1;
-}
-
-.receipt-total{
-    padding-top: 3em;
-}
-
-.receipt-place-info{
-    padding: 1em;
-    padding-top: 2em;
-    font-size: 1.15em;
-    font-weight: 700;
-}
-
-.receipt-place-location{
-    font-weight: normal;
-    font-size: 0.8em;
-    color: var(--text-secondary);
-    padding-top: 1em;
 }

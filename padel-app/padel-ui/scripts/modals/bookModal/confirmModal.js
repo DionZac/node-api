@@ -24,6 +24,15 @@ class ConfirmModal {
         let month_name = moment(this.filters.date, "DD-MM-YYYY").format('MMMM');
 
         return `
+            <div class="receipt-header">
+                <div class="receipt-image-container">
+                    <img src="${this.match.shop.image_url}" />
+                </div>
+                <div class="receipt-place-name"> ${this.match.shop.name} </div>
+                <div class="receipt-place-court"> ${this.match.court.name} </div>
+                <div class="form-seperator"></div>
+            </div>
+            <span class="label"> Receipt Details </span>
             <div class="confirmation-page">
                 <div class="confirmation-header"> ${day_name} ${day_number} ${month_name} | ${this.match.start} - ${this.match.end} </div>
 
@@ -55,14 +64,6 @@ class ConfirmModal {
                         <div class="receipt-label"> Total </div>
                         <div class="receipt-value" id="receipt-total-price">${total.toFixed(2)}$</div>
                     </div>
-                </div>
-
-                <div class="form-seperator"></div>
-
-                <div class="receipt-place-info">
-                    <div class="receipt-place-name"> ${this.match.shop.name} </div>
-                    <div class="receipt-place-court"> ${this.match.court.name} </div>
-                    <div class="receipt-place-location"> ${this.match.shop.location_name} </div>
                 </div>
             </div>
             <div class="confirm-receipt-booking">

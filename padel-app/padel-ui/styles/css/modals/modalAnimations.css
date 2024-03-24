@@ -1,3 +1,7 @@
+:root{
+    --slide-up-top: 25em;
+}
+
 /* Main View - Modal */
 /*  CSS Animation Slide in/out horizontally */
 .close-main{
@@ -84,19 +88,19 @@
 
 @keyframes slideUpModal {
     0%{
-        top: var(--device-height);
+        top: calc(var(--device-height) + 15em);
     }
     100%{
-        top: 15em;
+        top: var(--slide-up-top);
     }
 }
 
 @keyframes slideDownModal{
     0%{
-        top: 15em;
+        top: var(--slide-up-top);
     }
     100%{
-        top: var(--device-height);
+        top: calc(var(--device-height) + 15em);
         display: none;
     }
 }

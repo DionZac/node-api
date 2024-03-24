@@ -23,6 +23,12 @@ class ShopProfile {
     render(){
         $('#modal-place-page').html(this.createHTML());
 
+        $('#modal-place-page .shop-image').off('click').on('click', () => {
+            if(this.controller.router.current == "confirm_booking"){
+                this.controller.back();
+            }
+        })
+
         $('.shop-options .shop-option-selected').removeClass('shop-option-selected');
         $('.shop-options-book').addClass('shop-option-selected')
 
