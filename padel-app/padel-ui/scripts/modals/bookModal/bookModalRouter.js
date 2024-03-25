@@ -31,7 +31,7 @@ class BookModalRouter extends ModalRouter{
                 $('#modal-place-page').addClass('modal-inactive');
                 $('.confirm-receipt-booking').show();
                 $('.confirm-booking').hide();
-                $('#modal').scrollTop(0)
+                $('.modal').scrollTop(0)
                 
                 // $('.modal-view').hide();
                 // $('#modal-confirmation-page').show();

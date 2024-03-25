@@ -20,9 +20,13 @@ class BookModal extends Modal{
     }
 
     open(){
-        super.open();
+        super.open(true);
 
         this.openPlacesModal();
+    }
+
+    close(){
+        super.close(true);
     }
 
     async confirmBooking(match){
@@ -85,7 +89,7 @@ class BookModal extends Modal{
 
     back(){
         if(this.router.index == 1){
-            this.close();
+            this.close(true);
         }
         else{
             if(this.router.current == "confirm_booking"){
@@ -103,8 +107,8 @@ class BookModal extends Modal{
 
     createHTML(){
         return(`
-            <div class="modal-back-container">
-                <i id="modal-back" class="fa fa-2x fa-angle-left"></i>
+            <div class="modal-back modal-back-container">
+                <i class="fa fa-2x fa-angle-left"></i>
             </div>
             <div class="header modal-header">
                 <span class="header-text"> Find a place </span>

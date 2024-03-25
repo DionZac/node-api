@@ -9,6 +9,9 @@ class Router {
         "next": ""
     };
 
+    index = 0;
+    history = [];
+
 
     constructor(){
         this.home = new Home();
@@ -16,15 +19,16 @@ class Router {
         this.profileView = new ProfileView();
     }
 
-    navigate(page){
-        if(page == this.navigation.current) return;
+    navigate(page, prev_triggered){
+        if(page == this.navigation.current && page !== "modal") return;
+        
+        if(!prev_triggered){
+            this.history.push(page);
+            this.index ++;
+        }
 
         this.resetMenuIcons();
         this.setFilledMenuIcon(page);
-
-        this.navigation.next = "";
-        this.navigation.prev = this.navigation.current;
-        this.navigation.current = page;
 
         // If navigate to a view - Display the View //
         this.changeView(page);
@@ -45,6 +49,12 @@ class Router {
                 return;
         }
         console.log(this.navigation);
+    }
+
+    prev(){
+        this.index --;
+        this.navigate(this.history[this.index - 1], true);
+        this.history.pop();
     }
 
     changeView(view){

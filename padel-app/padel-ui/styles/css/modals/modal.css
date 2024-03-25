@@ -2,8 +2,9 @@
     color: var(--text-secondary)
 }
 
-#modal {
+.modal {
     position: fixed;
+    background: var(--primary);
     left: 100%;
     width: 40%;
     height: 5%;
