@@ -2,8 +2,11 @@ class Match {
     date;
     price;
     players = {
-        team_1:{},
-        team_2:{}
+        team_1:{
+            player_1: window.user_profile
+        },
+        team_2:{
+        }
     };
     court_id;
     court;

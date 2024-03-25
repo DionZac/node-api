@@ -70,7 +70,7 @@ class Profile{
 
     createRivalHtml(rival){
         return `
-            <div class="profile-rival">
+            <div class="friend-profile">
                 <img src="${rival.image_url}" />
                 <span id="rival-name">${rival.name.split(' ')[0]}</span>
                 <span id="rival-ranking">${rival.ranking_points}</span>

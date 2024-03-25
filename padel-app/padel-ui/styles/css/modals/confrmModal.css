@@ -34,6 +34,30 @@
     font-size: 1.7em;
 }
 
+.confirmation-players{
+    display: flex;
+    margin-left: 2em;
+    font-size: 1.7em;
+    border: 1px solid var(--border-main);
+    margin: 2em;
+    margin-top: 1em;
+    border-radius: 25px;
+}
+
+.confirmation-players .friend-profile{
+    padding: 1em;
+    border-right: 2px dotted #cdcdcd;
+    margin: 0;
+    padding-left: 2em;
+    padding-right: 2em;
+    justify-content: center;
+}
+
+.add-new-friend{
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
 .confirmation-page{
     display: flex;
     flex-direction: column;

@@ -25,10 +25,10 @@
 
         async serialize(match){
             try{
-                match.player_1 = match.players.team_1.player_1;
-                match.player_2 = match.players.team_1.player_2;
-                match.player_3 = match.players.team_2.player_1;
-                match.player_4 = match.players.team_2.player_2;
+                match.player_1 = match.players.team_1.player_1.rowid;
+                match.player_2 = match.players.team_1.player_2.rowid;
+                match.player_3 = match.players.team_2.player_1.rowid;
+                match.player_4 = match.players.team_2.player_2.rowid;
             }
             catch(e){
 

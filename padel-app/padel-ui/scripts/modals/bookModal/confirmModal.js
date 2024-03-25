@@ -11,7 +11,33 @@ class ConfirmModal {
 
         $('.confirm-receipt-booking').off('click').on('click', () => {
             this.controller.confirmBooking(this.match);
+        });
+
+        var self = this;
+        $('.add-new-friend').off('click').on('click', function(){
+            let id = $(this).attr('id');
+
+            let html = self.createFriendProfileHTML(window.user_profile.friends[0]);
+            $(`#${id}`).html(html);
+
+            self.match.players.team_1.player_2 = window.user_profile.friends[0];
         })
+    }
+
+    createFriendProfileHTML(user){
+        return `
+            <img src="${user.image_url}" />
+            <span id="confirmation-friend-name"> ${user.name.split(' ')[0]} </span>
+        `
+    }
+
+    createAddNewFriendHTML(){
+        return `
+            <div class="confirmation-add-friend">
+                <i class="fa fa-3x fa-plus"></i>
+            </div>
+            <span> Add Friend </span>
+        `
     }
 
     createHTML(){
@@ -23,6 +49,8 @@ class ConfirmModal {
         let day_number = moment(this.filters.date, "DD-MM-YYYY").format('DD');
         let month_name = moment(this.filters.date, "DD-MM-YYYY").format('MMMM');
 
+        let user = this.match.players.team_1.player_1;
+
         return `
             <div class="receipt-header">
                 <div class="receipt-image-container">
@@ -31,6 +59,31 @@ class ConfirmModal {
                 <div class="receipt-place-name"> ${this.match.shop.name} </div>
                 <div class="receipt-place-court"> ${this.match.court.name} </div>
                 <div class="form-seperator"></div>
+            </div>
+            <span class="label"> Players </span>
+            <div class="confirmation-players">
+                <div class="friend-profile">
+                    <img src="${user.image_url}" />
+                    <span id="confirmation-friend-name"> ${user.name} </span>
+                </div>
+                <div class="friend-profile add-new-friend" id="add-new-friend-1">
+                    <div class="confirmation-add-friend">
+                        <i class="fa fa-3x fa-plus"></i>
+                    </div>
+                    <span> Add Friend </span>
+                </div>
+                <div class="friend-profile add-new-friend" id="add-new-friend-2">
+                    <div class="confirmation-add-friend">
+                        <i class="fa fa-3x fa-plus"></i>
+                    </div>
+                    <span> Add Friend </span>
+                </div>
+                <div class="friend-profile add-new-friend" id="add-new-friend-3">
+                    <div class="confirmation-add-friend">
+                        <i class="fa fa-3x fa-plus"></i>
+                    </div>
+                    <span> Add Friend </span>
+                </div>
             </div>
             <span class="label"> Receipt Details </span>
             <div class="confirmation-page">
