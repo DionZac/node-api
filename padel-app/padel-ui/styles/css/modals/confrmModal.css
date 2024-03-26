@@ -1,6 +1,6 @@
 #modal-confirmation-page{
     border-radius: 4em;
-    background: var(--primary);
+    background: var(--main);
 }
 
 .receipt-header{
@@ -66,6 +66,7 @@
     font-size: 1.6em;
     background: var(--main);
     border-radius: 50px;
+    border: 1px solid var(--border-main);
 }
 
 .confirmation-header{

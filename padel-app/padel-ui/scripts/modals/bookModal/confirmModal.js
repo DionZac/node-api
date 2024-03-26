@@ -88,9 +88,9 @@ class ConfirmModal {
         let balls_price = this.match.extras.balls * this.match.shop.balls_price;
         let commission = this.match.price * this.match.shop.commission_rate;
         let total = this.match.price + commission;
-        let day_name = moment(this.filters.date, "DD-MM-YYYY").format('dddd');
-        let day_number = moment(this.filters.date, "DD-MM-YYYY").format('DD');
-        let month_name = moment(this.filters.date, "DD-MM-YYYY").format('MMMM');
+        let day_name = moment(this.filters.date, "YYYY-MM-DD").format('dddd');
+        let day_number = moment(this.filters.date, "YYYY-MM-DD").format('DD');
+        let month_name = moment(this.filters.date, "YYYY-MM-DD").format('MMMM');
 
         let user = this.match.players.team_1.player_1;
 

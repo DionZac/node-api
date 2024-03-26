@@ -52,6 +52,8 @@ class BookModal extends Modal{
             $('#modal-find-place').html(html);
             await this.placesModal.loadShops();  
         }
+
+        this.placesModal.render();
         
         this.router.navigate({
             method: 'openPlacesModal',

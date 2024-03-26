@@ -27,7 +27,7 @@ class PlacesModal extends Modal {
         this.controller = options.controller;
 
         this.filters = {
-            "date": "17-03-2024",
+            "date": "2024-03-17",
             "time": {
                 "start": "20:00",
                 "end": "21:30"
@@ -52,10 +52,38 @@ class PlacesModal extends Modal {
         }
     }
 
-    open(){
-        super.open();
+    render(){
+        var self = this;
 
-        this.loadShops();
+        $('.datepicker-container').off('click').on('click' , () => {
+            $('#date-input')[0].showPicker(); // Display picker
+        });
+
+        $('#date-input').off('change').on('change', function() {
+            let val = $('#date-input').val();
+            let monthName = moment(val, "YYYY-MM-DD").format('MMMM').toUpperCase().substr(0,3);
+            let date = `${moment(val, "YYYY-MM-DD").format("DD")} ${monthName}`
+            $("#datepicker-value").text(date);
+            self.filters.date = val;
+        })
+
+        $('.time-start-container').off('click').on('click', () => {
+            $('#time-start-input')[0].showPicker(); 
+        });
+        $('#time-start-input').off('change').on('change', function() {
+            let val = $('#time-start-input').val();
+            $('#timestart-value').text(val);
+            self.filters.time.start = val;
+        })
+
+        $('.time-end-container').off('click').on('click', () => {
+            $('#time-end-input')[0].showPicker(); 
+        });
+        $('#time-end-input').off('change').on('change', function() {
+            let val = $('#time-end-input').val();
+            $('#timeend-value').text(val);
+            self.filters.time.end = val;
+        })
     }
 
     async loadShops(){
@@ -90,22 +118,25 @@ class PlacesModal extends Modal {
     }
 
     createHTML(){
-        let monthName = moment(this.filters.date, "DD-MM-YYYY").format('MMMM').toUpperCase().substr(0,3);
-        let date = `${moment(this.filters.date, "DD-MM-YYYY").format("DD")} ${monthName}`
+        let monthName = moment(this.filters.date, "YYYY-MM-DD").format('MMMM').toUpperCase().substr(0,3);
+        let date = `${moment(this.filters.date, "YYYY-MM-DD").format("DD")} ${monthName}`
         return(`
             <div class="filters-container">
                 <div class="places-filters">
                     <div class="datepicker-container">
+                        <input style="display:none" type="date" id="date-input" />
                          <i class="fa fa-3x fa-calendar-days"></i>
                          <span id="datepicker-value"> ${date} </span>
                     </div>
                     <div class="vertical-seperator"></div>
                     <div class="time-start-container">
+                        <input style="display:none" type="time" step=1800 id="time-start-input" />
                          <i class="fa fa-3x fa-clock"></i>
                          <span id="timestart-value"> ${this.filters.time.start} </span>
                     </div>
                     <div class="vertical-seperator"></div>
                     <div class="time-end-container">
+                        <input style="display:none" type="time" step="1800" id="time-end-input" />
                          <i class="fa fa-3x fa-stopwatch"></i>
                          <span id="timeend-value"> ${this.filters.time.end} </span>
                     </div>
