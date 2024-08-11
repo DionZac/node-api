@@ -517,31 +517,40 @@
             "league": "Super League"
         },
         {
-            "name": "Antalyaspor"
+            "name": "Antalyaspor",
+            "league":"Turkish League"
         },
         {
-            "name": "Sivasspor"
+            "name": "Sivasspor",
+            "league":"Turkish League"
         },
         {
-            "name": "Galatasaray"
+            "name": "Galatasaray",
+            "league":"Turkish League"
         },
         {
-            "name": "Fenerbahce"
+            "name": "Fenerbahce",
+            "league":"Turkish League"
         },
         {
-            "name":"Besiktas"
+            "name":"Besiktas",
+            "league":"Turkish League"
         },
         {
-            "name": "Umraniyespor"
+            "name": "Umraniyespor",
+            "league":"Turkish League"
         },
         {
-            "name": "Trabzonspor"
+            "name": "Trabzonspor",
+            "league":"Turkish League"
         },
         {
-            "name": "Kasimpasa"
+            "name": "Kasimpasa",
+            "league":"Turkish League"
         },
         {
-            "name": "Samsunspor"
+            "name": "Samsunspor",
+            "league":"Turkish League"
         },
         {
             "name": "PSV Einthoven"
