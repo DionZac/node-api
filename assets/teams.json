@@ -285,6 +285,10 @@
             "league":"Serie A"
         },
         {
+            "name": "Venezia",
+            "league": "Serie A"
+        },
+        {
             "name": "PSG",
             "league": "Ligue 1"
         },
@@ -375,6 +379,10 @@
         {
             "name": "Toulouse",
             "league": "Ligue 1"
+        },
+        {
+            "name": "Saint Etienne",
+            "league":"Ligue 1"
         },
         {
             "name": "Bayern Munich",
