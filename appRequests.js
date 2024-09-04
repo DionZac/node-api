@@ -31,8 +31,8 @@ exports.teams = async(req,res) => {
 		fs.readFile('./assets/nations.json', (err, nations) => {
 			nations = JSON.parse(nations);
 			for(let nation of nations.teams){
-				nation["league"] = "EURO Qualification";
-				// data["teams"].push(nation);
+				nation["league"] = "Nations League";
+				data["teams"].push(nation);
 			}
 
 			res.send(data);
