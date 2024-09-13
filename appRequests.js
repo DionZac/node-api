@@ -32,7 +32,7 @@ exports.teams = async(req,res) => {
 			nations = JSON.parse(nations);
 			for(let nation of nations.teams){
 				nation["league"] = "Nations League";
-				data["teams"].push(nation);
+				// data["teams"].push(nation);
 			}
 
 			res.send(data);
