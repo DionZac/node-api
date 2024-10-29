@@ -2,6 +2,8 @@
     var master  = require("./master.js");
     
     exports.paroliResource = class extends master.masterResource {
+        account_authorization = true;
+        
         constructor(){
             super();
             this.paroli = db.paroli;
