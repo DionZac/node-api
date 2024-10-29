@@ -1,6 +1,6 @@
 {
     "DB_ENGINE": "SQLITE3",
-    "PORT":9000,
+    "PORT":9001,
     "DB_FILE":"menu.db",
     "DB_LOG":true,
     "api_endpoint": "/api/v1/",
