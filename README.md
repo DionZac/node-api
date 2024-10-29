@@ -1,12 +1,18 @@
 # CURRENT USES 
 
-`` paroli-server ``
+`` Bet Stats App ``
 
-    Branch is used in the paroli app - App branch name : `` new-paroli-app  ``
+    - App branch name : `main`
+    - User hash : `91w4brrj7r`
 
-`` update-test ``
+    **NOTE** Server is fetching results filtered with account_user_id:91w4brrj7r
 
-    Branch is used in the main stats app - App branch name : `` main ``
+`` Paroli App ``
+
+    - App branch name : `new-paroli-app`
+    - User hash : `cgnv4z1bjyron8t6`
+
+    **NOTE** Server is fetching results filtered with account_user_id:91w4brrj7r
 
 
 # Node - API
