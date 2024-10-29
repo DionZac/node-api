@@ -1,3 +1,13 @@
+# CURRENT USES 
+
+`` paroli-server ``
+
+    Branch is used in the paroli app - App branch name : `` new-paroli-app  ``
+
+`` update-test ``
+
+    Branch is used in the main stats app - App branch name : `` main ``
+
 
 # Node - API
 
