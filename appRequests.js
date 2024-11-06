@@ -40,6 +40,21 @@ exports.teams = async(req,res) => {
 	});
 }
 
+exports.european = async(req,res) => {
+	try{
+		let data = {
+			champions_league: JSON.parse(await fs.readFileSync('./assets/champions_league.json')),
+			europa_league: JSON.parse(await fs.readFileSync('./assets/europa_league.json')),
+			conference_league: JSON.parse(await fs.readFileSync('./assets/conference_league.json'))
+		};
+
+		res.send(data);
+	}
+	catch(e){
+		res.send([]);
+	}
+}
+
 exports.leagues = async(req, res) => {
 	fs.readFile('./assets/leagues.json', (err, data) => {
 		data = JSON.parse(data);

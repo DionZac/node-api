@@ -15,6 +15,7 @@ exports.registerRequestServices = function(server){
     server.all('/assets/leagues', appRequests.leagues);
     server.all('/assets/bet_categories', appRequests.categories);
     server.all('/assets/nba/teams', appRequests.nbaTeams);
+    server.all('/assets/european', appRequests.european);
     server.all('/assets/nba/bet_categories', appRequests.nbaBetCategories);
 
     server.all('/api/v1/*', handler.call);
