@@ -11,9 +11,9 @@
             "resource": "usersResource"
         },
         {
-            "dbname": "feed",
-            "endpoint": "feed",
-            "resource": "feedResource"
+            "dbname": "patients",
+            "endpoint": "patients",
+            "resource": "patientsResource"
         }
     ]
 }
