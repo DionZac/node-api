@@ -12,6 +12,54 @@
                 "len": 160,
                 "def": "",
                 "hlp": "Just a test field so table is not empty"
+            },
+            {
+                "fname": "user",
+                "type": "lnk",
+                "dblink": "users",
+                "hlp": "Rowid value of user(doctor) this patient is registered from"
+            },
+            {
+                "fname": "amka",
+                "type": "str",
+                "def": "",
+                "hlp": "AMKA number of patient"
+            },
+            {
+                "fname": "firstname",
+                "type": "str",
+                "def": ""
+            },
+            {
+                "fname": "lastname",
+                "type": "str",
+                "def": ""
+            },
+            {
+                "fname":"phone_number",
+                "type": "str",
+                "def": ""
+            },
+            {
+                "fname":"email",
+                "type": "str",
+                "def": ""
+            },
+            {
+                "fname":"pitcture",
+                "type": "str",
+                "def": ""
+            },
+            {
+                "fname":"area",
+                "type": "str",
+                "def": ""
+            },
+            {
+                "fname":"notes",
+                "type": "str",
+                "len": 9192,
+                "def": ""
             }
         ]
     }
