@@ -14,12 +14,6 @@
                 "hlp": "Just a test field so table is not empty"
             },
             {
-                "fname": "user",
-                "type": "lnk",
-                "dblink": "users",
-                "hlp": "Rowid value of user(doctor) this patient is registered from"
-            },
-            {
                 "fname": "amka",
                 "type": "str",
                 "def": "",
@@ -60,6 +54,13 @@
                 "type": "str",
                 "len": 9192,
                 "def": ""
+            },
+            {
+                "fname": "user",
+                "type": "lnk",
+                "dblink": "users",
+                "def": -1,
+                "hlp": "Rowid value of user(doctor) this patient is registered from"
             }
         ]
     }
