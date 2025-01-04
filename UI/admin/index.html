@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./main.css">
+
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Admin</h2>
+        <a  href="#" data-link="dashboard" class="active">Dashboard</a>
+        <a  href="#" data-link="patients">Patients</a>
+    </div>
+
+     <!-- Toggle Sidebar Button -->
+     <div class="menu-toggle">
+        <i class="material-icons">menu_open</i>
+    </div>
+
+    <div class="topbar">John Doe</div>
+
+    <div id="patients" class="content">
+        <h2>Patients</h2>
+        <div class="search-container">
+            <svg style="display: none">
+                <symbol id="magnify" viewBox="0 0 18 18" height="100%" width="100%">
+                  <path d="M12.5 11h-.8l-.3-.3c1-1.1 1.6-2.6 1.6-4.2C13 2.9 10.1 0          6.5 0S0 2.9 0 6.5 2.9 13 6.5 13c1.6 0 3.1-.6 4.2-1.6l.3.3v.8l5 5          1.5-1.5-5-5zm-6 0C4 11 2 9 2 6.5S4 2 6.5 2 11 4 11 6.5 9 11 6.5            11z" fill="#fff" fill-rule="evenodd"/>
+                </symbol>
+              </svg>
+              
+              <div class="search-bar">
+                
+                <input id="search" onkeyup="filterPatients()" type="text" class="input" placeholder="&nbsp;">
+                <span class="label">Search by Name or AMKA</span>
+                <span class="highlight"></span>
+                <div class="search-btn">
+                     <svg class="icon icon-18">
+                       <use xlink:href="#magnify"></use>
+                      </svg>
+                 </div>
+                </div>
+              
+            <!-- <input type="text" id="search" placeholder="Search by Name or AMKA" onkeyup="filterPatients()"> -->
+        </div>
+        <div class="patient-list" id="patientList">
+
+        </div>
+        <div class="fab-container">
+            <div class="fab new-patient" id="newPatient"><i class="material-icons">+</i></div>
+        </div>
+    </div>
+
+    <div id="dashboard" class="content">
+        <div class="dashboard-title">Dashboard</div>
+        <div class="cards-container">
+            <div class="card">
+                <div class="card-title">Total Patients</div>
+                <div class="card-value">135</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Today's Patients</div>
+                <div class="card-value">35</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Monthly Patients</div>
+                <div class="card-value">135</div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="patient_form" class="content">
+        <div class="form-container">
+            <div class="form-title">Add New Patient</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="firstname">First Name</label>
+                        <input type="text" id="firstname" name="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname">Last Name</label>
+                        <input type="text" id="lastname" name="lastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="text" id="phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="amka">AMKA</label>
+                        <input type="text" id="amka" name="amka" required>
+                    </div>
+                </div>
+        </div>
+        <!-- Floating Action Buttons -->
+        <div class="fab-container">
+            <!-- <div class="fab cancel" id="cancelForm"><i class="material-icons">close</i></div> -->
+            <div class="fab save" id="saveForm"><i class="material-icons">save</i></div>
+        </div>
+    </div>
+
+    <script type="module" src="./app.js" ></script>
+
+    <script>
+
+
+        $("#cancelForm").click(() => {
+            $(".content").hide();
+            $("#patients-list").show();
+        })
+
+       
+
+        function filterPatients() {
+            let input = document.getElementById('search').value.toLowerCase();
+            let patients = document.querySelectorAll('.patient-item');
+            patients.forEach(patient => {
+                let name = patient.querySelector('.fullname').innerText.toLowerCase();
+                let amka = patient.querySelector('.amka').innerText.toLowerCase();
+                if (name.includes(input) || amka.includes(input)) {
+                    patient.style.display = "flex";
+                } else {
+                    patient.style.display = "none";
+                }
+            });
+        }
+    </script>
+</body>
+</html>

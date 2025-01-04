@@ -1,0 +1,57 @@
+/* Patient List */
+.patient-list {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: white;
+    gap: 1em;
+}
+
+.patient-item {
+    background: white;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-left: 27px;
+    gap: 6em;
+    align-items: center;
+    justify-content: center;
+}
+
+.patient-info {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 1em;
+}
+
+.patient-item img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin-right: 16px;
+    margin-left: -37px;
+    border: 2px solid #E0E0E0;
+}
+
+.fullname, .amka{
+    font-weight: bold;
+    color: #5b5b5b;
+}
+
+.phone{
+    font-size: 14px;
+    font-weight: bold;
+    color: #adadad;
+}
+
+.edit-icon {
+    color: #00796B;
+    cursor: pointer;
+    font-size: 24px;
+}

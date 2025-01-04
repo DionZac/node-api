@@ -55,9 +55,9 @@ class sqlite3API {
         }
 
         return new Promise((resolve, reject) => {
-            db.engine.insert(this.model, rec, (err, rowid) => {
+            db.engine.insert(this.model, rec, function(err, rowid){
                 if (err) { reject(err); return; }
-                else { resolve(rowid); return; }
+                else { resolve(this.lastID); return; } // this.lastID - SQLITE3 returns it that way
             })
         })
     }

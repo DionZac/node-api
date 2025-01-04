@@ -1,0 +1,25 @@
+@import url("./views/views.css");
+@import url("./styles/styles.css");
+@import url("./components/components.css");
+
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #e0e7eb;
+    display: flex;
+}
+
+/* Content */
+.content {
+    margin-left: 240px;
+    padding: 80px 80px 20px;
+    width: calc(100% - 280px);
+    transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+}
+
+.content.expanded {
+    margin-left: 0;
+    width: 100%;
+}
+
+

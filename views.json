@@ -10,8 +10,8 @@
     "admin":{
         "name": "admin",
         "endpoint": "/admin",
-        "folderpath": "/",
-        "filename": "admin.html",
+        "folderpath": "/admin",
+        "filename": "index.html",
         "module" : "adminView"
     }
 }
