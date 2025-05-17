@@ -39,8 +39,10 @@
     "get_genres": "run-func module.js getAllGenres"
   },
   "devDependencies": {
+    "googleapis": "^148.0.0",
     "moment": "^2.29.3",
     "monitor": "^0.6.10",
+    "multer": "^1.4.5-lts.2",
     "request": "^2.88.2",
     "sqlite3": "^4.2.0"
   }

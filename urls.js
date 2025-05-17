@@ -8,6 +8,8 @@ var viewModules = {};
 
 exports.registerRequestServices = function(server){
     server.all('/login', appRequests.login);
+    server.all('/image_upload', appRequests.uploadImages);
+    server.all('/video_upload', appRequests.uploadVideos);
 
     server.all('/api/v1/*', handler.call);
 }

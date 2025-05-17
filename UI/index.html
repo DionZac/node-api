@@ -1,5 +1,161 @@
-<html>
-    <body>
-        <h1> Hello - Default View </h1>
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capture & Upload</title>
+    <link rel="stylesheet" href="./main.css" />
+</head>
+<body>
+
+    <!-- Fullscreen Loader -->
+    <div id="loader">
+      Uploading images...
+      <div id="progressBar"><div id="progress"></div></div>
+    </div>
+
+    <!-- Capture Screen -->
+    <div id="captureContainer">
+        <video 
+            src="test.mp4"
+            style="z-index:-1"
+            muted
+            loop
+        ></video>
+        <button id="captureBtn" style="z-index: 2;position: absolute;top: 85%;">Open Camera</button>
+        <input type="file" id="fileInput" accept="image/*,video/*" capture="environment" style="display: none;" multiple>
+    </div>
+
+    <!-- Preview & Upload Screen -->
+    <div id="previewContainer" style="display: none;">
+        <video id="previewVideo" controls style="display: none;"></video>
+        <img id="previewImage" style="display: none;">
+        <button id="uploadBtn">Upload</button>
+    </div>
+
+    <script>
+        const SERVER_URL = "http://192.168.2.6:9000";
+        const IMAGE_UPLOAD_ENDPOINT = "/image_upload";
+        const VIDEO_UPLOAD_ENDPOINT = "/video_upload";
+
+
+        const captureBtn = document.getElementById("captureBtn");
+        const fileInput = document.getElementById("fileInput");
+        const captureContainer = document.getElementById("captureContainer");
+        const previewContainer = document.getElementById("previewContainer");
+        const previewImage = document.getElementById("previewImage");
+        const previewVideo = document.getElementById("previewVideo");
+        const uploadBtn = document.getElementById("uploadBtn");
+        const loader = document.getElementById('loader');
+        const progress = document.getElementById('progress');
+
+
+        captureBtn.addEventListener("click", () => fileInput.click());
+
+        fileInput.addEventListener("change",async (event) => {
+            // Show loader
+            loader.style.display = 'flex';
+            progress.style.width = '0%';
+
+            debugger;
+            let images = [];
+            let videos = [];
+
+            const files = event.target.files;
+            if (!files) return;
+
+            for(let file of files){
+
+                captureContainer.style.display = "none";
+                previewContainer.style.display = "flex";
+
+                const fileURL = URL.createObjectURL(file);
+                if (file.type.startsWith("image")) {
+                    previewImage.src = fileURL;
+                    previewImage.style.display = "block";
+                    previewVideo.style.display = "none";
+                    images.push(file);
+                } else if (file.type.startsWith("video")) {
+                    videos.push(file);
+                    previewVideo.src = fileURL;
+                    previewVideo.style.display = "block";
+                    previewImage.style.display = "none";
+                }
+            }
+
+            try{
+                await uploadImages(images);
+            }
+            catch(e){
+                // Handle image upload fail
+                debugger;
+            }
+
+            try{
+                await uploadVideos(videos);
+            }
+            catch(e){
+                // Handle video upload fail
+                debugger;
+            }
+
+
+        });
+
+        sendRequest = (url,formData) => {
+            return new Promise((resolve , reject) => {
+                const xhr = new XMLHttpRequest();
+
+                xhr.upload.onprogress = function (e) {
+                  if (e.lengthComputable) {
+                    const percent = (e.loaded / e.total) * 100;
+                    progress.style.width = percent + '%';
+                  }
+                };
+
+                xhr.onload = function () {
+                  loader.style.display = 'none';
+                  resolve();
+                };
+                
+                xhr.onerror = function () {
+                  loader.style.display = 'none';
+                  reject();
+                };
+
+                xhr.open('POST', url);
+                xhr.send(formData);
+            })
+        }
+
+        uploadImages = async (files) => {
+            if(!files || files.length < 1) return;
+
+            const formData = new FormData();
+            for(let file of files){
+                formData.append("images", file);
+            }
+            await sendRequest(IMAGE_UPLOAD_ENDPOINT , formData);
+
+        }
+
+        uploadVideos = async (files) => {
+            if(!files || files.length < 1) return;
+
+            const formData = new FormData();
+            for(let file of files){
+                formData.append("videos", file);
+            }
+            await sendRequest(VIDEO_UPLOAD_ENDPOINT , formData);
+        }
+
+        $('video').css({
+            width: $(window).width(),
+            height: $(window).height()
+        })
+        document.querySelector('video').play();
+    </script>
+
+</body>
 </html>

@@ -169,12 +169,12 @@ exports.serverInit = async function (args) {
   try {
     /// set which folders are being included in 'settings.json' -- if null do not include anything ///
     if (this.settings.PROJECT_INCLUDE_FOLDER) {
-      // try{
-      //   server.use(express.static(`${__dirname}/${this.settings.PROJECT_INCLUDE_FOLDER}`));
-      // }
-      // catch(e){
-      //   glib.serverlog(`Failed to include project directory : ${__dirname}/${this.settings.PROJECT_INCLUDE_FOLDER}`, 0);
-      // }
+      try{
+        server.use(express.static(`${__dirname}/${this.settings.PROJECT_INCLUDE_FOLDER}`));
+      }
+      catch(e){
+        glib.serverlog(`Failed to include project directory : ${__dirname}/${this.settings.PROJECT_INCLUDE_FOLDER}`, 0);
+      }
     }
 
     let views = await glib.readJSONfile("./views.json");
