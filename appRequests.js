@@ -77,17 +77,21 @@ var appReq      = {};
 ////////////////////////////////////////////////////////////
 
 const handle_upload = async (req,res, upload, type) => {
+  glib.serverlog(`Handling new upload`);
 	const uploadedFiles = [];
 
 	try{
 		const uploadHandler = upload.array(type, 20);
 		uploadHandler(req, res,async (err) => {
 			if(err){
+        glib.serverlog(`Failed to create temp local files....`);
+        glib.serverlog(err);
 				return res.status(509).send(`Upload error : ${err.message}`);
 			}
 
 			try {
   		    	for (const file of req.files) {
+              glib.serverlog(`Uploading file to drive....`);
   		    	  const driveFile = await uploadToDrive(file.path, file.originalname, GOOGLE_DRIVE_FOLDER_ID);
   		    	  uploadedFiles.push(driveFile.webViewLink);
   		    	  fs.unlinkSync(file.path); // Delete local temp file
@@ -95,6 +99,7 @@ const handle_upload = async (req,res, upload, type) => {
 	    
   		    	res.status(200).send(`Uploaded to Google Drive:\n${uploadedFiles.join('\n')}`);
   		  	} catch (err) {
+            glib.serverlog(`Faile to add file in drive....`);
   		    	glib.serverlog(err);
   		    	res.status(508).send('Error uploading to Google Drive.');
   		  	}
