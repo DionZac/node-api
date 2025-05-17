@@ -83,7 +83,7 @@ const handle_upload = async (req,res, upload, type) => {
 		const uploadHandler = upload.array(type, 20);
 		uploadHandler(req, res,async (err) => {
 			if(err){
-				return res.status(500).send(`Upload error : ${err.message}`);
+				return res.status(509).send(`Upload error : ${err.message}`);
 			}
 
 			try {
@@ -93,10 +93,10 @@ const handle_upload = async (req,res, upload, type) => {
   		    	  fs.unlinkSync(file.path); // Delete local temp file
   		    	}
 	    
-  		    	res.send(`Uploaded to Google Drive:\n${uploadedFiles.join('\n')}`);
+  		    	res.status(200).send(`Uploaded to Google Drive:\n${uploadedFiles.join('\n')}`);
   		  	} catch (err) {
   		    	glib.serverlog(err);
-  		    	res.status(500).send('Error uploading to Google Drive.');
+  		    	res.status(508).send('Error uploading to Google Drive.');
   		  	}
 		})
 	}
