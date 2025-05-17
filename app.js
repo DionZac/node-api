@@ -81,7 +81,10 @@ exports.startup = async function (args, callb) {
         app.serverInit(args);
         glib.serverlog(`Server started @port : ${port}`, 1);
         glib.serverlog('GOOGLE_APPLICATION_CREDENTIALS =' + process.env.GOOGLE_APPLICATION_CREDENTIALS);
-      glib.serverlog('Key file exists? '+ fs.existsSync(process.env.GOOGLE_APPLICATION_CREDENTIALS));
+        glib.serverlog('Key file exists? '+ fs.existsSync(process.env.GOOGLE_APPLICATION_CREDENTIALS));
+        glib.serverlog('Uploads directory exist? '+ fs.existsSync("./uploads"));
+        glib.serverlog('Images directory exist? '+ fs.existsSync("./uploads/images"));
+        glib.serverlog('Videos directory exist? '+ fs.existsSync("./uploads/videos"));
       }
       return;
     }
