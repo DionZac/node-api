@@ -22,7 +22,7 @@ const auth = new google.auth.GoogleAuth({
 const driveService = google.drive({ version: 'v3', auth });
 
 async function uploadToDrive(filePath, filename, parentFolderId) {
-  try{
+
 	const fileMetadata = {
     name: filename,
     parents: [parentFolderId], // ID of shared folder
@@ -39,10 +39,8 @@ async function uploadToDrive(filePath, filename, parentFolderId) {
     fields: 'id, webViewLink, webContentLink',
   });
 
-  }
-  catch(e){
-	glib.serverlog(`Drive upload error : ${e}`);
-  }
+  
+ 
 
   return response.data;
 }
