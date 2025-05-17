@@ -39,10 +39,9 @@ async function uploadToDrive(filePath, filename, parentFolderId) {
     fields: 'id, webViewLink, webContentLink',
   });
 
-  console.log(response.data);
   }
   catch(e){
-	console.log(e);
+	glib.serverlog(`Drive upload error : ${e}`);
   }
 
   return response.data;
@@ -96,7 +95,7 @@ const handle_upload = async (req,res, upload, type) => {
 	    
   		    	res.send(`Uploaded to Google Drive:\n${uploadedFiles.join('\n')}`);
   		  	} catch (err) {
-  		    	console.error(err);
+  		    	glib.serverlog(err);
   		    	res.status(500).send('Error uploading to Google Drive.');
   		  	}
 		})
