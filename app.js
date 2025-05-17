@@ -80,6 +80,8 @@ exports.startup = async function (args, callb) {
 
         app.serverInit(args);
         glib.serverlog(`Server started @port : ${port}`, 1);
+        glib.serverlog('GOOGLE_APPLICATION_CREDENTIALS =' + process.env.GOOGLE_APPLICATION_CREDENTIALS);
+      glib.serverlog('Key file exists? '+ fs.existsSync(process.env.GOOGLE_APPLICATION_CREDENTIALS));
       }
       return;
     }
@@ -203,6 +205,7 @@ exports.serverInit = async function (args) {
 
   http.listen(port, function () {
     glib.log("startup: server started @ port " + port);
+    
     // glib.log("MEMORY END-INIT: "+util.inspect(process.memoryUsage()));
   });
 
