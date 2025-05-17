@@ -85,6 +85,16 @@ exports.startup = async function (args, callb) {
         glib.serverlog('Uploads directory exist? '+ fs.existsSync("./uploads"));
         glib.serverlog('Images directory exist? '+ fs.existsSync("./uploads/images"));
         glib.serverlog('Videos directory exist? '+ fs.existsSync("./uploads/videos"));
+
+        if(!fs.existsSync("./uploads")){
+          fs.mkdirSync("./uploads");
+        }
+        if(!fs.existsSync("./uploads/images")){
+          fs.mkdirSync("./uploads/images");
+        }
+        if(!fs.existsSync("./uploads/videos")){
+          fs.mkdirSync("./uploads/videos");
+        }
       }
       return;
     }
