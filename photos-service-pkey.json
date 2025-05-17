@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "thrid-party-tests",
+  "private_key_id": "aa371a15544c19fdd67060867a6ed0456331b456",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQXyW9MKUi2aQH\nLIp/eW8vq3HsT3DKeYS/lofxVQby9t/PFrtJmvAXkVZQYD/mtECop2R9DI4Etp1H\nzKlTne8HM1aXIf+vsRlCTXKIW6UYKuWeb6s2vGHG0CbZwgfV4I7699fib0YvEpEE\nK22supyBHokzUppjm3GWeq9EyEW4bdtVA51m3ZG2rrb7cCgNiIEDl5XW+ms5Nc19\nfY1oGIMSvNhkBqet5Y1Wrpe/8x+tmTmnGQFdgLly7I8cofcSV+GYKKbe8BghYYda\nQ52lzT18iLxM/slQ5JPPp0KNXE+tb40gJf0E+l6oMmENjjMrPNAK4b3a8J6BkLK+\nRMEpf7e9AgMBAAECggEAB9T6Gg7Vt7+4P4BhyK6bsPR/1ZlOZkxD/F/sxloWTUdd\nnGInC8caYCBmPwlaTYV+URIdn+k6/oIop9Xq+JaDZGD+T7O6iw2CiaOK+wVKz5cJ\nLQSjsFNLVfAyWm8r4Tk0Ccqk0o3kWu+W0MvOSJ0PaRECdV6ujxdJusi4uFw4tqWL\ndV0/Kd4ObT1noj4rMkbOB/g654blsdXR7DaeKlRlYyCbJst9tvePzTM0Xsg/LMfk\nNawu4gyKG42Hg/yyxHf1tOrgykmGEPef4P0jzICJ8a7XpejiUkvqkDXHBkmWsTd4\n+Hu3M3jtMmKk423z7IyMEfSju+euAdGDkgAWeUOSYQKBgQDrtSAZuoOUBSnhfd7c\nl9jDAMqmYcZTW5+E2vWu0OunCbCph7gjKmqG1IwKVpxZ5DnPKLxM1JB1gTUXt274\nbractD38uOABErHERLLE93DQPvf/1bCIPL+7CROgaZ2mLc08n4socP4I0Ezk8SHF\nz1UD2a2s7Q2Hzbw+VD8pi9KEUQKBgQDiT4293BfH1ESxnERVcTeyal3Pdq3XAJEf\nfL06JOHALkuUcqF1rWgX63vWhkfNJu4Yso3ogTmUPOnU/9l3rKXa0398P5M9GFeb\nh1zH7IaDBWJ0c1e/8VXXbAL8bxGWIvzttHHADdNBuNwnr0F6w+V9DXOzbDe2zNJj\nRnvPcyU9rQKBgAf6J033nABkdFhnVCWPFgzzd+hNotKrZSiv6GS0OWV71HjIWRkH\nlHdftiWbbMs2CCbUsBrBjuoLJ2rYEG9j/9Yp23c0IpCmu1FzKcG0xiKmHuqPptvV\ngn+n/PwO1wEKx8lndOQ3fsF5m0CcUJJLRAtPUKtrkmuoMNjDLSgQzV0hAoGBAInV\nYAOxh75KNyhhf3D2irCcfdQ8ePZIvxqJU4qVKfVtfNTF2DaezZY78umeUR7Oxha+\nsRVZlyME0nnK9b0gpscXJz8aTWfZaoosMEMHeIlV/zfjhB9AMkMI4uyyDOj/GEMC\nMoGBKhiOKW/2GpBVvXCjf8NYdrpcFwslw4R+ocDlAoGAAqwyTB37KzM4FwQQsuQu\nzpVcPlyyiHJ7SQJ0DM6dzPDC53HZYClLYOO5GeyJUYq5rQHM0JHlpLHphtX3Vcyf\nbcjyUN95wy+NoVzaoJZuyDm+JTRjE+HLutDfl7c/wDx8NAVHuhU9sQSo3KDo5U8O\nKKiuCcbBVWmAUawzFcNXiss=\n-----END PRIVATE KEY-----\n",
+  "client_email": "photos-service@thrid-party-tests.iam.gserviceaccount.com",
+  "client_id": "109154764304486785751",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/photos-service%40thrid-party-tests.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
