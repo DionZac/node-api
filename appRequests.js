@@ -13,7 +13,7 @@ const fs = require('fs');
 
 const GOOGLE_DRIVE_FOLDER_ID = "1X9uQZvGOeUod_bvPS7UuKIYhpnsFThuk";
 
-const KEYFILEPATH = "./gallery-uploader-key.json";
+const KEYFILEPATH = "/etc/secrets/gallery-uploader-key.json";
 const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
 
 const auth = new google.auth.GoogleAuth({
