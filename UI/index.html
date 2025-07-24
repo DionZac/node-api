@@ -35,11 +35,15 @@
         </div>
     </div>
 
+    <img src="./background-3.PNG" style="object-fit:contain; width: 100%" />
+
     <!-- Capture Screen -->
-    <div id="captureContainer" style="position: absolute;top: 80%;">
-        <!-- <img src="./background.PNG" style="object-fit:contain" /> -->
+    <div id="captureContainer" style="position: fixed;bottom: 2%; right: 2%;">
+        
         <!-- <video src="test.mp4" style="z-index:-1" muted loop></video> -->
-        <button id="captureBtn" style="z-index: 2;">Upload photos and videos</button>
+        <button id="captureBtn" style="z-index: 2;">
+            <svg style="    width: 60%; height: 60%;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path style="fill:white;" d="M256 109.3L256 320c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-210.7-41.4 41.4c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l96-96c12.5-12.5 32.8-12.5 45.3 0l96 96c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 109.3zM224 400c44.2 0 80-35.8 80-80l80 0c35.3 0 64 28.7 64 64l0 32c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64l0-32c0-35.3 28.7-64 64-64l80 0c0 44.2 35.8 80 80 80zm144 24a24 24 0 1 0 0-48 24 24 0 1 0 0 48z"/></svg>
+        </button>
         <input type="file" id="fileInput" accept="image/*,video/*"  style="display: none;"
             multiple>
     </div>
@@ -73,9 +77,8 @@
             loader.style.display = 'flex';           // show overlay
             progressBar.style.width = '0%';
             percentTxt.textContent = '0%';
-            stateTxt.textContent = 'Loading';
+            stateTxt.textContent = 'Uploading';
 
-            debugger;
             let images = [];
             let videos = [];
 
@@ -99,18 +102,12 @@
             try {
                 await uploadImages(images);
             }
-            catch (e) {
-                // Handle image upload fail
-                debugger;
-            }
+            catch (e) {}
 
             try {
                 await uploadVideos(videos);
             }
-            catch (e) {
-                // Handle video upload fail
-                debugger;
-            }
+            catch (e) {}
 
 
         });
@@ -142,8 +139,13 @@
                     document.querySelector('.status').classList.add('hidden');
 
                     loader.click(() => {
-                        loader.style.display = 'none';
-                    })
+                        window.location.reload();
+                    });
+
+                    window.reload_timeout = setTimeout(() => {
+                        window.location.reload();
+                    }, 3000);
+                    
                     resolve();
                 };
 
@@ -156,9 +158,13 @@
                     document.querySelector('.status').classList.add('hidden');
 
                     loader.click(() => {
-                        
-                        loader.style.display = 'none';
-                    })
+                        window.location.reload();
+                    });
+
+                    window.reload_timeout = setTimeout(() => {
+                        window.location.reload();
+                    }, 3000);
+
                     reject();
                 };
 
@@ -192,7 +198,6 @@
             width: $(window).width(),
             height: $(window).height()
         })
-        document.querySelector('video').play();
     </script>
 
 </body>

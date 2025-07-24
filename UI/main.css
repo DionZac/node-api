@@ -1,100 +1,162 @@
  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
- 
-  /***  overall overlay ***/
-  #loader{
-    position:fixed;inset:0;
-    background:rgba(0,0,0,.75);
-    backdrop-filter:blur(4px);
-    display:none;                 /* toggled by JS */
-    align-items:center;
-    justify-content:center;
-    z-index:1000;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;font-family:Montserrat,sans-serif}
 
-  /***  wrapper keeps everything together ***/
-  #wrapper{position:relative;width:350px;color:#fff}
+ /***  overall overlay ***/
+ #loader {
+   position: fixed;
+   inset: 0;
+   background: rgba(0, 0, 0, .75);
+   backdrop-filter: blur(4px);
+   display: none;
+   /* toggled by JS */
+   align-items: center;
+   justify-content: center;
+   z-index: 1000;
+ }
 
- .spinner{
-  width:70px;height:70px;margin:0 auto 24px;
-  border:6px solid rgba(255,255,255,.2);
-  border-top-color:#a29bfe;
-  border-radius:50%;
-  animation:spin 1s linear infinite;
-  position:relative;                 /* so pseudo-icon centers */
-}
+ * {
+   box-sizing: border-box;
+   margin: 0;
+   padding: 0;
+   font-family: Montserrat, sans-serif
+ }
 
-/* endless rotation */
-@keyframes spin{
-  to{transform:rotate(360deg);}
-}
+ /***  wrapper keeps everything together ***/
+ #wrapper {
+   position: relative;
+   width: 350px;
+   color: #fff
+ }
 
-/* SUCCESS  ✓  -------------------------------------------------- */
-.spinner.success{
-  border-color:#2ed573;
-  animation:none;                    /* stop spinning */
-}
-.spinner.success::before{
-  content:"\f00c";                   /* Font Awesome checkmark */
-  font-family:"Font Awesome 5 Free";font-weight:900;
-  font-size:2em;color:#2ed573;
-  position:absolute;inset:0;
-  display:flex;align-items:center;justify-content:center;
-}
+ .spinner {
+   width: 70px;
+   height: 70px;
+   margin: 0 auto 24px;
+   border: 6px solid rgba(255, 255, 255, .2);
+   border-top-color: #a29bfe;
+   border-radius: 50%;
+   animation: spin 1s linear infinite;
+   position: relative;
+   /* so pseudo-icon centers */
+ }
 
-/* ERROR  ✕  ----------------------------------------------------- */
-.spinner.error{
-  border-color:#ff4757;
-  animation:none;
-}
-.spinner.error::before{
-  content:"\f00d";                   /* Font Awesome times / X */
-  font-family:"Font Awesome 5 Free";font-weight:900;
-  font-size:2em;color:#ff4757;
-  position:absolute;inset:0;
-  display:flex;align-items:center;justify-content:center;
-}
+ /* endless rotation */
+ @keyframes spin {
+   to {
+     transform: rotate(360deg);
+   }
+ }
 
-  /***  progress bar ***/
-  .loading-bar{height:30px;background:#a4acaf;border-radius:6px;overflow:hidden}
-  .progress-bar{height:100%;width:0;background:#a29bfe;border-radius:6px}
-  .response-text {     font-size: .9rem;
-    letter-spacing: 1pt;
-    text-transform: uppercase;}
+ /* SUCCESS  ✓  -------------------------------------------------- */
+ .spinner.success {
+   border-color: #2ed573;
+   animation: none;
+   /* stop spinning */
+ }
 
-  /***  status text row ***/
-  .status{margin-top:12px;display:flex;justify-content:space-between;font-size:.9rem;letter-spacing:1pt;text-transform:uppercase}
+ .spinner.success::before {
+   content: "\f00c";
+   /* Font Awesome checkmark */
+   font-family: "Font Awesome 5 Free";
+   font-weight: 900;
+   font-size: 2em;
+   color: #2ed573;
+   position: absolute;
+   inset: 0;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+ }
 
-    body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: url('background-2.PNG') no-repeat center center/contain;
-            background-color: #607d82;
-        }
-        #captureContainer, #previewContainer {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        #captureBtn, #uploadBtn {
-            padding: 15px 30px;
+ /* ERROR  ✕  ----------------------------------------------------- */
+ .spinner.error {
+   border-color: #ff4757;
+   animation: none;
+ }
+
+ .spinner.error::before {
+   content: "\f00d";
+   /* Font Awesome times / X */
+   font-family: "Font Awesome 5 Free";
+   font-weight: 900;
+   font-size: 2em;
+   color: #ff4757;
+   position: absolute;
+   inset: 0;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+ }
+
+ /***  progress bar ***/
+ .loading-bar {
+   height: 30px;
+   background: #a4acaf;
+   border-radius: 6px;
+   overflow: hidden
+ }
+
+ .progress-bar {
+   height: 100%;
+   width: 0;
+   background: #a29bfe;
+   border-radius: 6px
+ }
+
+ .response-text {
+   font-size: .9rem;
+   letter-spacing: 1pt;
+   text-transform: uppercase;
+   text-align: center;
+ }
+
+ /***  status text row ***/
+ .status {
+   margin-top: 12px;
+   display: flex;
+   justify-content: space-between;
+   font-size: .9rem;
+   letter-spacing: 1pt;
+   text-transform: uppercase
+ }
+
+ body {
+   margin: 0;
+   padding: 0;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   height: 100vh;
+   /* background: url('background-2.PNG') no-repeat center center/contain; */
+   background-color: #a5593c;
+ }
+
+ #captureContainer,
+ #previewContainer {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+ }
+
+ #captureBtn,
+ #uploadBtn {
+    width: 50px;
+    height: 50px;
     font-size: 18px;
     border: none;
-    background-color: #607d82;
+    background-color: #ee8e5a;
     color: #ffffff;
     border-radius: 5px;
     cursor: pointer;
-        }
-        #preview {
-            width: 100%;
-            max-width: 400px;
-            margin-top: 20px;
-        }
+    border-radius: 100%;
+   
+ }
 
-        .hidden{
-          display: none;
-        }
+ #preview {
+   width: 100%;
+   max-width: 400px;
+   margin-top: 20px;
+ }
+
+ .hidden {
+   display: none;
+ }

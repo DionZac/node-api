@@ -41,7 +41,7 @@ db = new database();
 exports.settings = {};
 exports.initialize_only_database = false;
 exports.startup = async function (args, callb) {
-  if (0==1 && cluster.isMaster && !app.initialize_only_database) {
+  if (cluster.isMaster && !app.initialize_only_database) {
     cluster.fork();
 
     cluster.on('exit', function (worker, code, signal) {
@@ -50,6 +50,7 @@ exports.startup = async function (args, callb) {
   }
 
   else {
+
     if (!args) args = [];  // can plug in default
 
     // initialize settings from 'settings.json' file ///
